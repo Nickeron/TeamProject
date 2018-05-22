@@ -9,36 +9,56 @@
 	@foreach (User friend in Model)
 	{
 		<br />
+		<div id=@friend.Id>
 		<label>@friend.FirstName @friend.LastName </label>
 		<button class="requestButton" id=@friend.Id onClick="sendRequest(this.id)">Send Friend Request</button>
-		<br />
+		</div>
 	}
 </div>
 
 <script>
 	function sendRequest(userId) {
-
 		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("SendRequest", "Home")";
-		console.log(urlToSendRequest);
 
-			(async () => {
-				const rawResponse =
-					await fetch(urlToSendRequest,
-					{
-					method: 'POST',
-					headers:
-					{
-							'Accept': 'application/json',
-							'Content-Type': 'application/json',
-							},
-					credentials: "same-origin",
-					body: JSON.stringify(userId)
-				});
-				const content = await rawResponse.json();
+		(async () =>
+		{
+			const rawResponse =	await fetch(urlToSendRequest,
+			{
+				method: 'POST',
+				headers:
+				{
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				credentials: "same-origin",
+				body: JSON.stringify(userId)
+			});
+			//const content = await rawResponse.json();
+			//console.log(content);
+		})();
+		fadeOutEffect(userId)
+		alert("Friend Request Sent!");
+	}
 
-				console.log(content);
-			})();
-		alert(userId);
+	function fadeOutEffect(userId) {
+		var element = document.getElementById(userId);
+		console.log(userId);
+		var fadeEffect = setInterval(
+			function ()
+			{
+				if (!element.style.opacity)
+				{
+					element.style.opacity = 1;
+				}
+				if (element.style.opacity < 0.1)
+				{
+					clearInterval(fadeEffect);
+				}
+				else
+				{
+					element.style.opacity -= 0.1;
+				}
+			}, 100);
 	}
 </script>
 

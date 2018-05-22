@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,9 +27,11 @@ namespace GamameKaiDernoume.Controllers
             this.logger = logger;
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+            return View(dataRepository.GetAllPostsByUser(thisUser.UserName, true));
         }
 
         [Authorize]
@@ -94,8 +95,9 @@ namespace GamameKaiDernoume.Controllers
             if (dataRepository.SaveAll())
             {
                 logger.LogError("Ok ola mia xara");
+                return Ok("New friendship saved!");
             };
-            return View(dataRepository.GetAllStrangeUsers(await userManager.GetUserAsync(HttpContext.User)));
+            return BadRequest("Something bad happened");
         }
 
         [Authorize]
@@ -104,6 +106,7 @@ namespace GamameKaiDernoume.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult CreateInterest(Interest newInterest)
         {

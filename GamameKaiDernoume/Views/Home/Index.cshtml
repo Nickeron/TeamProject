@@ -1,17 +1,17 @@
-﻿@model User
+﻿@model IEnumerable<Post>
 @{
 	ViewData["Title"] = "Home Page";
 }
 
-@*@foreach (var p in Model.Posts)
-{
-<div>
-	<h3>@p.PostText</h3>
-	<p>@p.PostDate</p>
-	@foreach (var interest in p.PostInterests)
-	{
+<h2>My Wall</h2>
 
-		<h4>@interest.Interest</h4>
+@foreach (Post post in Model)
+{
+	<h1>@post.PostText</h1>
+	<h2>@post.PostScope</h2>
+	<h1>@post.PostDate</h1>
+	foreach (var interest in post.PostInterests)
+	{
+		<p>@interest.Interest.InterestCategory</p>
 	}
-</div>
-}*@
+}

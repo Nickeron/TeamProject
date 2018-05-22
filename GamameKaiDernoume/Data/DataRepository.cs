@@ -110,7 +110,11 @@ namespace GamameKaiDernoume.Data
 
         public IEnumerable<User> GetAllStrangeUsers(User thisUser)
         {
-            IEnumerable<Friend> allKnown = _ctx.Friends.Include(u=>u.Receiver).Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id).ToList();
+            IEnumerable<Friend> allKnown = _ctx.Friends
+                .Include(u=>u.Receiver)
+                .Include(u=>u.Sender)
+                .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
+                .ToList();
             List<string> allFriends = new List<string>() { thisUser.Id };
             foreach (Friend knownPerson in allKnown)
             {
