@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GamameKaiDernoume.Data.Entities;
 
@@ -11,7 +12,7 @@ namespace GamameKaiDernoume.Data
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
         IEnumerable<Post> GetAllPosts(bool includeReactions);
         IEnumerable<Post> GetAllPostsByUser(string username, bool includeComments);
-        Post GetPostById(string username, int id);
+        Post GetPostByTimeStamp(DateTime timestamp);
         IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory);
         bool SaveAll();
         

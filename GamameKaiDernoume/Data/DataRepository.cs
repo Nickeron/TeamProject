@@ -37,6 +37,7 @@ namespace GamameKaiDernoume.Data
                 return _ctx.Posts
                     .Include(u => u.Comments)
                     .Include(u => u.PostInterests)
+                    .ThenInclude(u=>u.Interest)
                     .Include(u => u.Reactions)
                     .ToList();
 
@@ -56,8 +57,9 @@ namespace GamameKaiDernoume.Data
                 return _ctx.Posts
                            .Where(o => o.User.UserName == username)
                            .Include(o => o.Reactions)
-                           .Include(i => i.PostInterests)
                            .Include(i => i.Comments)
+                           .Include(i => i.PostInterests)
+                           .ThenInclude(i=>i.Interest)
                            .ToList();
 
             }
@@ -86,13 +88,13 @@ namespace GamameKaiDernoume.Data
             }
         }
 
-        public Post GetPostById(string username, int id)
+        public Post GetPostByTimeStamp(DateTime timeStamp)
         {
             return _ctx.Posts
                        .Include(o => o.Comments)
                        .Include(o => o.Reactions)
                        .Include(o => o.PostInterests)
-                       .Where(o => o.PostID == id && o.User.UserName == username)
+                       .Where(o => o.PostDate == timeStamp)
                        .FirstOrDefault();
         }
 

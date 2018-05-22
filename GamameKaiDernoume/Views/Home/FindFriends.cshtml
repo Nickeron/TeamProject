@@ -11,13 +11,14 @@
 		<br />
 		<div id=@friend.Id>
 		<label>@friend.FirstName @friend.LastName </label>
-		<button class="requestButton" id=@friend.Id onClick="sendRequest(this.id)">Send Friend Request</button>
+		<button id=@friend.Id onClick="sendRequest(this.id)">Send Friend Request</button>
 		</div>
 	}
 </div>
 
 <script>
 	function sendRequest(userId) {
+
 		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("SendRequest", "Home")";
 
 		(async () =>

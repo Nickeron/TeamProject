@@ -14,6 +14,7 @@ namespace GamameKaiDernoume.Data.Entities
         public string PostText { get; set; }
 
         public User User { get; set; }
+
         public ICollection<PostInterest> PostInterests { get; set; }
         public virtual ICollection<Reaction> Reactions { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

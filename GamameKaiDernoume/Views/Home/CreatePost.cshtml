@@ -1,21 +1,81 @@
-﻿@model CreatePostViewModel
+﻿@model IEnumerable<Interest>
 @{
-    ViewData["Title"] = "CreatePost";
+	ViewData["Title"] = "CreatePost";
 }
 
 <h2>CreatePost</h2>
-<div id="theForm">
-	<form asp-controller="Home" asp-action="ShowUserPosts" asp-method="post">
-		<label asp-for="newPost.PostText">Post Text</label>
-		<input asp-for="newPost.PostText" /> <br />
-		<label asp-for="newPostInterests">Choose interests</label>
 
-		@foreach (var interest in Model.newPostInterests)
-		{
-		<label asp-for=@interest>@interest.InterestCategory</label>
-		<input asp-for=@interest type="radio" value=@interest.InterestCategory/>
-		}
-		
-		<input type="submit" value="Save Post" />
-	</form>
+<div id="form">
+	<label>Say something</label>
+	<input id="postText" /> <br />
+
+	@foreach (Interest interest in Model)
+	{
+		<button id="out-@interest.InterestCategory" onClick="addInterest(this)" value="@interest.InterestCategory">@interest.InterestCategory</button>
+	}
+
+	<button onclick="sendRequest(this)">Save Post</button>
 </div>
+
+<script>
+	let interests = [];
+
+	function addInterest(element) {
+		//window.event.preventDefault();
+		interests.push(element.value);
+		//var interestinpost = document.getElementById(element.value)
+		//interestinpost.value = element.value
+		//fadeOutEffect(element.id)
+	}
+
+	function sendRequest(e)
+	{
+		let urlToSendRequest = "https://" + window.location.host + "@Url.Action("ShowUserPosts", "Home")";
+
+		 let data =
+			 {
+			postText: document.getElementById("postText").value,
+			interests: interests
+		};
+
+		(async () =>
+		{
+			const rawResponse = await
+				fetch(urlToSendRequest,
+			{
+				method: 'POST',
+				headers:
+				{
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				credentials: "same-origin",
+				body: JSON.stringify(data)
+			});
+		})();
+		alert("Friend Request Sent!");
+
+	}
+
+
+	function fadeOutEffect(userId) {
+		var element = document.getElementById(userId);
+		console.log(userId);
+		var fadeEffect = setInterval(
+			function ()
+			{
+				if (!element.style.opacity)
+				{
+					element.style.opacity = 1;
+				}
+				if (element.style.opacity < 0.1)
+				{
+					clearInterval(fadeEffect);
+				}
+				else
+				{
+					element.style.opacity -= 0.1;
+				}
+			}, 100);
+	}
+</script>

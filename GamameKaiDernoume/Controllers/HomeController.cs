@@ -9,6 +9,7 @@ using GamameKaiDernoume.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace GamameKaiDernoume.Controllers
 {
@@ -31,40 +32,67 @@ namespace GamameKaiDernoume.Controllers
         public async Task<IActionResult> Index()
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
-            return View(dataRepository.GetAllPostsByUser(thisUser.UserName, true));
+            var allUserPosts = dataRepository.GetAllPostsByUser(thisUser.UserName, true);
+            return View(allUserPosts);
         }
 
         [Authorize]
         public IActionResult CreatePost()
         {
-            CreatePostViewModel theWantedPost = new CreatePostViewModel
-            {
-                newPostInterests = dataRepository.GetAllInterests()
-            };
-            return View(theWantedPost);
+            return View(dataRepository.GetAllInterests());
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> ShowUserPosts(CreatePostViewModel newPostViewModel)
+        public async Task<IActionResult> ShowUserPosts([FromBody]CreatePostViewModel newPostViewModel)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
-
-            Post theNewPost = new Post
+            if (ModelState.IsValid)
             {
-                User = thisUser,
-                PostDate = DateTime.Now,
-                PostText = newPostViewModel.newPost.PostText,
-                PostInterests = newPostViewModel.newPost.PostInterests,
-                PostScope = Scope.Global
-            };
+                List<Interest> interests = (List<Interest>)dataRepository.GetAllInterests();
+                List<Interest> addedInterests = new List<Interest>();
+                foreach (Interest interest in interests)
+                {
+                    if (newPostViewModel.Interests.Contains(interest.InterestCategory))
+                    {
+                        addedInterests.Add(interest);
+                    }
+                }
+                
+                DateTime timeStamp = DateTime.Now;
+                Post theNewPost = new Post
+                {
+                    User = thisUser,
+                    PostDate = timeStamp,
+                    PostText = newPostViewModel.PostText,
+                    PostScope = Scope.Global
+                };
 
-            dataRepository.AddEntity(theNewPost);
-            if (dataRepository.SaveAll())
-            {
-                logger.LogError("Ok ola mia xara");
-            };
+                dataRepository.AddEntity(theNewPost);
 
-            return View(dataRepository.GetAllPostsByUser(thisUser.UserName, false));
+                if (dataRepository.SaveAll())
+                {
+                    logger.LogError("Ok ola mia xara");
+                };
+                Post savedPost = dataRepository.GetPostByTimeStamp(timeStamp);
+
+                foreach (Interest interest in addedInterests)
+                {
+                    PostInterest postInterest = new PostInterest
+                    {
+                        Interest = interest,
+                        Post = savedPost
+                    };
+                    dataRepository.AddEntity(postInterest); 
+                }
+                if (dataRepository.SaveAll())
+                {
+                    logger.LogError("Ok ola mia xara");
+                };
+                return View(dataRepository.GetAllPostsByUser(thisUser.UserName, false));
+            }
+            return BadRequest("Something was missing");
+
         }
 
         [Authorize]

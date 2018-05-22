@@ -55,13 +55,13 @@ namespace GamameKaiDernoume.Data
 
             modelBuilder.Entity<PostInterest>()
                 .HasOne(p => p.Post)
-                .WithMany(p=> p.PostInterests)
-                .HasForeignKey(p=>p.PostId);
+                .WithMany(p => p.PostInterests)
+                .HasForeignKey(p => p.PostId);
 
             modelBuilder.Entity<PostInterest>()
                 .HasOne(p => p.Interest)
-                .WithMany(p=> p.PostInterests)
-                .HasForeignKey(p=>p.InterestId);
+                .WithMany(p => p.PostInterests)
+                .HasForeignKey(p => p.InterestId);
 
             base.OnModelCreating(modelBuilder);
 
