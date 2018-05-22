@@ -9,10 +9,12 @@
 	<label>Say something</label>
 	<input id="postText" /> <br />
 
-	@foreach (Interest interest in Model)
-	{
-		<button id="out-@interest.InterestCategory" onClick="addInterest(this)" value="@interest.InterestCategory">@interest.InterestCategory</button>
-	}
+	<select name="interest" id="interest" onchange="addInterest(this)" >
+		@foreach (Interest interest in Model)
+		{
+			<option id="@interest.InterestCategory" value="@interest.InterestCategory">@interest.InterestCategory</option>
+		}
+	</select>
 
 	<button onclick="sendRequest(this)">Save Post</button>
 </div>
@@ -26,6 +28,7 @@
 		//var interestinpost = document.getElementById(element.value)
 		//interestinpost.value = element.value
 		//fadeOutEffect(element.id)
+		console.log(interests);
 	}
 
 	function sendRequest(e)
@@ -53,7 +56,7 @@
 				body: JSON.stringify(data)
 			});
 		})();
-		alert("Friend Request Sent!");
+		alert("Post Created!");
 
 	}
 
