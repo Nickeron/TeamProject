@@ -69,23 +69,24 @@ namespace GamameKaiDernoume.Controllers
         [Authorize]
         public async Task<IActionResult> FindFriends()
         {
-            var availableFriends = new FriendRequestViewModel
-            {
-                allAvailableFriends = dataRepository.GetAllStrangeUsers(await userManager.GetUserAsync(HttpContext.User))
-            };
-            return View(availableFriends);
+            var allAvailableFriends = dataRepository.GetAllStrangeUsers(await userManager.GetUserAsync(HttpContext.User));
+
+            return View(allAvailableFriends);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> SendRequest(FriendRequestViewModel ToBeFriend)
+        public async Task<IActionResult> SendRequest([FromBody]string UserId)
         {
-            User theNewFriend = await userManager.FindByIdAsync(ToBeFriend.UserToBeFriend.Id);
-            if (theNewFriend is null) throw new Exception();
+            User theNewFriend = await userManager.FindByIdAsync(UserId);
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (theNewFriend is null || thisUser is null) throw new Exception();
+
             Friend newFriendship = new Friend
             {
                 Receiver = theNewFriend,
-                Sender = await userManager.GetUserAsync(HttpContext.User),
+                Sender = thisUser,
                 Accept = false
             };
 

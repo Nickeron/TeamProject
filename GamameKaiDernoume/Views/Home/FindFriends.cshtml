@@ -1,14 +1,44 @@
-﻿@model FriendRequestViewModel
+﻿@model IEnumerable<User>
 @{
 	ViewData["Title"] = "FindFriends";
 }
 
 <h2>FindFriends</h2>
 
-<form asp-controller="Home" asp-action="SendRequest" method="post">
-	<br />
-	<label asp-for="UserToBeFriend">UserName  </label>
-	<input asp-for="UserToBeFriend" type="radio" value=@Model.allAvailableFriends.First().UserName/>
-	<input type="submit" value="Friend Request" />
-	<br />
-</form>
+<div>
+	@foreach (User friend in Model)
+	{
+		<br />
+		<label>@friend.FirstName @friend.LastName </label>
+		<button class="requestButton" id=@friend.Id onClick="sendRequest(this.id)">Send Friend Request</button>
+		<br />
+	}
+</div>
+
+<script>
+	function sendRequest(userId) {
+
+		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("SendRequest", "Home")";
+		console.log(urlToSendRequest);
+
+			(async () => {
+				const rawResponse =
+					await fetch(urlToSendRequest,
+					{
+					method: 'POST',
+					headers:
+					{
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							},
+					credentials: "same-origin",
+					body: JSON.stringify(userId)
+				});
+				const content = await rawResponse.json();
+
+				console.log(content);
+			})();
+		alert(userId);
+	}
+</script>
+
