@@ -1,0 +1,21 @@
+﻿@model CreatePostViewModel
+@{
+    ViewData["Title"] = "CreatePost";
+}
+
+<h2>CreatePost</h2>
+<div id="theForm">
+	<form asp-controller="Home" asp-action="ShowUserPosts" asp-method="post">
+		<label asp-for="newPost.PostText">Post Text</label>
+		<input asp-for="newPost.PostText" /> <br />
+		<label asp-for="newPostInterests">Choose interests</label>
+
+		@foreach (var interest in Model.newPostInterests)
+		{
+		<label asp-for=@interest>@interest.InterestCategory</label>
+		<input asp-for=@interest type="radio" value=@interest.InterestCategory/>
+		}
+		
+		<input type="submit" value="Save Post" />
+	</form>
+</div>

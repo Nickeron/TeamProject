@@ -1,0 +1,14 @@
+﻿@model FriendRequestViewModel
+@{
+	ViewData["Title"] = "FindFriends";
+}
+
+<h2>FindFriends</h2>
+
+<form asp-controller="Home" asp-action="SendRequest" method="post">
+	<br />
+	<label asp-for="UserToBeFriend">UserName  </label>
+	<input asp-for="UserToBeFriend" type="radio" value=@Model.allAvailableFriends.First().UserName/>
+	<input type="submit" value="Friend Request" />
+	<br />
+</form>

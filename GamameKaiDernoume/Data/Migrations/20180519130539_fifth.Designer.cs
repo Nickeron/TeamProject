@@ -4,14 +4,16 @@ using GamameKaiDernoume.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GamameKaiDernoume.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180519130539_fifth")]
+    partial class fifth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +75,11 @@ namespace GamameKaiDernoume.Data.Migrations
 
                     b.Property<string>("InterestIcon");
 
+                    b.Property<int?>("PostID");
+
                     b.HasKey("InterestID");
+
+                    b.HasIndex("PostID");
 
                     b.ToTable("Interests");
                 });
@@ -92,11 +98,15 @@ namespace GamameKaiDernoume.Data.Migrations
 
                     b.Property<string>("SenderId");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("MessageID");
 
                     b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
@@ -106,6 +116,8 @@ namespace GamameKaiDernoume.Data.Migrations
                     b.Property<int>("PostID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("InterestID");
 
                     b.Property<DateTime>("PostDate");
 
@@ -119,22 +131,11 @@ namespace GamameKaiDernoume.Data.Migrations
 
                     b.HasKey("PostID");
 
+                    b.HasIndex("InterestID");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("GamameKaiDernoume.Data.Entities.PostInterest", b =>
-                {
-                    b.Property<int>("PostId");
-
-                    b.Property<int>("InterestId");
-
-                    b.HasKey("PostId", "InterestId");
-
-                    b.HasIndex("InterestId");
-
-                    b.ToTable("PostInterest");
                 });
 
             modelBuilder.Entity("GamameKaiDernoume.Data.Entities.Reaction", b =>
@@ -177,10 +178,6 @@ namespace GamameKaiDernoume.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
-
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -203,6 +200,8 @@ namespace GamameKaiDernoume.Data.Migrations
 
                     b.Property<string>("UserAvatar");
 
+                    b.Property<string>("UserId");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
@@ -217,6 +216,8 @@ namespace GamameKaiDernoume.Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -349,7 +350,7 @@ namespace GamameKaiDernoume.Data.Migrations
             modelBuilder.Entity("GamameKaiDernoume.Data.Entities.Friend", b =>
                 {
                     b.HasOne("GamameKaiDernoume.Data.Entities.User", "Receiver")
-                        .WithMany("Friends")
+                        .WithMany()
                         .HasForeignKey("ReceiverId");
 
                     b.HasOne("GamameKaiDernoume.Data.Entities.User", "Sender")
@@ -357,35 +358,37 @@ namespace GamameKaiDernoume.Data.Migrations
                         .HasForeignKey("SenderId");
                 });
 
+            modelBuilder.Entity("GamameKaiDernoume.Data.Entities.Interest", b =>
+                {
+                    b.HasOne("GamameKaiDernoume.Data.Entities.Post")
+                        .WithMany("Interests")
+                        .HasForeignKey("PostID");
+                });
+
             modelBuilder.Entity("GamameKaiDernoume.Data.Entities.Message", b =>
                 {
                     b.HasOne("GamameKaiDernoume.Data.Entities.User", "Receiver")
-                        .WithMany("ReceivedMessages")
+                        .WithMany()
                         .HasForeignKey("ReceiverId");
 
                     b.HasOne("GamameKaiDernoume.Data.Entities.User", "Sender")
-                        .WithMany("SentMessages")
+                        .WithMany()
                         .HasForeignKey("SenderId");
+
+                    b.HasOne("GamameKaiDernoume.Data.Entities.User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("GamameKaiDernoume.Data.Entities.Post", b =>
                 {
+                    b.HasOne("GamameKaiDernoume.Data.Entities.Interest")
+                        .WithMany("Posts")
+                        .HasForeignKey("InterestID");
+
                     b.HasOne("GamameKaiDernoume.Data.Entities.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("GamameKaiDernoume.Data.Entities.PostInterest", b =>
-                {
-                    b.HasOne("GamameKaiDernoume.Data.Entities.Interest", "Interest")
-                        .WithMany("PostInterests")
-                        .HasForeignKey("InterestId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GamameKaiDernoume.Data.Entities.Post", "Post")
-                        .WithMany("PostInterests")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("GamameKaiDernoume.Data.Entities.Reaction", b =>
@@ -396,6 +399,13 @@ namespace GamameKaiDernoume.Data.Migrations
 
                     b.HasOne("GamameKaiDernoume.Data.Entities.User", "User")
                         .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("GamameKaiDernoume.Data.Entities.User", b =>
+                {
+                    b.HasOne("GamameKaiDernoume.Data.Entities.User")
+                        .WithMany("Friends")
                         .HasForeignKey("UserId");
                 });
 
