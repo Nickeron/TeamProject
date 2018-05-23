@@ -140,7 +140,7 @@ namespace GamameKaiDernoume.Data
                 .Include(u => u.Sender)
                 .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
                 .ToList();
-            List<string> allFriends = new List<string>() { thisUser.Id };
+            List<string> allFriends = new List<string>() {};
             foreach (Friend knownPerson in allKnown)
             {
                 if (knownPerson.Receiver.Id != thisUser.Id)

@@ -2,17 +2,20 @@
 	.withUrl("/chatHub")
 	.build();
 
-connection.on("ReceiveMessage", (user, message) => {
-	const encodedMsg = user + " says " + message;
+connection.on("ReceiveMessage", (sender, message) => {
+	const encodedMsg = sender + " says " + message;
 	const li = document.createElement("li");
 	li.textContent = encodedMsg;
 	document.getElementById("messagesList").appendChild(li);
 });
 
 document.getElementById("sendButton").addEventListener("click", event => {
-	const user = document.getElementById("userName").value;
+	const sender = document.getElementById("userName").value;
+	const receiver = document.getElementById("activeUser").value;
 	const message = document.getElementById("messageInput").value;
-	connection.invoke("SendMessage", user, message).catch(err => console.error(err.toString()));
+	console.log(sender, receiver, message);
+	connection.invoke("SendMessage", sender, receiver, message).catch(err => console.error(err.toString()));
+	sendRequest(receiver, message);
 	event.preventDefault();
 });
 

@@ -12,4 +12,12 @@ namespace GamameKaiDernoume.Models
         public string UserName { get; set; }
         public IEnumerable<User> ThisUsersFriends { get; set; }
     }
+
+    public class SendMessageModel
+    {
+        public string ReceiverID { get; set; }
+        public string MessageText { get; set; }
+    }
+
+
 }

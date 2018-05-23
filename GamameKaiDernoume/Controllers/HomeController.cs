@@ -50,6 +50,33 @@ namespace GamameKaiDernoume.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> SendMessage([FromBody]SendMessageModel messageModel)
+        {
+            User receiver = await userManager.FindByIdAsync(messageModel.ReceiverID);
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (receiver is null || thisUser is null) throw new Exception("Cannot have null receiver or sender");
+
+            Message newMessage = new Message
+            {
+                MessageDate = DateTime.Now,
+                MessageText = messageModel.MessageText,
+                Receiver = receiver,
+                Sender = thisUser
+            };
+
+            dataRepository.AddEntity(newMessage);
+
+            if (dataRepository.SaveAll())
+            {
+                logger.LogError("Ok new message was saved");
+                return Ok("New message saved!");
+            };
+            return BadRequest("Something bad happened");
+        }
+
+        [Authorize]
         public IActionResult CreatePost()
         {
             return View(dataRepository.GetAllInterests());
@@ -85,7 +112,7 @@ namespace GamameKaiDernoume.Controllers
 
                 if (dataRepository.SaveAll())
                 {
-                    logger.LogError("Ok ola mia xara");
+                    logger.LogError("Ok new post was saved");
                 };
                 Post savedPost = dataRepository.GetPostByTimeStamp(timeStamp);
 
@@ -100,7 +127,7 @@ namespace GamameKaiDernoume.Controllers
                 }
                 if (dataRepository.SaveAll())
                 {
-                    logger.LogError("Ok ola mia xara");
+                    logger.LogError("Ok relationship of post and interests was saved");
                 };
                 return View(dataRepository.GetAllPostsByUser(thisUser.UserName, true));
             }
@@ -135,7 +162,7 @@ namespace GamameKaiDernoume.Controllers
             dataRepository.AddEntity(newFriendship);
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok ola mia xara");
+                logger.LogError("Ok a new friend request was created");
                 return Ok("New friendship saved!");
             };
             return BadRequest("Something bad happened");
@@ -159,7 +186,7 @@ namespace GamameKaiDernoume.Controllers
             dataRepository.AddEntity(theNewInterest);
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok ola mia xara");
+                logger.LogError("Ok new interest was created and saved to database");
             };
             return View();
         }

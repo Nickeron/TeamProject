@@ -6,7 +6,7 @@
 	@foreach (User friend in Model.ThisUsersFriends)
 	{
 		<li class="list-group-item list-group-item-action" id="friend-side">
-			<div id="@friend.Id">@friend.UserAvatar @friend.UserName</div>
+			<option id="@friend.Id" onclick="setActiveUser(this)" value=@friend.UserName>@friend.UserAvatar @friend.UserName</option>
 		</li>
 	}
 </ul>
@@ -16,7 +16,7 @@
 	<div class="row">
 		<div class="col-6">&nbsp;</div>
 		<div class="col-6">
-			<small type="text" value="@Model.UserName" id="userName">@Model.UserName</small>
+			<option type="text" value="@Model.UserName" id="userName">@Model.UserName</option>
 			<br />
 			Message <input type="text" id="messageInput" />
 			<input type="button" id="sendButton" value="Send" />
@@ -27,6 +27,7 @@
 			<hr />
 		</div>
 	</div>
+	<h3 id="activeUser" value="">No active user</h3>
 	<div class="row">
 		<div class="col-6">&nbsp;</div>
 		<div class="col-6">
@@ -36,7 +37,39 @@
 </div>
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/chat.js"></script>
-@*
-	If you need a version of the chat script that is compatible with IE 11, replace the above <script> tag that imports chat.js with this one
-	<script src="~/js/es5-chat.js"></script>
-*@
+
+<script>
+	function setActiveUser(element)
+	{
+		const activeUser = document.getElementById("activeUser");
+		activeUser.value = element.id;
+		activeUser.innerHTML = element.value;
+		console.log(activeUser.value);
+	}
+
+	function sendRequest(userId, message)
+	{
+		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("SendMessage", "Home")";
+
+		let data =
+			{
+				receiverID: userId,
+				messageText: message
+			};
+		(async () =>
+		{
+		const rawResponse =	await fetch(urlToSendRequest,
+		{
+		method: 'POST',
+		headers:
+		{
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		},
+		credentials: "same-origin",
+		body: JSON.stringify(data)
+		});
+		})();
+	}
+</script>
+

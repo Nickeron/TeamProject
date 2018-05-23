@@ -17,4 +17,13 @@ namespace GamameKaiDernoume.Models
         [Required]
         public List<string> Interests { get; set; }
     }
+
+    public class CommentModel {
+        [Required]
+        public string PostID { get; set; }
+
+        [Required]
+        public string CommentText { get; set; }
+    }
+
 }

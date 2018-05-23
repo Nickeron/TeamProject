@@ -11,7 +11,7 @@
 		<br />
 		<div id=@friend.Id>
 		<label>@friend.FirstName @friend.LastName </label>
-		<button id=@friend.Id onClick="sendRequest(this.id)">Send Friend Request</button>
+		<button id=@friend.Id onclick="sendRequest(this.id)">Send Friend Request</button>
 		</div>
 	}
 </div>
@@ -37,7 +37,7 @@
 			//const content = await rawResponse.json();
 			//console.log(content);
 		})();
-		fadeOutEffect(userId)
+		$(userId).fadeOut();
 		alert("Friend Request Sent!");
 	}
 

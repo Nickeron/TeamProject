@@ -9,14 +9,15 @@ namespace GamameKaiDernoume.Controllers
     [Authorize]
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string Sender, string ReceiverId, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            await Clients.Client(ReceiverId).SendAsync("ReceiveMessage", Sender, message);
+            await SendMessageToCaller(Sender, message);
         }
 
-        public Task SendMessageToCaller(string message)
+        public async Task SendMessageToCaller(string Sender, string message)
         {
-            return Clients.Caller.SendAsync("ReceiveMessage", message);
+            await Clients.Caller.SendAsync("ReceiveMessage", Sender, message);
         }
 
         public Task SendMessageToGroups(string message)
