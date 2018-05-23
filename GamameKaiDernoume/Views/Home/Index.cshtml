@@ -15,19 +15,19 @@
 			}
 			<span class="badge badge-secondary">@post.PostScope</span>
 			<div class="card-body">
-				<h4 class="card-title">
+				<p class="card-title">
 					@post.User.FirstName @post.User.LastName
 					@foreach (var interest in post.PostInterests)
 					{
 						<span class="badge badge-primary">@interest.Interest.InterestCategory</span>
 					}
-				</h4>
-				<p class="card-text">
+					<span class="card-footer text-muted">
+						@post.PostDate
+					</span>
+				</p>
+				<h2 class="card-text">
 					@post.PostText
-				<span class="card-footer text-muted">
-					@post.PostDate
-				</span>
-			</p>
+				</h2>
 			<a href="#" class="btn btn-secondary">Write a Comment</a>
 		</div>
 	</div>
