@@ -9,7 +9,8 @@
 	<label>Say something</label>
 	<input id="postText" /> <br />
 
-	<select name="interest" id="interest" onchange="addInterest(this)" >
+	<select name="interest" id="interest" onchange="addInterest(this)">
+		<option value="" disabled selected>None</option>
 		@foreach (Interest interest in Model)
 		{
 			<option id="@interest.InterestCategory" value="@interest.InterestCategory">@interest.InterestCategory</option>
@@ -27,7 +28,6 @@
 		interests.push(element.value);
 		//var interestinpost = document.getElementById(element.value)
 		//interestinpost.value = element.value
-		$(element).fadeOut
 		console.log(interests);
 	}
 
