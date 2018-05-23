@@ -13,6 +13,7 @@ using GamameKaiDernoume.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using GamameKaiDernoume.Data.Entities;
+using GamameKaiDernoume.Controllers;
 
 namespace GamameKaiDernoume
 {
@@ -39,7 +40,7 @@ namespace GamameKaiDernoume
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("OurConnection")));
 
             services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -47,6 +48,7 @@ namespace GamameKaiDernoume
             services.AddScoped<IDataRepository, DataRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +70,12 @@ namespace GamameKaiDernoume
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+            app.UseFileServer();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chathub");
+            });
 
             app.UseMvc(routes =>
             {

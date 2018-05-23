@@ -89,7 +89,7 @@ namespace GamameKaiDernoume.Controllers
                 {
                     logger.LogError("Ok ola mia xara");
                 };
-                return View(dataRepository.GetAllPostsByUser(thisUser.UserName, false));
+                return View(dataRepository.GetAllPostsByUser(thisUser.UserName, true));
             }
             return BadRequest("Something was missing");
 
