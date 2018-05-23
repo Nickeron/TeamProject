@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,9 +10,15 @@ namespace GamameKaiDernoume.Controllers
     [Authorize]
     public class ChatHub : Hub
     {
+        private readonly ILogger<ChatHub> logger;
+
+        public ChatHub(ILogger<ChatHub> logger)
+        {
+            this.logger = logger;
+        }
         public async Task SendMessage(string Sender, string ReceiverId, string message)
         {
-            await Clients.Client(ReceiverId).SendAsync("ReceiveMessage", Sender, message);
+            await Clients.User(ReceiverId).SendAsync("ReceiveMessage", Sender, message);
             await SendMessageToCaller(Sender, message);
         }
 
@@ -28,7 +35,8 @@ namespace GamameKaiDernoume.Controllers
 
         public override async Task OnConnectedAsync()
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
+            logger.LogInformation(Context.User.Identity.Name + " connected with CID: " + Context.ConnectionId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Identity.Name);
             await base.OnConnectedAsync();
         }
 

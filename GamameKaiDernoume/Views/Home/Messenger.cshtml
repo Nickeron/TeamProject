@@ -5,8 +5,10 @@
 <ul class="list-group">
 	@foreach (User friend in Model.ThisUsersFriends)
 	{
-		<li class="list-group-item list-group-item-action" id="friend-side">
-			<option id="@friend.Id" onclick="setActiveUser(this)" value=@friend.UserName>@friend.UserAvatar @friend.UserName</option>
+		<li class="list-group-item list-group-item-action" 
+			id="@friend.Id"
+			onclick="setActiveUser(this)">
+			@friend.UserAvatar @friend.UserName
 		</li>
 	}
 </ul>
@@ -43,7 +45,7 @@
 	{
 		const activeUser = document.getElementById("activeUser");
 		activeUser.value = element.id;
-		activeUser.innerHTML = element.value;
+		activeUser.innerHTML = element.innerHTML;
 		console.log(activeUser.value);
 	}
 
