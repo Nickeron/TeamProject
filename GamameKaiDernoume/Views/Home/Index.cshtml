@@ -7,26 +7,29 @@
 
 @foreach (Post post in Model)
 {
-<div class="card border-info mb-3" style="width: 18rem;">
-	@if (!(post.PostImage is null))
-	{
-		<img class="card-img-top" src="@post.PostImage" alt="@post.PostText">
-	}
-	<div class="card-body">
-		<h4 class="card-title">
-			@post.User.FirstName @post.User.LastName
-			@foreach (var interest in post.PostInterests)
+	<div class="jumbotron">
+		<div class="card border-info mb-3">
+			@if (!(post.PostImage is null))
 			{
-				<span class="badge badge-secondary">@interest.Interest.InterestCategory</span>
+				<img class="card-img-top" src="@post.PostImage" alt="@post.PostText">
 			}
-		</h4>
-		<div class="card-footer text-muted">
-			@post.PostDate
+			<span class="badge badge-secondary">@post.PostScope</span>
+			<div class="card-body">
+				<h4 class="card-title">
+					@post.User.FirstName @post.User.LastName
+					@foreach (var interest in post.PostInterests)
+					{
+						<span class="badge badge-primary">@interest.Interest.InterestCategory</span>
+					}
+				</h4>
+				<p class="card-text">
+					@post.PostText
+				<span class="card-footer text-muted">
+					@post.PostDate
+				</span>
+			</p>
+			<a href="#" class="btn btn-secondary">Write a Comment</a>
 		</div>
-		<p class="card-text">@post.PostText</p>
-		<a href="#" class="btn btn-secondary">Write a Comment</a>
-		<span class="badge badge-secondary">@post.PostScope</span>
-
 	</div>
 </div>
 }
