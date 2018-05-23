@@ -27,7 +27,7 @@
 		interests.push(element.value);
 		//var interestinpost = document.getElementById(element.value)
 		//interestinpost.value = element.value
-		//fadeOutEffect(element.id)
+		$(element).fadeOut
 		console.log(interests);
 	}
 
@@ -58,27 +58,5 @@
 		})();
 		alert("Post Created!");
 
-	}
-
-
-	function fadeOutEffect(userId) {
-		var element = document.getElementById(userId);
-		console.log(userId);
-		var fadeEffect = setInterval(
-			function ()
-			{
-				if (!element.style.opacity)
-				{
-					element.style.opacity = 1;
-				}
-				if (element.style.opacity < 0.1)
-				{
-					clearInterval(fadeEffect);
-				}
-				else
-				{
-					element.style.opacity -= 0.1;
-				}
-			}, 100);
 	}
 </script>
