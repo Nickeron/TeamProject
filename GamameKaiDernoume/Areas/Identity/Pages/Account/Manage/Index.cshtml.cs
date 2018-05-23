@@ -44,6 +44,14 @@ namespace GamameKaiDernoume.Areas.Identity.Pages.Account.Manage
             [EmailAddress]
             public string Email { get; set; }
 
+            [DataType(DataType.Text)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -66,6 +74,8 @@ namespace GamameKaiDernoume.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 Email = email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 PhoneNumber = phoneNumber
             };
 
@@ -96,6 +106,20 @@ namespace GamameKaiDernoume.Areas.Identity.Pages.Account.Manage
                     var userId = await _userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
                 }
+            }
+            if (Input.FirstName != user.FirstName)
+            {
+                user.FirstName = Input.FirstName;
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                user.LastName = Input.LastName;
+            }
+            var updateProfileResult = await _userManager.UpdateAsync(user);
+            if (!updateProfileResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Unexpected error ocurred updating the profile for user with ID '{user.Id}'");
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
