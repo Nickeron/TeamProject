@@ -44,7 +44,7 @@ namespace GamameKaiDernoume
 
             services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            
+
             services.AddScoped<IDataRepository, DataRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
