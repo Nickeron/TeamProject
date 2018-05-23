@@ -132,5 +132,28 @@ namespace GamameKaiDernoume.Data
 
             return _ctx.Users.Where(u => !allFriends.Contains(u.Id)).ToList();
         }
+
+        public IEnumerable<User> GetUsersFriends(User thisUser)
+        {
+            IEnumerable<Friend> allKnown = _ctx.Friends
+                .Include(u => u.Receiver)
+                .Include(u => u.Sender)
+                .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
+                .ToList();
+            List<string> allFriends = new List<string>() { thisUser.Id };
+            foreach (Friend knownPerson in allKnown)
+            {
+                if (knownPerson.Receiver.Id != thisUser.Id)
+                {
+                    allFriends.Add(knownPerson.Receiver.Id);
+                }
+                if (knownPerson.Sender.Id != thisUser.Id)
+                {
+                    allFriends.Add(knownPerson.Sender.Id);
+                }
+            }
+
+            return _ctx.Users.Where(u => allFriends.Contains(u.Id)).ToList();
+        }
     }
 }

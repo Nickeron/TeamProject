@@ -37,6 +37,18 @@ namespace GamameKaiDernoume.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> Messenger()
+        {
+            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+            MessengerViewModel messengerView = new MessengerViewModel
+            {
+                ThisUserID = thisUser.Id,
+                ThisUsersFriends = dataRepository.GetUsersFriends(thisUser)
+            };         
+            return View(messengerView);
+        }
+
+        [Authorize]
         public IActionResult CreatePost()
         {
             return View(dataRepository.GetAllInterests());
