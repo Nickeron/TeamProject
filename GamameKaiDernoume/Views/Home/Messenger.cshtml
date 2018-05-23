@@ -2,16 +2,24 @@
 @{
 	ViewData["Title"] = "Messenger";
 }
+<ul class="list-group">
+	@foreach (User friend in Model.ThisUsersFriends)
+	{
+		<li class="list-group-item list-group-item-action">
+			@friend.UserAvatar @friend.UserName
+		</li>
+	}
+</ul>
 
 <div class="container">
 	<div class="row">&nbsp;</div>
 	<div class="row">
 		<div class="col-6">&nbsp;</div>
 		<div class="col-6">
-			User <input type="text" id="userInput" />
+			<small type="text" value="@Model.UserName" id="userName">@Model.UserName</small>
 			<br />
 			Message <input type="text" id="messageInput" />
-			<input type="button" id="sendButton" value="Send Message" />
+			<input type="button" id="sendButton" value="Send" />
 		</div>
 	</div>
 	<div class="row">

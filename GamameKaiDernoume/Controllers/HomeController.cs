@@ -43,6 +43,7 @@ namespace GamameKaiDernoume.Controllers
             MessengerViewModel messengerView = new MessengerViewModel
             {
                 ThisUserID = thisUser.Id,
+                UserName = (thisUser.FirstName is null)? thisUser.UserName : thisUser.FirstName,
                 ThisUsersFriends = dataRepository.GetUsersFriends(thisUser)
             };         
             return View(messengerView);

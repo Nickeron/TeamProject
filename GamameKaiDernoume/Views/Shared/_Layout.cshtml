@@ -19,17 +19,17 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+						<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+					</li>
 					<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+						<a class="nav-link" asp-area="" asp-controller="Home" asp-action="FindFriends">Find Friends</a>
+					</li>
 					<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+						<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Messenger">Messenger</a>
+					</li>
 					<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="FindFriends">Find Friends</a></li>
-					<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Messenger">Messenger</a></li>
-					<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Home" asp-action="CreatePost">Post Something</a></li>
+						<a class="nav-link" asp-area="" asp-controller="Home" asp-action="CreatePost">Post Something</a>
+					</li>
 				</ul>
 				<partial name="_LoginPartial" />
 			</div>
@@ -42,7 +42,23 @@
 		@RenderBody()
 		<hr />
 		<footer>
-			<p>&copy; 2018 - BitsPlease</p>
+			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+				<div class="container">
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item">
+								<a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+							</li>
+							<li class="nav-item">
+								<p class="navbar-text">&copy; 2018 - BitsPlease</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
 		</footer>
 	</div>
 

@@ -10,7 +10,7 @@ connection.on("ReceiveMessage", (user, message) => {
 });
 
 document.getElementById("sendButton").addEventListener("click", event => {
-	const user = document.getElementById("userInput").value;
+	const user = document.getElementById("userName").value;
 	const message = document.getElementById("messageInput").value;
 	connection.invoke("SendMessage", user, message).catch(err => console.error(err.toString()));
 	event.preventDefault();

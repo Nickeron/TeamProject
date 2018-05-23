@@ -9,6 +9,7 @@ namespace GamameKaiDernoume.Models
     public class MessengerViewModel
     {
         public string ThisUserID { get; set; }
+        public string UserName { get; set; }
         public IEnumerable<User> ThisUsersFriends { get; set; }
     }
 }
