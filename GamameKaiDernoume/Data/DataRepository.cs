@@ -160,5 +160,10 @@ namespace GamameKaiDernoume.Data
 
             return _ctx.Users.Where(u => allFriends.Contains(u.Id)).ToList();
         }
+
+        public Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser)
+        {
+            return _ctx.Reactions.Where(r => r.Post.PostID == reactionPostId && r.User == thisUser).FirstOrDefault();
+        }
     }
 }

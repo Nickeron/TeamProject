@@ -29,16 +29,18 @@
 					@post.PostText
 				</h2>
 				<p>
-					<button type="button" class="btn btn-primary btn-sm">
-						<span><i class="far fa-thumbs-up"></i></span>
-						@post.Reactions.Where(r => r.IsLike).ToList().Count
-					</button>
-					<button type="button" class="btn btn-primary btn-sm">
-						<span><i class="far fa-thumbs-down"></i></span>
-						@post.Reactions.Where(r => !r.IsLike).ToList().Count
-					</button>
-				</p>
-				<p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-primary">
+							<i class="far fa-thumbs-up"></i>
+							<input type="radio" id="Like-@post.PostID" onchange="AddReaction(@post.PostID, true)" />
+							<span id="like-count-@post.PostID">@post.Reactions.Where(r => r.IsLike).ToList().Count</span>
+						</label>
+						<label class="btn btn-primary">
+							<i class="far fa-thumbs-down"></i>
+							<input type="radio" id="DisLike-@post.PostID" onchange="AddReaction(@post.PostID, false)">
+							<span id="dislike-count-@post.PostID">@post.Reactions.Where(r => !r.IsLike).ToList().Count</span>
+						</label>
+					</div>
 					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
 						Comment
 					</button>
@@ -63,35 +65,36 @@
 		</div>
 	</div>
 }
+
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/comment.js"></script>
+
 <script>
-	function SendNewCommentData(PostID) {
+
+	async function SendReaction(PostID, isLike) {
+		const reaction = isLike;
+
+		let data = {
+			postID: PostID,
+			isLike: isLike
+		};
+
+		await sendData("@Url.Action("AddReactionToPost", "Home")", data);
+	}
+
+	function SendNewCommentData(PostID)
+	{
 		const commentsTextElement = document.getElementById('commentText-' + PostID);
 		const commentsText = commentsTextElement.value;
 		commentsTextElement.value = "";
 		console.log(PostID, commentsText);
 
-		let data={
-			postID : PostID,
-            commentText: commentsText };
+		let data = {
+			postID: PostID,
+			commentText: commentsText
+		};
 
-		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("AddNewCommentToPost", "Home")";
-
-		(async () =>
-		{
-			const rawResponse =	await fetch(urlToSendRequest,
-			{
-				method: 'POST',
-				headers:
-				{
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				credentials: "same-origin",
-				body: JSON.stringify(data)
-			});
-
-		})();
+		sendData("@Url.Action("AddNewCommentToPost", "Home")", data);
 	}
+
 </script>

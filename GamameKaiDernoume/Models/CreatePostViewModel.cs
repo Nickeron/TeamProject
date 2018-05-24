@@ -26,4 +26,12 @@ namespace GamameKaiDernoume.Models
         public string CommentText { get; set; }
     }
 
+    public class ReactionModel {
+        [Required]
+        public int PostID { get; set; }
+
+        [Required]
+        public bool IsLike { get; set; }
+    }
+
 }

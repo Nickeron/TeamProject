@@ -17,28 +17,8 @@
 </div>
 
 <script>
-	function sendRequest(userId) {
-
-		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("SendFriendRequest", "Home")";
-
-		(async () =>
-		{
-			const rawResponse =	await fetch(urlToSendRequest,
-			{
-				method: 'POST',
-				headers:
-				{
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				credentials: "same-origin",
-				body: JSON.stringify(userId)
-			});
-			//const content = await rawResponse.json();
-			//console.log(content);
-		})();
-		$(userId).fadeOut();
-		alert("Friend Request Sent!");
+	async function sendRequest(userId) {
+		await sendData("@Url.Action("SendFriendRequest", "Home")", userId);
 	}
 
 	function fadeOutEffect(userId) {

@@ -51,27 +51,13 @@
 
 	function sendRequest(userId, message)
 	{
-		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("SendMessage", "Home")";
-
 		let data =
 			{
 				receiverID: userId,
 				messageText: message
 			};
-		(async () =>
-		{
-		const rawResponse =	await fetch(urlToSendRequest,
-		{
-		method: 'POST',
-		headers:
-		{
-		'Accept': 'application/json',
-		'Content-Type': 'application/json',
-		},
-		credentials: "same-origin",
-		body: JSON.stringify(data)
-		});
-		})();
+
+		sendData("@Url.Action("SendMessage", "Home")", data);
 	}
 </script>
 

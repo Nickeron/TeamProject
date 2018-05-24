@@ -113,6 +113,54 @@ namespace GamameKaiDernoume.Controllers
 
         [Authorize]
         [HttpPost]
+        public async Task<IActionResult> AddReactionToPost([FromBody]ReactionModel ReactionData)
+        {
+            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (ModelState.IsValid)
+            {
+                Reaction postReaction = dataRepository.GetReactionByPostAndUser(ReactionData.PostID, thisUser);
+
+                // Does the reaction already exist?
+                if (postReaction is null)
+                {
+                    Post reactedPost = dataRepository.GetPostById(ReactionData.PostID);
+                    postReaction = new Reaction
+                    {
+                        Post = reactedPost,
+                        User = thisUser,
+                        IsLike = ReactionData.IsLike
+                    };
+
+                    dataRepository.AddEntity(postReaction);
+
+                    if (dataRepository.SaveAll())
+                    {
+                        logger.LogInformation("Reaction Saved to Database");
+                    };
+                    return Ok("New Reaction Added");
+                }
+                else
+                {
+                    if (postReaction.IsLike == ReactionData.IsLike)
+                        return Ok("No change");
+                    else
+                    {
+                        postReaction.IsLike = ReactionData.IsLike;
+                        if (dataRepository.SaveAll())
+                        {
+                            logger.LogInformation("Reaction Saved to Database");
+                        };
+                        return Ok("Reaction Changed");
+                    }
+                }
+            }
+            return BadRequest("Incorrect values were provided!");
+
+        }
+
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> ShowUserPosts([FromBody]CreatePostViewModel newPostViewModel)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
