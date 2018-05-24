@@ -35,15 +35,15 @@
 				</p>
 				<div class="collapse" id="collapseComment-@post.PostID">
 					<div class="input-group mb-3">
-						<input type="text" class="form-control" id="commentText-@post.PostID" placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2"/>
+						<input type="text" class="form-control" id="commentText-@post.PostID" placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
 						<div class="input-group-append">
-							<button onclick="SendNewCommentData(@post.PostID)" type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
-							Send Comment
+							<button onclick="CreateNewComment(@post.PostID)" type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
+								Send Comment
 							</button>
 						</div>
 					</div>
 				</div>
-				<ul id="@post.PostID" class="list-group list-group-flush">
+				<ul id="listOfComments-@post.PostID" class="list-group list-group-flush">
 					@foreach (Comment postComment in post.Comments)
 					{
 						<li id="listItemComment-@post.PostID" class="list-group-item">@postComment.User.UserName @postComment.CommentText</li>
@@ -53,13 +53,15 @@
 		</div>
 	</div>
 }
-
+<script src="~/lib/signalr/signalr.js"></script>
+<script src="~/js/comment.js"></script>
 <script>
 	function SendNewCommentData(PostID) {
 		const commentsTextElement = document.getElementById('commentText-' + PostID);
 		const commentsText = commentsTextElement.value;
 		commentsTextElement.value = "";
-        console.log(PostID, commentsText);
+		console.log(PostID, commentsText);
+
 		let data={
 			postID : PostID,
             commentText: commentsText };

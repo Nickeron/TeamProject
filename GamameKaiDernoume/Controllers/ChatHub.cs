@@ -22,6 +22,11 @@ namespace GamameKaiDernoume.Controllers
             await SendMessageToCaller(Sender, message);
         }
 
+        public async Task CreateNewComment(string PostID, string commentsText)
+        {
+            await Clients.All.SendAsync("AddTheNewComment", Context.User.Identity.Name, PostID, commentsText);
+        }
+
         public async Task SendMessageToCaller(string Sender, string message)
         {
             await Clients.Caller.SendAsync("ReceiveMessage", Sender, message);
