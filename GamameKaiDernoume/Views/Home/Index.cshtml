@@ -29,20 +29,25 @@
 					@post.PostText
 				</h2>
 				<p>
-					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment" aria-expanded="false" aria-controls="collapseExample">
+					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
 						Comment
 					</button>
 				</p>
 				<div class="collapse" id="collapseComment">
 					<div class="input-group mb-3">
-						<input type="text" class="form-control" id="commentText- @post." placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
+						<input type="text" class="form-control" id="commentText-@post.PostID" placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2"/>
 						<div class="input-group-append">
-							<button onclick="SendNewCommentData(' + postId+')" type="button" class="btn btn-secondary">Send Comment</button>
+							<button onclick="SendNewCommentData(@post.PostID)" type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment">
+							Send Comment
+							</button>
 						</div>
 					</div>
 				</div>
 				<ul id="@post.PostID" class="list-group list-group-flush">
-					<li id="listItemComment-@post." class="list-group-item"></li>
+					@foreach (Comment postComment in post.Comments)
+					{
+						<li id="listItemComment-@post.PostID" class="list-group-item">@postComment.User.UserName @postComment.CommentText</li>
+					}
 				</ul>
 			</div>
 		</div>
@@ -51,8 +56,9 @@
 
 <script>
 	function SendNewCommentData(PostID) {
-		const commentsText = document.getElementById('commentText-' + PostID).value;
-        document.getElementById('listItemComment-' + PostID).remove();
+		const commentsTextElement = document.getElementById('commentText-' + PostID);
+		const commentsText = commentsTextElement.value;
+		commentsTextElement.value = "";
         console.log(PostID, commentsText);
 		let data={
 			postID : PostID,
@@ -75,11 +81,5 @@
 			});
 
 		})();
-	}
-	function CreateNewComment(postId)
-	{
-		var element = document.getElementById(postId);
-		console.log(element.id);
-		$(element).append('<li id="listItemComment-' + postId + '"class="list-group-item"><input id="commentText-' + postId + '"placeholder="enter comment text"/><button  onclick="SendNewCommentData(' + postId+')" type="button" class="btn btn-secondary">Send Comment</button></li>');
 	}
 </script>
