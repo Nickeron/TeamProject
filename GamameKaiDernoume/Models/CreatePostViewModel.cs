@@ -20,7 +20,7 @@ namespace GamameKaiDernoume.Models
 
     public class CommentModel {
         [Required]
-        public string PostID { get; set; }
+        public int PostID { get; set; }
 
         [Required]
         public string CommentText { get; set; }

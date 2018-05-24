@@ -15,7 +15,7 @@ namespace GamameKaiDernoume.Data
         IEnumerable<Post> GetAllPostsByUser(string username, bool includeComments);
         IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory);
         Post GetPostByTimeStamp(DateTime timestamp);
-        
+        Post GetPostById(int postID);
         bool SaveAll();
         
     }

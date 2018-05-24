@@ -21,15 +21,65 @@
 					{
 						<span class="badge badge-primary">@interest.Interest.InterestCategory</span>
 					}
-					<p class="text-muted">
-						@post.PostDate
-					</p>
+				</p>
+				<p class="text-muted">
+					@post.PostDate
 				</p>
 				<h2 class="card-text">
 					@post.PostText
 				</h2>
-			<a href="#" class="btn btn-secondary">Write a Comment</a>
+				<p>
+					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment" aria-expanded="false" aria-controls="collapseExample">
+						Comment
+					</button>
+				</p>
+				<div class="collapse" id="collapseComment">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" id="commentText- @post." placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
+						<div class="input-group-append">
+							<button onclick="SendNewCommentData(' + postId+')" type="button" class="btn btn-secondary">Send Comment</button>
+						</div>
+					</div>
+				</div>
+				<ul id="@post.PostID" class="list-group list-group-flush">
+					<li id="listItemComment-@post." class="list-group-item"></li>
+				</ul>
+			</div>
 		</div>
 	</div>
-</div>
 }
+
+<script>
+	function SendNewCommentData(PostID) {
+		const commentsText = document.getElementById('commentText-' + PostID).value;
+        document.getElementById('listItemComment-' + PostID).remove();
+        console.log(PostID, commentsText);
+		let data={
+			postID : PostID,
+            commentText: commentsText };
+
+		var urlToSendRequest = "https://" + window.location.host + "@Url.Action("AddNewCommentToPost", "Home")";
+
+		(async () =>
+		{
+			const rawResponse =	await fetch(urlToSendRequest,
+			{
+				method: 'POST',
+				headers:
+				{
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				credentials: "same-origin",
+				body: JSON.stringify(data)
+			});
+
+		})();
+	}
+	function CreateNewComment(postId)
+	{
+		var element = document.getElementById(postId);
+		console.log(element.id);
+		$(element).append('<li id="listItemComment-' + postId + '"class="list-group-item"><input id="commentText-' + postId + '"placeholder="enter comment text"/><button  onclick="SendNewCommentData(' + postId+')" type="button" class="btn btn-secondary">Send Comment</button></li>');
+	}
+</script>

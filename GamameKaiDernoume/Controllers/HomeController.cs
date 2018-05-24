@@ -84,6 +84,35 @@ namespace GamameKaiDernoume.Controllers
 
         [Authorize]
         [HttpPost]
+        public async Task<IActionResult> AddNewCommentToPost([FromBody]CommentModel CommentData)
+        {
+            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (ModelState.IsValid)
+            {
+                Post commentedPost = dataRepository.GetPostById(CommentData.PostID);
+                Comment newComment = new Comment
+                {
+                    User = thisUser,
+                    CommentDate = DateTime.Now,
+                    CommentText = CommentData.CommentText,
+                    Post = commentedPost
+                };
+
+                dataRepository.AddEntity(newComment);
+
+                if (dataRepository.SaveAll())
+                {
+                    logger.LogError("saved");
+                };
+                return Ok("New Comment Added");
+            }
+            return BadRequest("Something bad happened");
+
+        }
+
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> ShowUserPosts([FromBody]CreatePostViewModel newPostViewModel)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
@@ -145,7 +174,7 @@ namespace GamameKaiDernoume.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> SendRequest([FromBody]string UserId)
+        public async Task<IActionResult> SendFriendRequest([FromBody]string UserId)
         {
             User theNewFriend = await userManager.FindByIdAsync(UserId);
             User thisUser = await userManager.GetUserAsync(HttpContext.User);

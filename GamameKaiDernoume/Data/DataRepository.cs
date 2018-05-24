@@ -98,6 +98,11 @@ namespace GamameKaiDernoume.Data
                        .FirstOrDefault();
         }
 
+        public Post GetPostById(int postID)
+        {
+            return _ctx.Posts.Where(u => u.PostID.Equals(postID)).FirstOrDefault();
+        }
+
         public IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory)
         {
             return _ctx.Posts
