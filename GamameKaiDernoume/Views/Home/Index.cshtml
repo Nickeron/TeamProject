@@ -79,7 +79,7 @@
 			isLike: isLike
 		};
 
-		await sendData("@Url.Action("AddReactionToPost", "Home")", data);
+		return await sendData("@Url.Action("AddReactionToPost", "Home")", data);
 	}
 
 	function SendNewCommentData(PostID)

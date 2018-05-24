@@ -100,7 +100,11 @@ namespace GamameKaiDernoume.Data
 
         public Post GetPostById(int postID)
         {
-            return _ctx.Posts.Where(u => u.PostID.Equals(postID)).FirstOrDefault();
+            return _ctx.Posts
+                .Include(p=>p.PostInterests)
+                .Include(p=>p.Reactions)
+                .Include(p=>p.Comments)
+                .Where(u => u.PostID.Equals(postID)).FirstOrDefault();
         }
 
         public IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory)

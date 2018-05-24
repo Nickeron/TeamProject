@@ -5,16 +5,21 @@
 
 async function sendData(url, data) {
 	const urlToSendRequest = "https://" + window.location.host + url;
-
-	const RawResponse = await fetch(url, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			credentials: "same-origin",
-			body: JSON.stringify(data)
-	});
-
-	return await RawResponse.json();
+	let rawData;
+	await fetch(url, {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+		},
+		credentials: "same-origin",
+		body: JSON.stringify(data)
+	})
+		.then(res => res.json())
+		.catch(error => console.error('Error:', error))
+		.then(response => {
+			console.log('Success:', response);
+			rawData = response;
+		});
+	return rawData;
 }

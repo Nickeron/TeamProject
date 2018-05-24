@@ -116,15 +116,16 @@ namespace GamameKaiDernoume.Controllers
         public async Task<IActionResult> AddReactionToPost([FromBody]ReactionModel ReactionData)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
-
+            Post reactedPost;
             if (ModelState.IsValid)
             {
+
                 Reaction postReaction = dataRepository.GetReactionByPostAndUser(ReactionData.PostID, thisUser);
 
                 // Does the reaction already exist?
                 if (postReaction is null)
                 {
-                    Post reactedPost = dataRepository.GetPostById(ReactionData.PostID);
+                    reactedPost = dataRepository.GetPostById(ReactionData.PostID);
                     postReaction = new Reaction
                     {
                         Post = reactedPost,
@@ -138,26 +139,27 @@ namespace GamameKaiDernoume.Controllers
                     {
                         logger.LogInformation("Reaction Saved to Database");
                     };
-                    return Ok("New Reaction Added");
+                    //return Ok("New Reaction Added");
                 }
                 else
                 {
-                    if (postReaction.IsLike == ReactionData.IsLike)
-                        return Ok("No change");
-                    else
-                    {
+                    //return Ok("No change");
+                    if (postReaction.IsLike != ReactionData.IsLike)
+                        {
                         postReaction.IsLike = ReactionData.IsLike;
                         if (dataRepository.SaveAll())
                         {
                             logger.LogInformation("Reaction Saved to Database");
                         };
-                        return Ok("Reaction Changed");
+                        //return Ok("Reaction Changed");
                     }
                 }
             }
-            return BadRequest("Incorrect values were provided!");
-
-        }
+            reactedPost = dataRepository.GetPostById(ReactionData.PostID);
+            
+            return Json(new { likes = reactedPost.Reactions.Where(r => r.IsLike).ToList().Count,
+                           dislikes = reactedPost.Reactions.Where(r => !r.IsLike).ToList().Count });
+            }
 
         [Authorize]
         [HttpPost]
