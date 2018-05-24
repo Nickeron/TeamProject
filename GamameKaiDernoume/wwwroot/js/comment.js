@@ -6,7 +6,7 @@ connection.on("AddTheNewComment", (Name, PostID, commentsText) => {
 	const commentInList = document.createElement("li");
 	commentInList.setAttribute("id", "listItemComment-" + PostID);
 	commentInList.setAttribute("class", "list-group-item");
-	commentInList.textContent = Name + ':' + commentsText;
+	commentInList.textContent = Name + ': ' + commentsText;
 	document.getElementById("listOfComments-" + PostID).appendChild(commentInList);
 	});
 	
