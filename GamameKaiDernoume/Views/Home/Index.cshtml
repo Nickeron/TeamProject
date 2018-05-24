@@ -29,15 +29,15 @@
 					@post.PostText
 				</h2>
 				<p>
-					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
 						Comment
 					</button>
 				</p>
-				<div class="collapse" id="collapseComment">
+				<div class="collapse" id="collapseComment-@post.PostID">
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" id="commentText-@post.PostID" placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2"/>
 						<div class="input-group-append">
-							<button onclick="SendNewCommentData(@post.PostID)" type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment">
+							<button onclick="SendNewCommentData(@post.PostID)" type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
 							Send Comment
 							</button>
 						</div>
