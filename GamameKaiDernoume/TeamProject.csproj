@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>aspnet-GamameKaiDernoume-8EB449F2-0BE8-4FBE-A335-294F31402517</UserSecretsId>
+    <ApplicationIcon>gamer.ico</ApplicationIcon>
   </PropertyGroup>
 
 

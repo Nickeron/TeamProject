@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GamameKaiDernoume.Data.Migrations
+namespace TeamProject.Data.Migrations
 {
     public partial class fourth : Migration
     {

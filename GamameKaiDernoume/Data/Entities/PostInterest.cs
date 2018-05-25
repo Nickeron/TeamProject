@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GamameKaiDernoume.Data.Entities
+namespace TeamProject.Data.Entities
 {
     public class PostInterest
     {

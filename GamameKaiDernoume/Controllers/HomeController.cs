@@ -3,15 +3,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using GamameKaiDernoume.Models;
-using GamameKaiDernoume.Data.Entities;
-using GamameKaiDernoume.Data;
+using TeamProject.Models;
+using TeamProject.Data.Entities;
+using TeamProject.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 
-namespace GamameKaiDernoume.Controllers
+namespace TeamProject.Controllers
 {
     public class HomeController : Controller
     {

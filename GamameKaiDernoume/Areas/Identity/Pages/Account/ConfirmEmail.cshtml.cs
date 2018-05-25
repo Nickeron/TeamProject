@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GamameKaiDernoume.Data.Entities;
+using TeamProject.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace GamameKaiDernoume.Areas.Identity.Pages.Account
+namespace TeamProject.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {

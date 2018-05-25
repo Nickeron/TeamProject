@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GamameKaiDernoume.Data.Migrations
+namespace TeamProject.Data.Migrations
 {
     public partial class initial : Migration
     {

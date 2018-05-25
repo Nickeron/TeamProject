@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GamameKaiDernoume.Data.Entities;
+using TeamProject.Data.Entities;
 
-namespace GamameKaiDernoume.Data
+namespace TeamProject.Data
 {
     public interface IDataRepository
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace GamameKaiDernoume.Models
+namespace TeamProject.Models
 {
     public class ErrorViewModel
     {

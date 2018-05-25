@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GamameKaiDernoume.Controllers
+namespace TeamProject.Controllers
 {
     [Authorize]
     public class ChatHub : Hub

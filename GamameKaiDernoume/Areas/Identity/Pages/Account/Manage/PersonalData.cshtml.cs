@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using GamameKaiDernoume.Data.Entities;
+using TeamProject.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace GamameKaiDernoume.Areas.Identity.Pages.Account.Manage
+namespace TeamProject.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {

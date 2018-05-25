@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using GamameKaiDernoume.Data.Entities;
+using TeamProject.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GamameKaiDernoume.Data
+namespace TeamProject.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
