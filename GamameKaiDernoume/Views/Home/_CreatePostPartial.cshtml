@@ -4,32 +4,27 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">New message</h5>
-				<select name="interest" id="interest" onchange="addInterest(this)">
-					<option value="" disabled selected>None</option>
-					@foreach (Interest interest in Model.Interests)
-					{
-						<option id="@interest.InterestCategory" value="@interest.InterestCategory">@interest.InterestCategory</option>
-					}
-				</select>
-				<select name="scope" id="scope" onchange="changeScope(this)">
-					<option value=0 selected>Global</option>
-					<option value=1>Personal</option>
-				</select>
+				<h5 class="modal-title" id="exampleModalLabel">What's in your mind?</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
 				<form>
+					<select name="scope" id="scope" onchange="changeScope(this)">
+						<option value=0 selected>Global</option>
+						<option value=1>Personal</option>
+					</select>
+					<p id="interests-off-post">
+						@foreach (Interest interest in Model.Interests)
+						{
+							<span class="badge badge-secondary" onclick="toggleInterest(this)">@interest.InterestCategory</span>
+						}
+					</p>
 					<p id="interests-in-post"></p>
 					<div class="form-group">
 						<label for="recipient-name" class="col-form-label">Say something..</label>
 						<input id="postText" type="text" class="form-control">
-					</div>
-					<div class="form-group">
-						<label for="message-text" class="col-form-label">Message:</label>
-						<textarea class="form-control" id="message-text"></textarea>
 					</div>
 				</form>
 			</div>
@@ -45,13 +40,23 @@
 	let interests = [];
 	let scope = 0;
 
-	function addInterest(element) {
-		if (!interests.includes(element.value)) {
-			interests.push(element.value);
-			const interestinpost = document.createElement("span");
-			interestinpost.setAttribute("class", "badge badge-secondary");
-			interestinpost.textContent = element.value;
-			document.getElementById("interests-in-post").appendChild(interestinpost);
+	function toggleInterest(element) {
+		console.log(element);
+		console.log(interests);
+		const offInterests = document.getElementById("interests-off-post");
+		const inInterests = document.getElementById("interests-in-post");
+		const index = interests.findIndex(x => x === element.innerHTML);
+		if (index >= 0) {
+			element.setAttribute("class", "badge badge-secondary");
+			inInterests.removeChild(element);
+			offInterests.appendChild(element);
+			interests.splice(index, 1);
+		}
+		else {
+			element.setAttribute("class", "badge badge-primary");
+			offInterests.removeChild(element);
+			inInterests.appendChild(element);
+			interests.push(element.innerHTML);
 		}
 	}
 
