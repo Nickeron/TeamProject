@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace TeamProject.Models
 {
+    public class MyWallViewModel
+    {
+        public List<Post> Posts { get; set; }
+        public List<Interest> Interests { get; set; }
+    }
+
     public class CreatePostViewModel
     {
         public Scope PostScope { get; set; }

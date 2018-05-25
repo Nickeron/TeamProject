@@ -1,0 +1,59 @@
+﻿@model MyWallViewModel
+
+<div class="modal fade" id="createPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">New message</h5>
+				<select name="interest" id="interest" onchange="addInterest(this)">
+					<option value="" disabled selected>None</option>
+					@foreach (Interest interest in Model.Interests)
+			{
+				<option id="@interest.InterestCategory" value="@interest.InterestCategory">@interest.InterestCategory</option>
+			}
+				</select>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="col-form-label">Say something..</label>
+						<input id="postText" type="text" class="form-control">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="col-form-label">Message:</label>
+						<textarea class="form-control" id="message-text"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="sendRequest(this)">Save Post</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	let interests = [];
+
+	function addInterest(element) {
+		//window.event.preventDefault();
+		interests.push(element.value);
+		//var interestinpost = document.getElementById(element.value)
+		//interestinpost.value = element.value
+	}
+
+	async function sendRequest(e)
+	{
+		 let data =
+			 {
+			postText: document.getElementById("postText").value,
+			interests: interests
+			};
+
+		return await sendData("@Url.Action("CreatePost", "Home")", data);
+	}
+</script>

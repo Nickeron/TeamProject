@@ -32,16 +32,26 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Index()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
-            var allUserPosts = dataRepository.GetAllPostsForUser(thisUser);
-            return View(allUserPosts);
+            MyWallViewModel MyWallData = new MyWallViewModel
+            {
+                Posts = dataRepository.GetAllPostsForUser(thisUser).ToList(),
+                Interests = dataRepository.GetAllInterests().ToList()
+            };
+
+            return View(MyWallData);
         }
 
         [Authorize]
         public async Task<IActionResult> Personal()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
-            var allUserPosts = dataRepository.GetAllPostsByUser(thisUser);
-            return View(allUserPosts);
+            MyWallViewModel MyWallData = new MyWallViewModel
+            {
+                Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
+                Interests = dataRepository.GetAllInterests().ToList()
+            };
+
+            return View(MyWallData);
         }
 
         [Authorize]
@@ -51,9 +61,9 @@ namespace TeamProject.Controllers
             MessengerViewModel messengerView = new MessengerViewModel
             {
                 ThisUserID = thisUser.Id,
-                UserName = (thisUser.FirstName is null)? thisUser.UserName : thisUser.FirstName,
+                UserName = (thisUser.FirstName is null) ? thisUser.UserName : thisUser.FirstName,
                 ThisUsersFriends = dataRepository.GetUsersFriends(thisUser)
-            };         
+            };
             return View(messengerView);
         }
 
@@ -82,12 +92,6 @@ namespace TeamProject.Controllers
                 return Ok("New message saved!");
             };
             return BadRequest("Something bad happened");
-        }
-
-        [Authorize]
-        public IActionResult CreatePost()
-        {
-            return View(dataRepository.GetAllInterests());
         }
 
         [Authorize]
@@ -153,7 +157,7 @@ namespace TeamProject.Controllers
                 {
                     //return Ok("No change");
                     if (postReaction.IsLike != ReactionData.IsLike)
-                        {
+                    {
                         postReaction.IsLike = ReactionData.IsLike;
                         if (dataRepository.SaveAll())
                         {
@@ -164,14 +168,17 @@ namespace TeamProject.Controllers
                 }
             }
             reactedPost = dataRepository.GetPostById(ReactionData.PostID);
-            
-            return Json(new { likes = reactedPost.Reactions.Where(r => r.IsLike).ToList().Count,
-                           dislikes = reactedPost.Reactions.Where(r => !r.IsLike).ToList().Count });
-            }
+
+            return Json(new
+            {
+                likes = reactedPost.Reactions.Where(r => r.IsLike).ToList().Count,
+                dislikes = reactedPost.Reactions.Where(r => !r.IsLike).ToList().Count
+            });
+        }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> ShowUserPosts([FromBody]CreatePostViewModel newPostViewModel)
+        public async Task<IActionResult> CreatePost([FromBody]CreatePostViewModel newPostViewModel)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
 
@@ -186,7 +193,7 @@ namespace TeamProject.Controllers
                         addedInterests.Add(interest);
                     }
                 }
-                
+
                 DateTime timeStamp = DateTime.Now;
                 Post theNewPost = new Post
                 {
@@ -211,13 +218,13 @@ namespace TeamProject.Controllers
                         Interest = interest,
                         Post = savedPost
                     };
-                    dataRepository.AddEntity(postInterest); 
+                    dataRepository.AddEntity(postInterest);
                 }
                 if (dataRepository.SaveAll())
                 {
                     logger.LogError("Ok relationship of post and interests was saved");
                 };
-                return View(dataRepository.GetAllPostsByUser(thisUser));
+                return Ok("Ok relationship of post and interests was saved");
             }
             return BadRequest("Something was missing");
 

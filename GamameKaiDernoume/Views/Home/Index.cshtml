@@ -1,11 +1,15 @@
-﻿@model IEnumerable<Post>
+﻿@model MyWallViewModel
 @{
 	ViewData["Title"] = "Home Page";
 }
 
 <h2>My Wall</h2>
 
-@foreach (Post post in Model)
+<partial name="_CreatePostPartial" />
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPost" data-whatever="mdo">Create a new Post</button>
+
+@foreach (Post post in Model.Posts)
 {
 	<div class="jumbotron">
 		<div class="card border-info mb-3">
@@ -82,7 +86,7 @@
 		return await sendData("@Url.Action("AddReactionToPost", "Home")", data);
 	}
 
-	function SendNewCommentData(PostID)
+	async function SendNewCommentData(PostID)
 	{
 		const commentsTextElement = document.getElementById('commentText-' + PostID);
 		const commentsText = commentsTextElement.value;
@@ -94,7 +98,7 @@
 			commentText: commentsText
 		};
 
-		sendData("@Url.Action("AddNewCommentToPost", "Home")", data);
+		return await sendData("@Url.Action("AddNewCommentToPost", "Home")", data);
 	}
 
 </script>

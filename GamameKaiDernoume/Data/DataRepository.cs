@@ -54,7 +54,7 @@ namespace TeamProject.Data
             try
             {
                 _logger.LogInformation("Get All Posts for User was called");
-                var friends = GetUsersFriends(user);
+                List<User> friends = (List<User>)GetUsersFriends(user);
 
                 return _ctx.Posts
                            .Include(p => p.User)
@@ -63,6 +63,7 @@ namespace TeamProject.Data
                            .Include(i => i.PostInterests)
                            .ThenInclude(i => i.Interest)
                            .Where(o => friends.Select(x => x.Id).Contains(o.User.Id) || o.PostScope == Scope.Global)
+                           .OrderByDescending(p => p.PostDate)
                            .ToList();
             }
             catch (Exception ex)
@@ -83,6 +84,7 @@ namespace TeamProject.Data
                            .Include(i => i.PostInterests)
                            .ThenInclude(i => i.Interest)
                            .Where(o => o.User.Id == user.Id)
+                           .OrderByDescending(p => p.PostDate)
                            .ToList();
             }
             catch (Exception ex)
@@ -196,13 +198,14 @@ namespace TeamProject.Data
 
         public IEnumerable<User> GetUsersFriends(User thisUser)
         {
-            IEnumerable<Friend> allKnown = _ctx.Friends
+            List<Friend> allKnown = _ctx.Friends
                 .Include(u => u.Receiver)
                 .Include(u => u.Sender)
                 .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
                 .ToList();
 
-            List<string> allFriends = new List<string>() { };
+            List<string> allFriends = new List<string>();
+
             foreach (Friend knownPerson in allKnown)
             {
                 if (knownPerson.Receiver.Id != thisUser.Id)
@@ -214,7 +217,7 @@ namespace TeamProject.Data
                     allFriends.Add(knownPerson.Sender.Id);
                 }
             }
-
+            
             return _ctx.Users.Where(u => allFriends.Contains(u.Id)).ToList();
         }
 
