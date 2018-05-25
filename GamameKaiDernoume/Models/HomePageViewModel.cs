@@ -15,11 +15,12 @@ namespace TeamProject.Models
 
     public class CreatePostViewModel
     {
-        public Scope PostScope { get; set; }
+        
         public string PostImage { get; set; }
         [Required]
         public string PostText { get; set; }
-
+        [Required]
+        public int PostScope { get; set; }
         [Required]
         public List<string> Interests { get; set; }
     }

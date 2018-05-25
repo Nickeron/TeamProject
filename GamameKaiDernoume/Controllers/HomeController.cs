@@ -178,7 +178,7 @@ namespace TeamProject.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody]CreatePostViewModel newPostViewModel)
+        public async Task<IActionResult> CreatePost([FromBody]CreatePostViewModel newPostData)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
 
@@ -188,7 +188,7 @@ namespace TeamProject.Controllers
                 List<Interest> addedInterests = new List<Interest>();
                 foreach (Interest interest in interests)
                 {
-                    if (newPostViewModel.Interests.Contains(interest.InterestCategory))
+                    if (newPostData.Interests.Contains(interest.InterestCategory))
                     {
                         addedInterests.Add(interest);
                     }
@@ -199,8 +199,8 @@ namespace TeamProject.Controllers
                 {
                     User = thisUser,
                     PostDate = timeStamp,
-                    PostText = newPostViewModel.PostText,
-                    PostScope = Scope.Global
+                    PostText = newPostData.PostText,
+                    PostScope = (Scope) newPostData.PostScope
                 };
 
                 dataRepository.AddEntity(theNewPost);
