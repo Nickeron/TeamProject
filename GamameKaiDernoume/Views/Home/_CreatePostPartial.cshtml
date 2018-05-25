@@ -35,7 +35,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" onclick="sendRequest(this)">Save Post</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="sendNewPost()">Save Post</button>
 			</div>
 		</div>
 	</div>
@@ -60,15 +60,14 @@
 		scope = element.value;
 	}
 
-	async function sendRequest(e)
+	async function sendNewPost()
 	{
-		 let data =
-			 {
+		let data =
+			{
 				postText: document.getElementById("postText").value,
 				interests: interests,
-				postScope : scope
+				postScope: scope
 			};
-
 		return await sendData("@Url.Action("CreatePost", "Home")", data);
 	}
 </script>

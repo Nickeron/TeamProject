@@ -18,8 +18,8 @@ namespace TeamProject.Controllers
         }
         public async Task SendMessage(string Sender, string ReceiverId, string message)
         {
+            await Clients.Caller.SendAsync("ReceiveMessage", Sender, message);
             await Clients.User(ReceiverId).SendAsync("ReceiveMessage", Sender, message);
-            await SendMessageToCaller(Sender, message);
         }
 
         public async Task DistributeComment(string PostID, string commentsText)
@@ -30,11 +30,6 @@ namespace TeamProject.Controllers
         public async Task DistributeReaction(string PostID, int likes, int dislikes)
         {
                 await Clients.All.SendAsync("AddTheReaction", PostID, likes, dislikes); 
-        }
-
-        public async Task SendMessageToCaller(string Sender, string message)
-        {
-            await Clients.Caller.SendAsync("ReceiveMessage", Sender, message);
         }
 
         public Task SendMessageToGroups(string message)
