@@ -13,9 +13,11 @@ namespace TeamProject.Data
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
         IEnumerable<User> GetUsersFriends(User thisUser);
 
-        IEnumerable<Post> GetAllPosts(bool includeReactions);
-        IEnumerable<Post> GetAllPostsByUser(string username, bool includeComments);
+        IEnumerable<Post> GetAllPosts();
+        IEnumerable<Post> GetAllPostsForUser(User user);
+        IEnumerable<Post> GetAllPostsByUser(User user);
         IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory);
+
         Post GetPostByTimeStamp(DateTime timestamp);
         Post GetPostById(int postID);
 

@@ -17,29 +17,9 @@
 </div>
 
 <script>
-	async function sendRequest(userId) {
+	async function sendRequest(userId)
+	{
 		await sendData("@Url.Action("SendFriendRequest", "Home")", userId);
-	}
-
-	function fadeOutEffect(userId) {
-		var element = document.getElementById(userId);
-		console.log(userId);
-		var fadeEffect = setInterval(
-			function ()
-			{
-				if (!element.style.opacity)
-				{
-					element.style.opacity = 1;
-				}
-				if (element.style.opacity < 0.1)
-				{
-					clearInterval(fadeEffect);
-				}
-				else
-				{
-					element.style.opacity -= 0.1;
-				}
-			}, 100);
 	}
 </script>
 

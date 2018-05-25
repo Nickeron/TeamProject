@@ -31,8 +31,16 @@ namespace TeamProject.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var thisUser = await userManager.GetUserAsync(HttpContext.User);
-            var allUserPosts = dataRepository.GetAllPostsByUser(thisUser.UserName, true);
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            var allUserPosts = dataRepository.GetAllPostsForUser(thisUser);
+            return View(allUserPosts);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Personal()
+        {
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            var allUserPosts = dataRepository.GetAllPostsByUser(thisUser);
             return View(allUserPosts);
         }
 
@@ -166,6 +174,7 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> ShowUserPosts([FromBody]CreatePostViewModel newPostViewModel)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
+
             if (ModelState.IsValid)
             {
                 List<Interest> interests = (List<Interest>)dataRepository.GetAllInterests();
@@ -208,7 +217,7 @@ namespace TeamProject.Controllers
                 {
                     logger.LogError("Ok relationship of post and interests was saved");
                 };
-                return View(dataRepository.GetAllPostsByUser(thisUser.UserName, true));
+                return View(dataRepository.GetAllPostsByUser(thisUser));
             }
             return BadRequest("Something was missing");
 

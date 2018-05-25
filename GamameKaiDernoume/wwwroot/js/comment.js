@@ -19,17 +19,14 @@ async function CreateNewComment(PostID) {
 };
 
 connection.on("AddTheReaction", (PostID, likes, dislikes) => {
-	let likeSpan = document.getElementById("like-count-" + PostID);
+	const likeSpan = document.getElementById("like-count-" + PostID);
 	likeSpan.innerHTML = likes;
 	document.getElementById("dislike-count-" + PostID).innerHTML = dislikes;
 });
 
 async function AddReaction(PostID, isLike) {
-	console.log(isLike, PostID);
-	let result = await SendReaction(PostID, isLike);
-	console.log(result);
+	const result = await SendReaction(PostID, isLike);
 	connection.invoke("DistributeReaction", PostID, result.likes, result.dislikes).catch(err => console.error(err.toString()));
-
 };
 
 connection.start().catch(err => console.error(err.toString()));

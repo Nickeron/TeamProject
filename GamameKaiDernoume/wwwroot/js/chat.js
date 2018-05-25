@@ -13,7 +13,7 @@ document.getElementById("sendButton").addEventListener("click", event => {
 	const sender = document.getElementById("userName").value;
 	const receiver = document.getElementById("activeUser").value;
 	const message = document.getElementById("messageInput").value;
-	console.log(sender, receiver, message);
+
 	connection.invoke("SendMessage", sender, receiver, message).catch(err => console.error(err.toString()));
 	sendRequest(receiver, message);
 	event.preventDefault();

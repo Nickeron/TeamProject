@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Post>
+@{
+	ViewData["Title"] = "Profile";
+}
+
+<h2>My Staff</h2>
+
+@foreach (Post post in Model)
+{
+	<div class="jumbotron">
+		<div class="card border-info mb-3">
+			@if (!(post.PostImage is null))
+			{
+				<img class="card-img-top" src="@post.PostImage" alt="@post.PostText">
+			}
+			<span class="badge badge-secondary">@post.PostScope</span>
+			<div class="card-body">
+				<p class="card-title">
+					@post.User.FirstName @post.User.LastName
+					@foreach (var interest in post.PostInterests)
+					{
+						<span class="badge badge-primary">@interest.Interest.InterestCategory</span>
+					}
+				</p>
+				<p class="text-muted">
+					@post.PostDate
+				</p>
+				<h2 class="card-text">
+					@post.PostText
+				</h2>
+				<p>
+					<div class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-primary">
+							<i class="far fa-thumbs-up"></i>
+							<input type="radio" id="Like-@post.PostID" onchange="AddReaction(@post.PostID, true)" />
+							<span id="like-count-@post.PostID">@post.Reactions.Where(r => r.IsLike).ToList().Count</span>
+						</label>
+						<label class="btn btn-primary">
+							<i class="far fa-thumbs-down"></i>
+							<input type="radio" id="DisLike-@post.PostID" onchange="AddReaction(@post.PostID, false)">
+							<span id="dislike-count-@post.PostID">@post.Reactions.Where(r => !r.IsLike).ToList().Count</span>
+						</label>
+					</div>
+					<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
+						Comment
+					</button>
+				</p>
+				<div class="collapse" id="collapseComment-@post.PostID">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" id="commentText-@post.PostID" placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
+						<div class="input-group-append">
+							<button onclick="CreateNewComment(@post.PostID)" type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
+								Send Comment
+							</button>
+						</div>
+					</div>
+				</div>
+				<ul id="listOfComments-@post.PostID" class="list-group list-group-flush">
+					@foreach (Comment postComment in post.Comments)
+					{
+						<li id="listItemComment-@post.PostID" class="list-group-item">@postComment.User.UserName @postComment.CommentText</li>
+					}
+				</ul>
+			</div>
+		</div>
+	</div>
+}
+
+<script src="~/lib/signalr/signalr.js"></script>
+<script src="~/js/comment.js"></script>
+
+<script>
+
+	async function SendReaction(PostID, isLike) {
+		const reaction = isLike;
+
+		let data = {
+			postID: PostID,
+			isLike: isLike
+		};
+
+		return await sendData("@Url.Action("AddReactionToPost", "Home")", data);
+	}
+
+	function SendNewCommentData(PostID)
+	{
+		const commentsTextElement = document.getElementById('commentText-' + PostID);
+		const commentsText = commentsTextElement.value;
+		commentsTextElement.value = "";
+		console.log(PostID, commentsText);
+
+		let data = {
+			postID: PostID,
+			commentText: commentsText
+		};
+
+		sendData("@Url.Action("AddNewCommentToPost", "Home")", data);
+	}
+
+</script>

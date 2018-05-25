@@ -15,7 +15,7 @@ namespace TeamProject.Data
         private readonly ILogger<DataRepository> _logger;
         private readonly UserManager<User> userManager;
 
-        public DataRepository(ApplicationDbContext ctx, 
+        public DataRepository(ApplicationDbContext ctx,
             ILogger<DataRepository> logger,
             UserManager<User> userManager)
         {
@@ -29,45 +29,66 @@ namespace TeamProject.Data
             _ctx.Add(model);
         }
 
-        public IEnumerable<Post> GetAllPosts(bool includeReactions)
+        public IEnumerable<Post> GetAllPosts()
         {
-            if (includeReactions)
+            try
             {
-
+                _logger.LogInformation("Get All Posts was called");
                 return _ctx.Posts
                     .Include(u => u.Comments)
                     .Include(u => u.PostInterests)
-                    .ThenInclude(u=>u.Interest)
+                    .ThenInclude(u => u.Interest)
                     .Include(u => u.Reactions)
+                    .OrderBy(p => p.PostDate)
                     .ToList();
-
             }
-            else
+            catch (Exception ex)
             {
-                return _ctx.Posts
-                    .ToList();
+                _logger.LogError($"Failed to get all Posts: {ex}");
+                return null;
             }
         }
 
-        public IEnumerable<Post> GetAllPostsByUser(string username, bool includeComments)
+        public IEnumerable<Post> GetAllPostsForUser(User user)
         {
-            if (includeComments)
+            try
             {
+                _logger.LogInformation("Get All Posts for User was called");
+                var friends = GetUsersFriends(user);
 
                 return _ctx.Posts
-                           .Where(o => o.User.UserName == username)
+                           .Include(p => p.User)
                            .Include(o => o.Reactions)
                            .Include(i => i.Comments)
                            .Include(i => i.PostInterests)
-                           .ThenInclude(i=>i.Interest)
+                           .ThenInclude(i => i.Interest)
+                           .Where(o => friends.Select(x => x.Id).Contains(o.User.Id) || o.PostScope == Scope.Global)
                            .ToList();
-
             }
-            else
+            catch (Exception ex)
             {
+                _logger.LogError($"Failed to get all Posts: {ex}");
+                return null;
+            }
+        }
+
+        public IEnumerable<Post> GetAllPostsByUser(User user)
+        {
+            try
+            {
+                _logger.LogInformation("Get All Posts by User was called");
                 return _ctx.Posts
-                           .Where(o => o.User.UserName == username)
+                           .Include(o => o.Reactions)
+                           .Include(i => i.Comments)
+                           .Include(i => i.PostInterests)
+                           .ThenInclude(i => i.Interest)
+                           .Where(o => o.User.Id == user.Id)
                            .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get all Posts: {ex}");
+                return null;
             }
         }
 
@@ -83,35 +104,65 @@ namespace TeamProject.Data
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to get all products: {ex}");
+                _logger.LogError($"Failed to get all Interests: {ex}");
                 return null;
             }
         }
 
         public Post GetPostByTimeStamp(DateTime timeStamp)
         {
-            return _ctx.Posts
+            try
+            {
+                _logger.LogInformation("Get Post by Timestamp was called");
+
+                return _ctx.Posts
                        .Include(o => o.Comments)
                        .Include(o => o.Reactions)
                        .Include(o => o.PostInterests)
                        .Where(o => o.PostDate == timeStamp)
                        .FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Post: {ex}");
+                return null;
+            }
         }
 
         public Post GetPostById(int postID)
         {
-            return _ctx.Posts
-                .Include(p=>p.PostInterests)
-                .Include(p=>p.Reactions)
-                .Include(p=>p.Comments)
+            try
+            {
+                _logger.LogInformation("Get Post by ID was called");
+
+                return _ctx.Posts
+                .Include(p => p.PostInterests)
+                .Include(p => p.Reactions)
+                .Include(p => p.Comments)
                 .Where(u => u.PostID.Equals(postID)).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Post: {ex}");
+                return null;
+            }
         }
 
         public IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory)
         {
-            return _ctx.Posts
+            try
+            {
+                _logger.LogInformation("Get Post by By Category of Interest was called");
+
+                return _ctx.Posts
                        .Where(p => p.PostInterests.Contains(interestCategory))
                        .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Posts: {ex}");
+                return null;
+            }
         }
 
         public bool SaveAll()
@@ -122,10 +173,11 @@ namespace TeamProject.Data
         public IEnumerable<User> GetAllStrangeUsers(User thisUser)
         {
             IEnumerable<Friend> allKnown = _ctx.Friends
-                .Include(u=>u.Receiver)
-                .Include(u=>u.Sender)
+                .Include(u => u.Receiver)
+                .Include(u => u.Sender)
                 .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
                 .ToList();
+
             List<string> allFriends = new List<string>() { thisUser.Id };
             foreach (Friend knownPerson in allKnown)
             {
@@ -137,7 +189,7 @@ namespace TeamProject.Data
                 {
                     allFriends.Add(knownPerson.Sender.Id);
                 }
-            }                
+            }
 
             return _ctx.Users.Where(u => !allFriends.Contains(u.Id)).ToList();
         }
@@ -149,7 +201,8 @@ namespace TeamProject.Data
                 .Include(u => u.Sender)
                 .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
                 .ToList();
-            List<string> allFriends = new List<string>() {};
+
+            List<string> allFriends = new List<string>() { };
             foreach (Friend knownPerson in allKnown)
             {
                 if (knownPerson.Receiver.Id != thisUser.Id)
