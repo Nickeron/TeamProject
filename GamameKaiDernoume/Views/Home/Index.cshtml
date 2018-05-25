@@ -3,22 +3,25 @@
 	ViewData["Title"] = "Home Page";
 }
 
-<h2>My Wall</h2>
-
 <partial name="_CreatePostPartial" />
 <!-- Button TO CREATE A NEW POST modal -->
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#createPost" data-whatever="mdo">Create a new Post</button>
 
+<button type="button" class="btn-lg btn-success btn-block" data-toggle="modal" data-target="#createPost" data-whatever="mdo">Create a new Post</button>
+<br/>
 @foreach (Post post in Model.Posts)
 {
 	<div class="jumbotron">
 		<div class="card border-info mb-3">
-			@if (!(post.PostImage is null))
-			{
-				<img class="card-img-top" src="@post.PostImage" alt="@post.PostText">
-			}
 			<div class="card-body">
 				<p class="card-title">
+					@if (post.User.UserAvatar is null)
+					{
+						<i class="fas fa-user-astronaut"></i>
+					}
+					else
+					{
+						<img src="@post.User.UserAvatar" class="img-thumbnail">
+					}
 					@post.User.FirstName @post.User.LastName
 					@foreach (var interest in post.PostInterests)
 					{
@@ -39,6 +42,10 @@
 				<h2 class="card-text">
 					@post.PostText
 				</h2>
+				@if (!(post.PostImage is null))
+				{
+					<img class="card-img-top" src="@post.PostImage" alt="@post.PostText">
+				}
 				<p>
 					<div class="btn-group btn-group-toggle" data-toggle="buttons">
 						<label class="btn btn-outline-dark">
