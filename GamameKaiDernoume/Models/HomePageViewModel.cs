@@ -13,6 +13,14 @@ namespace TeamProject.Models
         public List<Interest> Interests { get; set; }
     }
 
+    public class InterestPostViewModel
+    {
+        [Required]
+        public int InterestId { get; set; }
+    }
+
+
+
     public class CreatePostViewModel
     {
         

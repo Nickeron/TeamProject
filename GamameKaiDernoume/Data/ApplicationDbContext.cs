@@ -64,8 +64,6 @@ namespace TeamProject.Data
                 .HasForeignKey(p => p.InterestId);
 
             base.OnModelCreating(modelBuilder);
-
-
         }
 
 

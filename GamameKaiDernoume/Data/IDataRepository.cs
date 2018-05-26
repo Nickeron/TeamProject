@@ -15,6 +15,7 @@ namespace TeamProject.Data
 
         IEnumerable<Post> GetAllPosts();
         IEnumerable<Post> GetAllPostsForUser(User user);
+        IEnumerable<Post> GetAllPostsForUserByInterest(User thisUser, int interestID);
         IEnumerable<Post> GetAllPostsByUser(User user);
         IEnumerable<Post> GetPostsByCategoryInterest(PostInterest interestCategory);
 
@@ -25,5 +26,6 @@ namespace TeamProject.Data
 
 
         bool SaveAll();
+        
     }
 }

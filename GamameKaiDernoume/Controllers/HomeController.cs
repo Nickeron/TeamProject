@@ -42,6 +42,20 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Index(int id)
+        {
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            MyWallViewModel MyWallData = new MyWallViewModel
+            {
+                Posts = dataRepository.GetAllPostsForUserByInterest(thisUser, id).ToList(),
+                Interests = dataRepository.GetAllInterests().ToList()
+            };
+
+            return View(MyWallData);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Personal()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);

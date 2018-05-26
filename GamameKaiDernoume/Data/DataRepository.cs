@@ -36,10 +36,10 @@ namespace TeamProject.Data
                 _logger.LogInformation("Get All Posts was called");
                 return _ctx.Posts
                     .Include(u => u.Comments)
+                    .Include(u => u.Reactions)
                     .Include(u => u.PostInterests)
                     .ThenInclude(u => u.Interest)
-                    .Include(u => u.Reactions)
-                    .OrderBy(p => p.PostDate)
+                    .OrderByDescending(p => p.PostDate)
                     .ToList();
             }
             catch (Exception ex)
@@ -49,12 +49,12 @@ namespace TeamProject.Data
             }
         }
 
-        public IEnumerable<Post> GetAllPostsForUser(User user)
+        public IEnumerable<Post> GetAllPostsForUser(User currentUser)
         {
             try
             {
                 _logger.LogInformation("Get All Posts for User was called");
-                List<User> friends = (List<User>)GetUsersFriends(user);
+                List<User> friends = (List<User>)GetUsersFriends(currentUser);
 
                 return _ctx.Posts
                            .Include(p => p.User)
@@ -65,6 +65,30 @@ namespace TeamProject.Data
                            .Where(o => friends.Select(x => x.Id).Contains(o.User.Id) || o.PostScope == Scope.Global)
                            .OrderByDescending(p => p.PostDate)
                            .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get all Posts: {ex}");
+                return null;
+            }
+        }
+
+        public IEnumerable<Post> GetAllPostsForUserByInterest(User currentUser, int interestId)
+        {
+            try
+            {
+                _logger.LogInformation("Get All Posts for User by interest was called");
+                _logger.LogInformation("Before the call" + interestId);
+                List<Post> allAvailablePosts = (List<Post>)GetAllPostsForUser(currentUser);
+
+                foreach (Post everyPost in allAvailablePosts)
+                {
+                    foreach (PostInterest pi in everyPost.PostInterests) {
+                        if(pi.Interest.InterestID == interestId)
+                        _logger.LogInformation("Interest Category:" + pi.Interest.InterestID);
+                } }
+
+                return allAvailablePosts.Where(o=> o.PostInterests.Select(i=> i.InterestId).Contains(interestId));
             }
             catch (Exception ex)
             {
@@ -157,8 +181,9 @@ namespace TeamProject.Data
                 _logger.LogInformation("Get Post by By Category of Interest was called");
 
                 return _ctx.Posts
-                       .Where(p => p.PostInterests.Contains(interestCategory))
-                       .ToList();
+                    .Include(p => p.PostInterests)
+                    .Where(p => p.PostInterests.Contains(interestCategory))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -217,7 +242,7 @@ namespace TeamProject.Data
                     allFriends.Add(knownPerson.Sender.Id);
                 }
             }
-            
+
             return _ctx.Users.Where(u => allFriends.Contains(u.Id)).ToList();
         }
 

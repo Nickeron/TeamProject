@@ -19,8 +19,7 @@ async function CreateNewComment(PostID) {
 };
 
 connection.on("AddTheReaction", (PostID, likes, dislikes) => {
-	const likeSpan = document.getElementById("like-count-" + PostID);
-	likeSpan.innerHTML = likes;
+	document.getElementById("like-count-" + PostID).innerHTML = likes;
 	document.getElementById("dislike-count-" + PostID).innerHTML = dislikes;
 });
 

@@ -6,8 +6,8 @@
 <partial name="_CreatePostPartial" />
 <!-- Button TO CREATE A NEW POST modal -->
 <br />
-<button type="button" class="btn-lg btn-success btn-block" data-toggle="modal" data-target="#createPost" data-whatever="mdo">Create a new Post</button>
-<br/>
+<button type="button" class="btn-lg btn-success btn-block" data-toggle="modal" data-target="#createPost">Create a new Post</button>
+<br />
 @foreach (Post post in Model.Posts)
 {
 	<div class="jumbotron">
@@ -25,7 +25,12 @@
 					@post.User.FirstName @post.User.LastName
 					@foreach (var interest in post.PostInterests)
 					{
-						<span class="badge badge-primary">@interest.Interest.InterestCategory</span>
+						<a asp-controller="Home"
+							asp-action="Index" 
+							asp-route-id="@interest.Interest.InterestID" 
+						   class="badge badge-primary">
+							@interest.Interest.InterestCategory
+						</a>
 					}
 				</p>
 				<p class="text-muted">
@@ -76,7 +81,7 @@
 			</div>
 		</div>
 		<ul id="listOfComments-@post.PostID" class="list-group">
-			@foreach (Comment postComment in post.Comments)
+			@foreach (Comment postComment in post.Comments.OrderByDescending(p => p.CommentDate))
 			{
 				<li id="listItemComment-@post.PostID" class="list-group-item">@postComment.User.UserName @postComment.CommentText</li>
 			}
@@ -88,9 +93,8 @@
 <script src="~/js/comment.js"></script>
 
 <script>
-	
+
 	async function SendReaction(PostID, isLike) {
-		const reaction = isLike;
 
 		let data = {
 			postID: PostID,
