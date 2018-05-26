@@ -28,7 +28,8 @@
 					}
 				</p>
 				<p class="text-muted">
-					@post.PostDate
+					<time class="post-date" onclick="formatDate(this)" datetime="@post.PostDate">@post.PostDate</time>
+
 					@if (@post.PostScope == Scope.Global)
 					{
 						<i class="fas fa-globe"></i>

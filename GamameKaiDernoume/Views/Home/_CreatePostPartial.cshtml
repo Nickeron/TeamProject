@@ -73,6 +73,7 @@
 				interests: interests,
 				postScope: scope
 			};
-		return await sendData("@Url.Action("CreatePost", "Home")", data);
+		await sendData("@Url.Action("CreatePost", "Home")", data);
+		location.reload();
 	}
 </script>

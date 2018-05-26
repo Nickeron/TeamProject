@@ -13,3 +13,15 @@
 
 	return rawData.json();
 }
+window.onload = function () {
+	var dateTimeElements = document.getElementsByClassName("post-date");
+
+	for (var i = 0; i < dateTimeElements.length; i++) {
+		formatDate(dateTimeElements[i]);
+	}
+};
+
+function formatDate(element) {
+	console.log(element.innerHTML);
+	element.innerHTML = moment(element.innerHTML).fromNow();
+}
