@@ -42,7 +42,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Index(int id)
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
@@ -59,6 +59,21 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Personal()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            MyWallViewModel MyWallData = new MyWallViewModel
+            {
+                Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
+                Interests = dataRepository.GetAllInterests().ToList()
+            };
+
+            return View(MyWallData);
+        }
+
+        [Authorize]
+        [HttpGet("{username}")]
+        public IActionResult Personal(string username)
+        {
+            User thisUser = userManager.Users.FirstOrDefault(u=>u.UserName == username);
+            logger.LogInformation("The username is !!!! :"+username + thisUser.UserName);
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),

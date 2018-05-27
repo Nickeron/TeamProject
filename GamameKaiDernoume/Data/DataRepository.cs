@@ -83,12 +83,14 @@ namespace TeamProject.Data
 
                 foreach (Post everyPost in allAvailablePosts)
                 {
-                    foreach (PostInterest pi in everyPost.PostInterests) {
-                        if(pi.Interest.InterestID == interestId)
-                        _logger.LogInformation("Interest Category:" + pi.Interest.InterestID);
-                } }
+                    foreach (PostInterest pi in everyPost.PostInterests)
+                    {
+                        if (pi.Interest.InterestID == interestId)
+                            _logger.LogInformation("Interest Category:" + pi.Interest.InterestID);
+                    }
+                }
 
-                return allAvailablePosts.Where(o=> o.PostInterests.Select(i=> i.InterestId).Contains(interestId));
+                return allAvailablePosts.Where(o => o.PostInterests.Select(i => i.InterestId).Contains(interestId));
             }
             catch (Exception ex)
             {
@@ -105,6 +107,7 @@ namespace TeamProject.Data
                 return _ctx.Posts
                            .Include(o => o.Reactions)
                            .Include(i => i.Comments)
+                           .ThenInclude(c => c.User)
                            .Include(i => i.PostInterests)
                            .ThenInclude(i => i.Interest)
                            .Where(o => o.User.Id == user.Id)
