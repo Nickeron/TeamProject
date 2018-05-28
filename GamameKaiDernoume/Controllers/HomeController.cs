@@ -91,15 +91,18 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Messenger()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
-            IEnumerable<Message> allUsersMessages = dataRepository.GetAllMessagesOfUser(thisUser);
-            User lastCommUser;
-            if (allUsersMessages.LastOrDefault().Receiver.Id == thisUser.Id)
-            {
-                lastCommUser = allUsersMessages.LastOrDefault().Sender;
-            }
-            else
-            {
-                lastCommUser = allUsersMessages.LastOrDefault().Receiver;
+            List<Message> allUsersMessages = (List<Message>)dataRepository.GetAllMessagesOfUser(thisUser);
+            User lastCommUser = null;
+            if (allUsersMessages.Count > 0)
+            { 
+                if (allUsersMessages.LastOrDefault().Receiver.Id == thisUser.Id)
+                {
+                    lastCommUser = allUsersMessages.LastOrDefault().Sender;
+                }
+                else
+                {
+                    lastCommUser = allUsersMessages.LastOrDefault().Receiver;
+                }
             }
             MessengerViewModel messengerView = new MessengerViewModel
             {
@@ -121,11 +124,10 @@ namespace TeamProject.Controllers
 
             MessengerViewModel messengerView = new MessengerViewModel
             {
-                ThisUser = thisUser,
                 LatestCommunicator = correspondant,
                 UsersMessages = allUsersMessages,
             };
-            return Json(allUsersMessages);
+            return Json(messengerView);
         }
 
         [Authorize]

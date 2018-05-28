@@ -2,30 +2,30 @@
 	.withUrl("/chatHub")
 	.build();
 
-connection.on("ReceiveMessage", (sender, message) => {
-	const encodedMsg = sender + " says " + message;
-	const li = document.createElement("li");
-	li.textContent = encodedMsg;
-	document.getElementById("messagesList").appendChild(li);
+connection.on("ReceiveMessage", (senderAvatar, message) => {
+	$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+	$('.message-input input').val(null);
+	$('.contact.active .preview').html('<span>You: </span>' + message);
+	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
 });
 
-connection.on("ShowSentMessage", (sender, message) => {
-	$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+connection.on("ShowSentMessage", (senderAvatar, message) => {
+	$('<li class="sent"><img src="'+senderAvatar+'" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
 	$('.message-input input').val(null);
 	$('.contact.active .preview').html('<span>You: </span>' + message);
 	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
 });
 
 document.getElementById("sendButton").addEventListener("click", event => {
-	const sender = document.getElementById("userName").value;
-	const receiver = document.getElementById("activeUser").value;
+	const senderAvatar = document.getElementById("profile-img").getAttribute("src");
+	const receiver = document.getElementById("activeUser").title;
 	const message = document.getElementById("messageInput").value;
 
 	if ($.trim(message) == '') {
 		return false;
 	}
 
-	connection.invoke("SendMessage", sender, receiver, message).catch(err => console.error(err.toString()));
+	connection.invoke("SendMessage", senderAvatar, receiver, message).catch(err => console.error(err.toString()));
 	sendRequest(receiver, message);
 	event.preventDefault();
 });

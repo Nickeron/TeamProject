@@ -50,31 +50,45 @@
 		</div>
 	</div>
 	<div class="content">
-		<div id="activeUser" class="contact-profile">
-			<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
-			<p>@Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName</p>
-		</div>
-		<div class="messages">
-			<ul id="active-user-messages">
-				@foreach (Message message in Model.UsersMessages.Where(m => m.Receiver.Id == Model.LatestCommunicator.Id || m.Sender.Id == Model.LatestCommunicator.Id))
-				{
-					if (message.Sender.Id == Model.ThisUser.Id)
+		@if (Model.LatestCommunicator is null)
+		{
+			<div id="activeUser" title="" class="contact-profile">
+				<img src="~/images/user.png" alt="" />
+				<p>No Communication History</p>
+			</div>
+			<div class="messages">
+				<ul id="active-user-messages"></ul>
+			</div>
+		}
+		else
+		{
+
+			<div id="activeUser" title="@Model.LatestCommunicator.Id" class="contact-profile">
+				<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
+				<p>@Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName</p>
+			</div>
+			<div class="messages">
+				<ul id="active-user-messages">
+					@foreach (Message message in Model.UsersMessages.Where(m => m.Receiver.Id == Model.LatestCommunicator.Id || m.Sender.Id == Model.LatestCommunicator.Id))
 					{
-						<li class="sent">
-							<img src="@Model.ThisUser.UserAvatar" alt="" />
-							<p>@message.MessageText</p>
-						</li>
+						if (message.Sender.Id == Model.ThisUser.Id)
+						{
+							<li class="sent">
+								<img src="@Model.ThisUser.UserAvatar" alt="" />
+								<p>@message.MessageText</p>
+							</li>
+						}
+						else
+						{
+							<li class="replies">
+								<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
+								<p>@message.MessageText</p>
+							</li>
+						}
 					}
-					else
-					{
-						<li class="replies">
-							<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
-							<p>@message.MessageText</p>
-						</li>
-					}
-				}
-			</ul>
-		</div>
+				</ul>
+			</div>
+		}
 		<div class="message-input">
 			<div class="wrap">
 				<input id="messageInput" type="text" placeholder="Write your message..." />
@@ -93,15 +107,20 @@
 
 	async function setActiveUser(userID)
 	{
-		let usersMessages = await sendData("@Url.Action("Messenger", "Home")", userID);
+		const messageModel = await sendData("@Url.Action("Messenger", "Home")", userID);
 		const ulMessages = document.getElementById("active-user-messages");
 		ulMessages.innerHTML = "";
 
-		console.log(usersMessages);
+		const activeUserElement = document.getElementById("activeUser");
+		activeUserElement.title = userID;
+		activeUserElement.firstElementChild.setAttribute("src", messageModel.latestCommunicator.userAvatar);
+		activeUserElement.lastElementChild.innerHTML = messageModel.latestCommunicator.firstName +" "+ messageModel.latestCommunicator.lastName;
+		console.log(messageModel.usersMessages);
 
-		for (let key in usersMessages) {
-			if (usersMessages.hasOwnProperty(key)) {
-				let message = usersMessages[key];
+		const comMessages = messageModel.usersMessages;
+		for (const key in comMessages) {
+			if (comMessages.hasOwnProperty(key)) {
+				const message = comMessages[key];
 				const li = document.createElement("li");
 				const img = document.createElement("img");
 				const p = document.createElement("p");
@@ -118,7 +137,7 @@
 				li.appendChild(p);
 				ulMessages.appendChild(li);
 			}
-		}		
+		}
 	}
 
 	function sendRequest(userId, message)
