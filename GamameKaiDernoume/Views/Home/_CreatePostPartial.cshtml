@@ -67,13 +67,27 @@
 
 	async function sendNewPost()
 	{
+		const newPostText = document.getElementById("postText").value;
+
+		if ($.trim(newPostText) == '') {
+			alert("A post cannot be empty!");
+			return false;
+		}
+
 		let data =
 			{
-				postText: document.getElementById("postText").value,
+				postText: newPostText,
 				interests: interests,
 				postScope: scope
 			};
 		await sendData("@Url.Action("CreatePost", "Home")", data);
 		location.reload();
 	}
+
+	document.addEventListener('keydown', (e) => {
+		if (e.which == 13) {
+			sendNewPost();
+			return false;
+		}
+	});
 </script>
