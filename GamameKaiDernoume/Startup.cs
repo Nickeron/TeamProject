@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TeamProject.Data.Entities;
 using TeamProject.Controllers;
+using System.Collections.Generic;
 
 namespace TeamProject
 {
@@ -32,6 +33,7 @@ namespace TeamProject
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddSingleton<List<string>>();
 
             services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(

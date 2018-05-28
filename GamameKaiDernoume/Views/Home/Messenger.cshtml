@@ -28,9 +28,9 @@
 				@foreach (User friend in Model.ThisUsersFriends)
 				{
 					var lastText = @Model.UsersMessages.Where(m => m.Receiver.Id == friend.Id || m.Sender.Id == friend.Id).LastOrDefault();
-					<li class="contact" id="friend-panel-@friend.Id" onclick="setActiveUser('@friend.Id')">
+					<li class="contact" title="@friend.Id" id="friend-panel-@friend.Id" onclick="setActiveUser('@friend.Id')">
 						<div class="wrap">
-							<span class="contact-status online"></span>
+							<span class="contact-status offline"></span>
 							<img src="@friend.UserAvatar" alt="" />
 							<div class="meta">
 								<p class="name">@friend.FirstName @friend.LastName</p>
@@ -103,7 +103,14 @@
 <script src="~/js/chat.js"></script>
 
 <script>
+	let allFriendsElements = Array.from(document.getElementsByClassName("contact"));
+	let allFriendsIDs = [];
+	
 	let thisUserID = document.getElementById("userName").title;
+
+	for (const key in allFriendsElements) {
+		allFriendsIDs.push(allFriendsElements[key].title);
+	}
 
 	async function setActiveUser(userID)
 	{

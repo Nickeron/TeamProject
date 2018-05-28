@@ -22,8 +22,35 @@ connection.on("ShowSentMessage", (receiverID, senderAvatar, message) => {
 	friendOnPanel.lastElementChild.innerHTML = message;
 });
 
-async function SendNewMessage()
-{
+function SetUserConnected(userID) {
+	const friendOnPanelStatus = document.getElementById("friend-panel-" + userID)
+	if (friendOnPanelStatus) {
+		const status = friendOnPanelStatus.firstElementChild.firstElementChild;
+		status.setAttribute("class", "contact-status online");
+	}
+}
+
+function SetUserDisConnected(userID) {
+	const friendOnPanelStatus = document.getElementById("friend-panel-" + userID)
+	if (friendOnPanelStatus) {
+		const status = friendOnPanelStatus.firstElementChild.firstElementChild;
+		status.setAttribute("class", "contact-status offline");
+	}
+}
+
+connection.on("UserConnected", (userId) => SetUserConnected(userId));
+
+// When user disconnects all others should see his status change
+connection.on("UserDisConnected", (userId) => SetUserDisConnected(userId));
+
+// When user connects first time they have to see who is already connected
+connection.on("UpdateConnections", (userIDs) => {
+	for (const connectedId in userIDs) {
+		SetUserConnected(userIDs[connectedId]);
+	}
+});
+
+async function SendNewMessage() {
 	const senderAvatar = document.getElementById("profile-img").getAttribute("src");
 	const receiverID = document.getElementById("activeUser").title;
 	const senderID = document.getElementById("userName").title;

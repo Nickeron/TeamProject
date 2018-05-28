@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TeamProject.Data.Entities;
 
 namespace TeamProject.Controllers
 {
@@ -11,10 +13,16 @@ namespace TeamProject.Controllers
     public class ChatHub : Hub
     {
         private readonly ILogger<ChatHub> logger;
+        private readonly UserManager<User> userManager;
+        private readonly List<string> allConnected;
 
-        public ChatHub(ILogger<ChatHub> logger)
+        public ChatHub(ILogger<ChatHub> logger,
+            UserManager<User> userManager,
+            List<string> allConnected)
         {
             this.logger = logger;
+            this.userManager = userManager;
+            this.allConnected = allConnected;
         }
 
         public async Task SendMessage(string SenderAvatar, string SenderId, string ReceiverId, string message)
@@ -30,7 +38,7 @@ namespace TeamProject.Controllers
 
         public async Task DistributeReaction(string PostID, int likes, int dislikes)
         {
-                await Clients.All.SendAsync("AddTheReaction", PostID, likes, dislikes); 
+            await Clients.All.SendAsync("AddTheReaction", PostID, likes, dislikes);
         }
 
         public Task SendMessageToGroups(string message)
@@ -42,13 +50,20 @@ namespace TeamProject.Controllers
         public override async Task OnConnectedAsync()
         {
             logger.LogInformation(Context.User.Identity.Name + " connected with CID: " + Context.ConnectionId);
+            string thisUserID = userManager.GetUserId(Context.User);
+            allConnected.Add(thisUserID);
             await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Identity.Name);
+            await Clients.All.SendAsync("UserConnected", thisUserID);
+            await Clients.User(thisUserID).SendAsync("UpdateConnections", allConnected);
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
+            string thisUserID = userManager.GetUserId(Context.User);
+            //allConnected.Remove(thisUserID);
+            await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Identity.Name);
+            await Clients.All.SendAsync("UserDisConnected", userManager.GetUserId(Context.User));
             await base.OnDisconnectedAsync(exception);
         }
     }
