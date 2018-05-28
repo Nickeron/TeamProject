@@ -42,3 +42,50 @@ body {
 	border-radius: 50%;
 	margin-right: 10px;
 }
+
+.message-user {
+	position: relative;
+	background: #dddddd;
+	border: 1px solid #cdcdcd;
+	max-width: 250px;
+	padding: 10px;
+	margin: 0 auto;
+	font-size: 14px;
+	border-radius: 6px;
+}
+
+.message-other {
+	position: relative;
+	background: #dddddd;
+	border: 1px solid #cdcdcd;
+	max-width: 250px;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 6px;
+}
+
+	.message-user:after,
+	.message-user:before {
+		right: 100%;
+		top: 50%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+	}
+
+	.message-user:after {
+		border-color: rgba(255, 255, 204, 0);
+		border-right-color: #000000;
+		border-width: 15px;
+		margin-top: -15px;
+	}
+
+	.message-user:before {
+		border-color: rgba(255, 204, 0, 0);
+		border-right-color: #00ff00;
+		border-width: 16px;
+		margin-top: -16px;
+	}

@@ -18,7 +18,7 @@ namespace TeamProject.Controllers
         }
         public async Task SendMessage(string Sender, string ReceiverId, string message)
         {
-            await Clients.Caller.SendAsync("ReceiveMessage", Sender, message);
+            await Clients.Caller.SendAsync("ShowSentMessage", Sender, message);
             await Clients.User(ReceiverId).SendAsync("ReceiveMessage", Sender, message);
         }
 

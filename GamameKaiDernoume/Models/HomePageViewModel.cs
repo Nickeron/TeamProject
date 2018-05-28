@@ -11,6 +11,7 @@ namespace TeamProject.Models
     {
         public List<Post> Posts { get; set; }
         public List<Interest> Interests { get; set; }
+        public bool CanCreateNewPostHere { get; set; }
     }
 
     public class InterestPostViewModel

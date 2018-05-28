@@ -2,41 +2,89 @@
 @{
 	ViewData["Title"] = "Messenger";
 }
-<ul class="list-group">
-	@foreach (User friend in Model.ThisUsersFriends)
-	{
-		<li class="list-group-item list-group-item-action" 
-			id="@friend.Id"
-			onclick="setActiveUser(this)">
-			@friend.UserAvatar @friend.UserName
-		</li>
-	}
-</ul>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+<link href="~/css/messenger.css" rel="stylesheet" />
 
-<div class="container">
-	<div class="row">&nbsp;</div>
-	<div class="row">
-		<div class="col-6">&nbsp;</div>
-		<div class="col-6">
-			<option type="text" value="@Model.UserName" id="userName">@Model.UserName</option>
-			<br />
-			Message <input type="text" id="messageInput" />
-			<input type="button" id="sendButton" value="Send" />
+<div id="frame">
+	<div id="sidepanel">
+		<div id="profile">
+			<div class="wrap">
+				<img id="profile-img" src="@Model.ThisUser.UserAvatar" class="online" alt="" />
+
+				<p id="userName">@Model.ThisUser.FirstName @Model.ThisUser.LastName</p>
+				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+				<div id="status-options">
+					<ul>
+						<li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
+						<li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
+						<li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
+						<li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="contacts">
+			<ul>
+				@foreach (User friend in Model.ThisUsersFriends)
+				{
+					var lastText = @Model.UsersMessages.Where(m => m.Receiver.Id == friend.Id || m.Sender.Id == friend.Id).LastOrDefault();
+					<li class="contact" id="@friend.Id" onclick="setActiveUser(@friend.Id)">
+						<div class="wrap">
+							<span class="contact-status online"></span>
+							<img src="@friend.UserAvatar" alt="" />
+							<div class="meta">
+								<p class="name">@friend.UserName</p>
+								@if (lastText is null)
+								{
+									<p class="preview">No messages</p>
+								}
+								else
+								{
+									<p class="preview">@lastText.MessageText</p>
+								}
+							</div>
+						</div>
+					</li>
+				}
+			</ul>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-12">
-			<hr />
+	<div class="content">
+		<div id="activeUser" class="contact-profile">
+			<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
+			<p>@Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName</p>
 		</div>
-	</div>
-	<h3 id="activeUser" value="">No active user</h3>
-	<div class="row">
-		<div class="col-6">&nbsp;</div>
-		<div class="col-6">
-			<ul id="messagesList"></ul>
+		<div class="messages">
+			<ul>
+				@foreach (Message message in Model.UsersMessages.Where(m => m.Receiver.Id == Model.LatestCommunicator.Id || m.Sender.Id == Model.LatestCommunicator.Id))
+				{
+					if (message.Sender.Id == Model.ThisUser.Id)
+					{
+						<li class="sent">
+							<img src="@Model.ThisUser.UserAvatar" alt="" />
+							<p>@message.MessageText</p>
+						</li>
+					}
+					else
+					{
+						<li class="replies">
+							<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
+							<p>@message.MessageText</p>
+						</li>
+					}
+				}
+			</ul>
+		</div>
+		<div class="message-input">
+			<div class="wrap">
+				<input id="messageInput" type="text" placeholder="Write your message..." />
+				@*<i class="fa fa-paperclip attachment" aria-hidden="true"></i>*@
+				<button id="sendButton" class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+			</div>
 		</div>
 	</div>
 </div>
+
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 

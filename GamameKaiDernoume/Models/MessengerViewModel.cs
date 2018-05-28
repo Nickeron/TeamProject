@@ -8,8 +8,10 @@ namespace TeamProject.Models
 {
     public class MessengerViewModel
     {
-        public string ThisUserID { get; set; }
-        public string UserName { get; set; }
+        public User ThisUser { get; set; }
+        public User LatestCommunicator { get; set; }
+
+        public IEnumerable<Message> UsersMessages { get; set; }
         public IEnumerable<User> ThisUsersFriends { get; set; }
     }
 

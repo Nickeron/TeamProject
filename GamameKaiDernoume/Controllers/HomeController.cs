@@ -29,6 +29,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
+        [Route("")]
         public async Task<IActionResult> Index()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
@@ -42,6 +43,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
+        [Route("/{id}")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Index(int id)
         {
@@ -56,6 +58,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
+        [Route("/profile")]
         public async Task<IActionResult> Personal()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
@@ -69,6 +72,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
+        [Route("/profile/{username}")]
         [HttpGet("{username}")]
         public IActionResult Personal(string username)
         {
@@ -86,11 +90,22 @@ namespace TeamProject.Controllers
         [Authorize]
         public async Task<IActionResult> Messenger()
         {
-            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            IEnumerable<Message> allUsersMessages = dataRepository.GetAllMessagesOfUser(thisUser);
+            User lastCommUser;
+            if (allUsersMessages.LastOrDefault().Receiver.Id == thisUser.Id)
+            {
+                lastCommUser = allUsersMessages.LastOrDefault().Sender;
+            }
+            else
+            {
+                lastCommUser = allUsersMessages.LastOrDefault().Receiver;
+            }
             MessengerViewModel messengerView = new MessengerViewModel
             {
-                ThisUserID = thisUser.Id,
-                UserName = (thisUser.FirstName is null) ? thisUser.UserName : thisUser.FirstName,
+                ThisUser = thisUser,
+                LatestCommunicator = lastCommUser,
+                UsersMessages = allUsersMessages,
                 ThisUsersFriends = dataRepository.GetUsersFriends(thisUser)
             };
             return View(messengerView);

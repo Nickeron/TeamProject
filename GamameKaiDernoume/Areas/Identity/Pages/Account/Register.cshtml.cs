@@ -67,7 +67,13 @@ namespace TeamProject.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email.Split('@')[0], Email = Input.Email };
+                var user = new User {
+                    UserName = Input.Email.Split('@')[0],
+                    FirstName = Input.Email.Split('@')[0],
+                    LastName = "",
+                    Email = Input.Email,
+                    UserAvatar = "/images/user.png"
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

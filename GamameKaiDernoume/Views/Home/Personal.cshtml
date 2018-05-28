@@ -13,25 +13,12 @@
 		<div class="card border-info mb-3">
 			<div class="card-body">
 				<p class="card-title">
-					@if (post.User.UserAvatar is null)
-					{
-						<i class="fas fa-user-astronaut"></i>
-					}
-					else
-					{
-						<img src="@post.User.UserAvatar" class="img-thumbnail">
-					}
+					<img src="@post.User.UserAvatar" class="avatar rounded-circle">
+
 					<a asp-controller="Home"
 					   asp-action="Personal"
 					   asp-route-username="@post.User.UserName" class="align-middle">
-						@if (post.User.FirstName is null)
-						{
-							@post.User.UserName
-						}
-						else
-						{
-							<span>@post.User.FirstName&nbsp;@post.User.LastName</span>
-						}
+						<span>@post.User.FirstName @post.User.LastName</span>
 					</a>
 					@foreach (var interest in post.PostInterests)
 					{
@@ -93,25 +80,12 @@
 			@foreach (Comment postComment in post.Comments)
 			{
 				<li id="listItemComment-@post.PostID" class="list-group-item">
-					@if (postComment.User.UserAvatar is null)
-					{
-						<i class="fas fa-user-astronaut">&nbsp;</i>
-					}
-					else
-					{
-						<img src="@postComment.User.UserAvatar" class="avatar rounded-circle">
-					}
+					<img src="@postComment.User.UserAvatar" class="avatar rounded-circle">
+
 					<a asp-controller="Home"
 					   asp-action="Personal"
 					   asp-route-username="@postComment.User.UserName">
-						@if (postComment.User.FirstName is null)
-						{
-							@postComment.User.UserName
-						}
-						else
-						{
-							<span>@postComment.User.FirstName&nbsp;@postComment.User.LastName</span>
-						}
+						<span>@postComment.User.FirstName @postComment.User.LastName</span>
 					</a>
 					@postComment.CommentText
 				</li>

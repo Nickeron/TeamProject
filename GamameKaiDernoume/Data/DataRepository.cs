@@ -246,12 +246,33 @@ namespace TeamProject.Data
                 }
             }
 
-            return _ctx.Users.Where(u => allFriends.Contains(u.Id)).ToList();
+            return _ctx.Users
+                .Include(u=>u.SentMessages)
+                .Where(u => allFriends.Contains(u.Id)).ToList();
         }
 
         public Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser)
         {
             return _ctx.Reactions.Where(r => r.Post.PostID == reactionPostId && r.User == thisUser).FirstOrDefault();
+        }
+
+        public IEnumerable<Message> GetAllMessagesOfUser(User thisUser)
+        {
+            try
+            {
+                _logger.LogInformation("Get All messages of user was called");
+
+                return _ctx.Messages
+                    .Include(p => p.Sender)
+                    .Include(m=>m.Receiver)
+                    .Where(m => m.Sender.Id == thisUser.Id)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Messages: {ex}");
+                return null;
+            }
         }
     }
 }

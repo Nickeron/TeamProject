@@ -13,6 +13,8 @@ namespace TeamProject.Data
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
         IEnumerable<User> GetUsersFriends(User thisUser);
 
+        IEnumerable<Message> GetAllMessagesOfUser(User thisUser);
+
         IEnumerable<Post> GetAllPosts();
         IEnumerable<Post> GetAllPostsForUser(User user);
         IEnumerable<Post> GetAllPostsForUserByInterest(User thisUser, int interestID);
