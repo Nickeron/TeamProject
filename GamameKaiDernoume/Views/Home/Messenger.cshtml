@@ -28,7 +28,7 @@
 				@foreach (User friend in Model.ThisUsersFriends)
 				{
 					var lastText = @Model.UsersMessages.Where(m => m.Receiver.Id == friend.Id || m.Sender.Id == friend.Id).LastOrDefault();
-					<li class="contact" id="@friend.Id" onclick="setActiveUser('@friend.Id')">
+					<li class="contact" id="friend-panel-@friend.Id" onclick="setActiveUser('@friend.Id')">
 						<div class="wrap">
 							<span class="contact-status online"></span>
 							<img src="@friend.UserAvatar" alt="" />
@@ -93,7 +93,7 @@
 			<div class="wrap">
 				<input id="messageInput" type="text" placeholder="Write your message..." />
 				@*<i class="fa fa-paperclip attachment" aria-hidden="true"></i>*@
-				<button id="sendButton" class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+				<button id="sendButton" class="submit" onclick="SendNewMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
 			</div>
 		</div>
 	</div>

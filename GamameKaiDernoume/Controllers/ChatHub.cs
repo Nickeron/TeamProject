@@ -16,10 +16,11 @@ namespace TeamProject.Controllers
         {
             this.logger = logger;
         }
-        public async Task SendMessage(string Sender, string ReceiverId, string message)
+
+        public async Task SendMessage(string SenderAvatar, string SenderId, string ReceiverId, string message)
         {
-            await Clients.Caller.SendAsync("ShowSentMessage", Sender, message);
-            await Clients.User(ReceiverId).SendAsync("ReceiveMessage", Sender, message);
+            await Clients.Caller.SendAsync("ShowSentMessage", ReceiverId, SenderAvatar, message);
+            await Clients.User(ReceiverId).SendAsync("ReceiveMessage", SenderId, SenderAvatar, message);
         }
 
         public async Task DistributeComment(string PostID, string commentsText)
