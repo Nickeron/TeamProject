@@ -1,9 +1,9 @@
 ﻿#frame {
 	width: 100%;
 	min-width: 360px;
-	height: 92vh;
+	height: 100vh;
 	min-height: 300px;
-	max-height: 720px;
+	max-height: 92vh;
 	background: #E6EAEA;
 }
 

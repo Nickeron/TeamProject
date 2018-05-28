@@ -2,7 +2,7 @@
 @{
 	ViewData["Title"] = "Messenger";
 }
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+<link href="~/css/reset.css" rel="stylesheet prefetch" />
 <link href="~/css/messenger.css" rel="stylesheet" />
 
 <div id="frame">
@@ -103,14 +103,7 @@
 <script src="~/js/chat.js"></script>
 
 <script>
-	let allFriendsElements = Array.from(document.getElementsByClassName("contact"));
-	let allFriendsIDs = [];
-	
 	let thisUserID = document.getElementById("userName").title;
-
-	for (const key in allFriendsElements) {
-		allFriendsIDs.push(allFriendsElements[key].title);
-	}
 
 	async function setActiveUser(userID)
 	{
@@ -122,7 +115,6 @@
 		activeUserElement.title = userID;
 		activeUserElement.firstElementChild.setAttribute("src", messageModel.latestCommunicator.userAvatar);
 		activeUserElement.lastElementChild.innerHTML = messageModel.latestCommunicator.firstName +" "+ messageModel.latestCommunicator.lastName;
-		console.log(messageModel.usersMessages);
 
 		const comMessages = messageModel.usersMessages;
 		for (const key in comMessages) {
