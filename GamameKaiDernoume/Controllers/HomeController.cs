@@ -113,6 +113,23 @@ namespace TeamProject.Controllers
 
         [Authorize]
         [HttpPost]
+        public async Task<IActionResult> Messenger([FromBody]string UserID)
+        {
+            User correspondant = await userManager.FindByIdAsync(UserID);
+            User thisUser      = await userManager.GetUserAsync(HttpContext.User);
+            IEnumerable<Message> allUsersMessages = dataRepository.GetAllMessagesOfUsers(thisUser, correspondant);
+
+            MessengerViewModel messengerView = new MessengerViewModel
+            {
+                ThisUser = thisUser,
+                LatestCommunicator = correspondant,
+                UsersMessages = allUsersMessages,
+            };
+            return Json(allUsersMessages);
+        }
+
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody]SendMessageModel messageModel)
         {
             User receiver = await userManager.FindByIdAsync(messageModel.ReceiverID);

@@ -265,7 +265,28 @@ namespace TeamProject.Data
                 return _ctx.Messages
                     .Include(p => p.Sender)
                     .Include(m=>m.Receiver)
-                    .Where(m => m.Sender.Id == thisUser.Id)
+                    .Where(m => m.Sender.Id == thisUser.Id || m.Receiver.Id == thisUser.Id)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Messages: {ex}");
+                return null;
+            }
+        }
+
+        public IEnumerable<Message> GetAllMessagesOfUsers(User thisUser, User talkUser)
+        {
+            try
+            {
+                _logger.LogInformation("Get All messages of users was called");
+
+                return _ctx.Messages
+                    .Include(p => p.Sender)
+                    .Include(m => m.Receiver)
+                    .Where(m => 
+                    (m.Sender.Id == thisUser.Id && m.Receiver.Id == talkUser.Id) || 
+                    (m.Sender.Id == talkUser.Id && m.Receiver.Id == thisUser.Id))
                     .ToList();
             }
             catch (Exception ex)

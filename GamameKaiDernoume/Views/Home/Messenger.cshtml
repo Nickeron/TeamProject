@@ -11,7 +11,7 @@
 			<div class="wrap">
 				<img id="profile-img" src="@Model.ThisUser.UserAvatar" class="online" alt="" />
 
-				<p id="userName">@Model.ThisUser.FirstName @Model.ThisUser.LastName</p>
+				<p title="@Model.ThisUser.Id" id="userName">@Model.ThisUser.FirstName @Model.ThisUser.LastName</p>
 				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
 				<div id="status-options">
 					<ul>
@@ -28,12 +28,12 @@
 				@foreach (User friend in Model.ThisUsersFriends)
 				{
 					var lastText = @Model.UsersMessages.Where(m => m.Receiver.Id == friend.Id || m.Sender.Id == friend.Id).LastOrDefault();
-					<li class="contact" id="@friend.Id" onclick="setActiveUser(@friend.Id)">
+					<li class="contact" id="@friend.Id" onclick="setActiveUser('@friend.Id')">
 						<div class="wrap">
 							<span class="contact-status online"></span>
 							<img src="@friend.UserAvatar" alt="" />
 							<div class="meta">
-								<p class="name">@friend.UserName</p>
+								<p class="name">@friend.FirstName @friend.LastName</p>
 								@if (lastText is null)
 								{
 									<p class="preview">No messages</p>
@@ -55,7 +55,7 @@
 			<p>@Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName</p>
 		</div>
 		<div class="messages">
-			<ul>
+			<ul id="active-user-messages">
 				@foreach (Message message in Model.UsersMessages.Where(m => m.Receiver.Id == Model.LatestCommunicator.Id || m.Sender.Id == Model.LatestCommunicator.Id))
 				{
 					if (message.Sender.Id == Model.ThisUser.Id)
@@ -89,12 +89,36 @@
 <script src="~/js/chat.js"></script>
 
 <script>
-	function setActiveUser(element)
+	let thisUserID = document.getElementById("userName").title;
+
+	async function setActiveUser(userID)
 	{
-		const activeUser = document.getElementById("activeUser");
-		activeUser.value = element.id;
-		activeUser.innerHTML = element.innerHTML;
-		console.log(activeUser.value);
+		let usersMessages = await sendData("@Url.Action("Messenger", "Home")", userID);
+		const ulMessages = document.getElementById("active-user-messages");
+		ulMessages.innerHTML = "";
+
+		console.log(usersMessages);
+
+		for (let key in usersMessages) {
+			if (usersMessages.hasOwnProperty(key)) {
+				let message = usersMessages[key];
+				const li = document.createElement("li");
+				const img = document.createElement("img");
+				const p = document.createElement("p");
+
+				img.setAttribute("src", message.sender.userAvatar);
+				p.innerHTML = message.messageText;
+				if (message.sender.id === thisUserID) {
+					li.setAttribute("class", "sent");
+				}
+				else {
+					li.setAttribute("class", "replies");
+				}
+				li.appendChild(img);
+				li.appendChild(p);
+				ulMessages.appendChild(li);
+			}
+		}		
 	}
 
 	function sendRequest(userId, message)

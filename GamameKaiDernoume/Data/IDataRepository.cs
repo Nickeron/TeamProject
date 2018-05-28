@@ -14,6 +14,7 @@ namespace TeamProject.Data
         IEnumerable<User> GetUsersFriends(User thisUser);
 
         IEnumerable<Message> GetAllMessagesOfUser(User thisUser);
+        IEnumerable<Message> GetAllMessagesOfUsers(User thisUser, User correspondant);
 
         IEnumerable<Post> GetAllPosts();
         IEnumerable<Post> GetAllPostsForUser(User user);
@@ -26,8 +27,6 @@ namespace TeamProject.Data
 
         Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser);
 
-
         bool SaveAll();
-        
     }
 }

@@ -1,6 +1,6 @@
 ﻿async function sendData(url, data) {
 	const urlToSendRequest = "https://" + window.location.host + url;
-	console.log(data);
+
 	const rawData = await fetch(url, {
 		method: 'POST',
 		headers: {
@@ -13,6 +13,7 @@
 
 	return rawData.json();
 }
+
 window.onload = function () {
 	var dateTimeElements = document.getElementsByClassName("post-date");
 
