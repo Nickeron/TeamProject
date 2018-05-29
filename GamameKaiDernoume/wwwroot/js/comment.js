@@ -2,12 +2,33 @@
 	.withUrl("/chatHub")
 	.build();
 
-connection.on("AddTheNewComment", (Name, PostID, commentsText) => {
-	const commentInList = document.createElement("li");
-	commentInList.setAttribute("id", "listItemComment-" + PostID);
-	commentInList.setAttribute("class", "list-group-item");
-	commentInList.textContent = Name + ': ' + commentsText;
-	document.getElementById("listOfComments-" + PostID).appendChild(commentInList);
+connection.on("AddTheNewComment", (Name, usersAvatar, PostID, commentsText) => {
+	const commentElement = document.getElementById("listOfComments-" + PostID);
+	if (commentElement) {
+		const commentInList = document.createElement("li");
+		commentInList.setAttribute("id", "listItemComment-" + PostID);
+		commentInList.setAttribute("class", "list-group-item");
+
+		const userAvatar = document.createElement("img");
+		userAvatar.setAttribute("src", usersAvatar);
+		userAvatar.setAttribute("class", "avatar rounded-circle");
+
+		const userLink = document.createElement("a");
+		userLink.setAttribute("href", "https://" + window.location.host + url);
+
+		const usersName = document.createElement("span");
+		usersName.textContent = Name;
+
+		userLink.appendChild(usersName);
+
+		const commentText = document.createElement("text");
+		commentText.textContent = commentsText;
+
+		commentInList.appendChild(userAvatar);
+		commentInList.appendChild(usersName);
+
+		commentElement.appendChild(commentInList);
+	}
 });
 
 async function CreateNewComment(PostID) {
