@@ -23,6 +23,5 @@ window.onload = function () {
 };
 
 function formatDate(element) {
-	console.log(element.innerHTML);
 	element.innerHTML = moment(element.innerHTML).fromNow();
 }

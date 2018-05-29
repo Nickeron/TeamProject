@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace TeamProject.Controllers
 {
@@ -17,14 +19,17 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
+        private readonly IHostingEnvironment env;
         private readonly ILogger<HomeController> logger;
 
         public HomeController(IDataRepository dataRepository,
             UserManager<User> userManager,
+            IHostingEnvironment env,
             ILogger<HomeController> logger)
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
+            this.env = env;
             this.logger = logger;
         }
 
@@ -76,8 +81,8 @@ namespace TeamProject.Controllers
         [HttpGet("{username}")]
         public IActionResult Personal(string username)
         {
-            User thisUser = userManager.Users.FirstOrDefault(u=>u.UserName == username);
-            logger.LogInformation("The username is !!!! :"+username + thisUser.UserName);
+            User thisUser = userManager.Users.FirstOrDefault(u => u.UserName == username);
+            logger.LogInformation("The username is !!!! :" + username + thisUser.UserName);
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
@@ -94,7 +99,7 @@ namespace TeamProject.Controllers
             List<Message> allUsersMessages = (List<Message>)dataRepository.GetAllMessagesOfUser(thisUser);
             User lastCommUser = null;
             if (allUsersMessages.Count > 0)
-            { 
+            {
                 if (allUsersMessages.LastOrDefault().Receiver.Id == thisUser.Id)
                 {
                     lastCommUser = allUsersMessages.LastOrDefault().Sender;
@@ -119,7 +124,7 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Messenger([FromBody]string UserID)
         {
             User correspondant = await userManager.FindByIdAsync(UserID);
-            User thisUser      = await userManager.GetUserAsync(HttpContext.User);
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
             IEnumerable<Message> allUsersMessages = dataRepository.GetAllMessagesOfUsers(thisUser, correspondant);
 
             MessengerViewModel messengerView = new MessengerViewModel
@@ -241,7 +246,7 @@ namespace TeamProject.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody]CreatePostViewModel newPostData)
+        public async Task<IActionResult> CreatePost([FromForm]CreatePostViewModel newPostData)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
 
@@ -255,7 +260,7 @@ namespace TeamProject.Controllers
                     {
                         addedInterests.Add(interest);
                     }
-                }
+                }                
 
                 DateTime timeStamp = DateTime.Now;
                 Post theNewPost = new Post
@@ -273,6 +278,21 @@ namespace TeamProject.Controllers
                     logger.LogError("Ok new post was saved");
                 };
                 Post savedPost = dataRepository.GetPostByTimeStamp(timeStamp);
+
+                var image = newPostData.PostImage;
+                if (image != null && image.Length > 0)
+                {
+                    if (image.ContentType.Contains("png") || image.ContentType.Contains("jpg") || image.ContentType.Contains("jpeg"))
+                    {
+                        var filePath = env.WebRootPath + "\\postImages\\" + savedPost.PostID + '.' + image.ContentType.Split('/')[1];
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+                        savedPost.PostImage = "/postImages/" + savedPost.PostID + '.' + image.ContentType.Split('/')[1];
+                    }
+                }
 
                 foreach (Interest interest in addedInterests)
                 {

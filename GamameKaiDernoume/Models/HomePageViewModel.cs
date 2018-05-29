@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace TeamProject.Models
 {
@@ -20,12 +21,9 @@ namespace TeamProject.Models
         public int InterestId { get; set; }
     }
 
-
-
     public class CreatePostViewModel
-    {
-        
-        public string PostImage { get; set; }
+    {        
+        public IFormFile PostImage { get; set; }
         [Required]
         public string PostText { get; set; }
         [Required]

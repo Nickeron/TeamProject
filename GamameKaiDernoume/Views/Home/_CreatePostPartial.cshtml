@@ -23,14 +23,16 @@
 					</p>
 					<p id="interests-in-post"></p>
 					<div class="form-group">
-						<label for="recipient-name" class="col-form-label">Say something..</label>
+						<label for="postText" class="col-form-label">Say something..</label>
 						<input id="postText" type="text" class="form-control">
+						<label for="postImage" class="col-form-label">Add an image..</label>
+						<input id="postImage" type="file" class="form-control" name="image">
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="sendNewPost()">Save Post</button>
+				<button type="button" class="btn btn-primary" onclick="sendNewPost()">Save Post</button>
 			</div>
 		</div>
 	</div>
@@ -74,13 +76,23 @@
 			return false;
 		}
 
-		let data =
-			{
-				postText: newPostText,
-				interests: interests,
-				postScope: scope
-			};
-		await sendData("@Url.Action("CreatePost", "Home")", data);
+		let input = document.querySelector('input[type="file"]')
+
+		let data = new FormData()
+		data.append('PostImage', input.files[0])
+		data.append('PostText', newPostText)
+		data.append('PostScope', scope)
+		data.append('Interests', interests)
+
+		const urlToSendRequest = "https://" + window.location.host + "@Url.Action("CreatePost", "Home")";
+
+		const rawData = await fetch(urlToSendRequest,
+		{
+			method: 'POST',
+			credentials: "same-origin",
+			body: data
+		});
+
 		location.reload();
 	}
 

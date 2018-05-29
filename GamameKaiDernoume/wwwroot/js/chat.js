@@ -3,13 +3,16 @@
 	.build();
 
 connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
-	$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-	$('.message-input input').val(null);
-	$('.contact.active .preview').html('<span>You: </span>' + message);
-	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+	if (senderID === document.getElementById("activeUser").title) {
+		$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+		$('.message-input input').val(null);
+		$('.contact.active .preview').html('<span>You: </span>' + message);
+		$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+	}
 
 	const friendOnPanel = document.getElementById("friend-panel-" + senderID).firstElementChild.lastElementChild;
 	friendOnPanel.lastElementChild.innerHTML = message;
+
 });
 
 connection.on("ShowSentMessage", (receiverID, senderAvatar, message) => {
