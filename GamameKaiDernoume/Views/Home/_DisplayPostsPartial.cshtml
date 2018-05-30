@@ -5,7 +5,7 @@
 	<div class="jumbotron">
 		<div class="card border-info mb-3">
 			<div class="card-body">
-				<p class="card-title">
+				<p class="card-title post-head">
 					<img src="@post.User.UserAvatar" class="avatar rounded-circle">
 					<a asp-controller="Home"
 					   asp-action="Personal"
@@ -21,7 +21,10 @@
 							@interest.Interest.InterestCategory
 						</a>
 					}
-					<i class="fas fa-times-circle" onclick="deleteModal('post', '@post.PostID')"></i>
+					@if (post.User.Id == Model.ThisUser.Id)
+					{
+					<i class="fas fa-times-circle fa-lg" onclick="deleteModal('post', '@post.PostID')"></i>
+					}
 				</p>
 				
 				<p class="text-muted">
@@ -94,7 +97,7 @@
 								</a>
 							</h6>
 
-							<time class="post-date" datetime="@postComment.CommentDate">@postComment.CommentDate</time>
+							<span class="post-date" datetime="@postComment.CommentDate">@postComment.CommentDate</span>
 							@if (postComment.User.Id == Model.ThisUser.Id)
 							{
 								<i class="fas fa-times-circle" onclick="deleteModal('comment', '@postComment.CommentID')"></i>

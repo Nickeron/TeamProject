@@ -35,6 +35,18 @@ body {
 	}
 }
 
+.post-head i {
+	float: right;
+	margin-left: 14px;
+	position: relative;
+	top: 2px;
+	color: #9f0000;
+	cursor: pointer;
+	-webkit-transition: color 0.3s ease;
+	-o-transition: color 0.3s ease;
+	transition: color 0.3s ease;
+}
+
 .avatar {
 	object-fit: cover;
 	vertical-align: middle;

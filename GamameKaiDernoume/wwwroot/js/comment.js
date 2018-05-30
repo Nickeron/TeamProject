@@ -35,7 +35,7 @@ connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, co
 
 		commentName.appendChild(userLink);
 
-		const time = document.createElement("time");
+		const time = document.createElement("span");
 		time.setAttribute("datetime", Date.now());
 		time.innerHTML = moment(Date.now()).fromNow();
 
