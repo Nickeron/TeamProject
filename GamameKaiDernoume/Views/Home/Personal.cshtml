@@ -5,9 +5,39 @@
 <link href="~/css/profile.css" rel="stylesheet" />
 <br />
 <div class="jumbotron">
-	<img src="@Model.ThisUser.UserAvatar" class="profile-avatar rounded-circle img-thumbnail">
-	<h1>@Model.ThisUser.FirstName @Model.ThisUser.LastName</h1>
-	Top 3 Interests of @Model.ThisUser.FirstName
+	<img src="@Model.ProfileUser.UserAvatar" class="profile-avatar rounded-circle img-thumbnail">
+	<h1>@Model.ProfileUser.FirstName @Model.ProfileUser.LastName</h1>
+	@if (!(Model.FriendshipStatus.Equals(Friendship.myself)))
+	{
+		if (Model.FriendshipStatus.Equals(Friendship.acceptRequest))
+		{
+			<a asp-controller="Friend"
+			   asp-action="Accept"
+			   asp-route-id="@Model.ProfileUser.Id"
+			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
+				Accept Request
+			</a>
+		}
+		else if (Model.FriendshipStatus.Equals(Friendship.addFriend))
+		{
+			<a asp-controller="Friend"
+			   asp-action="Make"
+			   asp-route-id="@Model.ProfileUser.Id"
+			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
+				Add friend
+			</a>
+		}
+		else
+		{
+			<a asp-controller="Friend"
+			   asp-action="Remove"
+			   asp-route-id="@Model.ProfileUser.Id"
+			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
+				Unfriend
+			</a>
+		}
+	}
+	Top 3 Interests of @Model.ProfileUser.FirstName
 </div>
 
 @if (Model.CanCreateNewPostHere)

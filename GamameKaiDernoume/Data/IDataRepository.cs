@@ -15,6 +15,9 @@ namespace TeamProject.Data
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
         IEnumerable<User> GetUsersFriends(User thisUser);
 
+        Friend GetFriend(User thisUser, string friendsID);
+        Friendship GetFriendship(User thisUser, User anotherUser);
+
         IEnumerable<Message> GetAllMessagesOfUser(User thisUser);
         IEnumerable<Message> GetAllMessagesOfUsers(User thisUser, User correspondant);
 

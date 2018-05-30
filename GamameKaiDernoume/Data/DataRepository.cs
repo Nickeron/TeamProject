@@ -34,6 +34,35 @@ namespace TeamProject.Data
             _ctx.Remove(model);
         }
 
+        public Friend GetFriend(User thisUser, string friendsID)
+        {
+            try
+            {
+                _logger.LogInformation("Get friend was called");
+                return _ctx.Friends.SingleOrDefault(f =>
+            (f.Receiver.Id == thisUser.Id && f.Sender.Id == friendsID) ||
+            (f.Receiver.Id == friendsID && f.Sender.Id == thisUser.Id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get friend: {ex}");
+                return null;
+            }
+        }
+
+        public Friendship GetFriendship(User thisUser, User anotherUser)
+        {
+            if (thisUser.Id == anotherUser.Id) { return Friendship.myself; }
+
+            Friend friendship = _ctx.Friends.SingleOrDefault(f =>
+            (f.Receiver.Id == thisUser.Id && f.Sender.Id == anotherUser.Id) ||
+            (f.Receiver.Id == anotherUser.Id && f.Sender.Id == thisUser.Id));
+
+            if (friendship is null) { return Friendship.addFriend; }
+            else if (friendship.Receiver.Id == thisUser.Id) { return Friendship.acceptRequest; }
+            else { return Friendship.removeFriend; }
+        }
+
         public IEnumerable<Post> GetAllPosts()
         {
             try

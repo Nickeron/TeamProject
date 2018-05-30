@@ -22,6 +22,8 @@ namespace TeamProject.Controllers
         private readonly IHostingEnvironment env;
         private readonly ILogger<FriendController> logger;
 
+        
+
         public FriendController(IDataRepository dataRepository,
             UserManager<User> userManager,
             IHostingEnvironment env,
@@ -41,10 +43,11 @@ namespace TeamProject.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> SendFriendRequest([FromBody]string UserId)
+        [Route("/makefriend/{userid}")]
+        [HttpGet("{userid}")]
+        public async Task<IActionResult> Make(string userid)
         {
-            User theNewFriend = await userManager.FindByIdAsync(UserId);
+            User theNewFriend = await userManager.FindByIdAsync(userid);
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
 
             if (theNewFriend is null || thisUser is null) throw new Exception();
@@ -57,6 +60,43 @@ namespace TeamProject.Controllers
             };
 
             dataRepository.AddEntity(newFriendship);
+            if (dataRepository.SaveAll())
+            {
+                logger.LogError("Ok a new friend request was created");
+                return Ok("New friendship saved!");
+            };
+            return BadRequest("Something bad happened");
+        }
+
+        [Route("/addfriend/{userid}")]
+        [HttpGet("{userid}")]
+        public async Task<IActionResult> Accept(string userid)
+        {
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (userid is null || thisUser is null) throw new Exception();
+
+            Friend friendship = dataRepository.GetFriend(thisUser, userid);
+            friendship.Accept = true;
+            if (dataRepository.SaveAll())
+            {
+                logger.LogError("Ok a new friend request was created");
+                return Ok("New friendship saved!");
+            };
+            return BadRequest("Something bad happened");
+        }
+
+        [Route("/unfriend/{userid}")]
+        [HttpGet("{userid}")]
+        public async Task<IActionResult> Remove(string userid)
+        {
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            if (userid is null || thisUser is null) throw new Exception();
+
+            Friend friendship = dataRepository.GetFriend(thisUser, userid);
+
+            dataRepository.DeleteEntity(friendship);
             if (dataRepository.SaveAll())
             {
                 logger.LogError("Ok a new friend request was created");

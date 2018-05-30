@@ -72,6 +72,7 @@ namespace TeamProject.Controllers
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,
+                ProfileUser = thisUser,
                 CanCreateNewPostHere = true,
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
@@ -83,13 +84,19 @@ namespace TeamProject.Controllers
         [Authorize]
         [Route("/profile/{username}")]
         [HttpGet("{username}")]
-        public IActionResult Personal(string username)
+        public async Task<IActionResult> Personal(string username)
         {
-            User thisUser = userManager.Users.FirstOrDefault(u => u.UserName == username);
+            if (username is null) { Redirect(Url.Action("Personal", "Home")); }
+
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);            
+            User profileUser = userManager.Users.FirstOrDefault(u => u.UserName == username);
+
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,
-                Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
+                ProfileUser = profileUser,
+                FriendshipStatus = dataRepository.GetFriendship(thisUser, profileUser),
+                Posts = dataRepository.GetAllPostsByUser(profileUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
 
