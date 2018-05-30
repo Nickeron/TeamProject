@@ -40,6 +40,7 @@ namespace TeamProject.Controllers
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
             MyWallViewModel MyWallData = new MyWallViewModel
             {
+                ThisUser = thisUser,
                 Posts = dataRepository.GetAllPostsForUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
@@ -55,6 +56,7 @@ namespace TeamProject.Controllers
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
             MyWallViewModel MyWallData = new MyWallViewModel
             {
+                ThisUser = thisUser,
                 Posts = dataRepository.GetAllPostsForUserByInterest(thisUser, id).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
@@ -69,6 +71,7 @@ namespace TeamProject.Controllers
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
             MyWallViewModel MyWallData = new MyWallViewModel
             {
+                ThisUser = thisUser,
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
@@ -85,6 +88,7 @@ namespace TeamProject.Controllers
             logger.LogInformation("The username is !!!! :" + username + thisUser.UserName);
             MyWallViewModel MyWallData = new MyWallViewModel
             {
+                ThisUser = thisUser,
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };

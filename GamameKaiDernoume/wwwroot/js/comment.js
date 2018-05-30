@@ -2,41 +2,75 @@
 	.withUrl("/chatHub")
 	.build();
 
-connection.on("AddTheNewComment", (Name, usersAvatar, PostID, commentsText) => {
+connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, commentsText, url) => {
 	const commentElement = document.getElementById("listOfComments-" + PostID);
-	if (commentElement) {
+
+	if (typeof commentElement != 'undefined') {
+
 		const commentInList = document.createElement("li");
 		commentInList.setAttribute("id", "listItemComment-" + PostID);
-		commentInList.setAttribute("class", "list-group-item");
+
+		const divUserAvatar = document.createElement("div");
+		divUserAvatar.setAttribute("class", "comment-avatar");
 
 		const userAvatar = document.createElement("img");
 		userAvatar.setAttribute("src", usersAvatar);
-		userAvatar.setAttribute("class", "avatar rounded-circle");
+
+		divUserAvatar.appendChild(userAvatar);
+
+		commentInList.appendChild(divUserAvatar);
+
+		const commentBox = document.createElement("div");
+		commentBox.setAttribute("class", "comment-box");
+
+		const commentHead = document.createElement("div");
+		commentHead.setAttribute("class", "comment-head");
+
+		const commentName = document.createElement("h6");
+		commentName.setAttribute("class", (isOP) ? "comment-name by-author" : "comment-name");
 
 		const userLink = document.createElement("a");
 		userLink.setAttribute("href", "https://" + window.location.host + url);
+		userLink.textContent = Name;
 
-		const usersName = document.createElement("span");
-		usersName.textContent = Name;
+		commentName.appendChild(userLink);
 
-		userLink.appendChild(usersName);
+		const time = document.createElement("time");
+		time.setAttribute("datetime", Date.now());
+		time.innerHTML = moment(Date.now()).fromNow();
 
-		const commentText = document.createElement("text");
-		commentText.textContent = commentsText;
+		commentHead.appendChild(commentName);
+		commentHead.appendChild(time);
 
-		commentInList.appendChild(userAvatar);
-		commentInList.appendChild(usersName);
+		if (AuthorID == currentUserID) {
+			const close = document.createElement("i");
+			close.setAttribute("class", "fas fa-times-circle");
+			const edit = document.createElement("i");
+			edit.setAttribute("class", "fas fa-pen-square");
+			commentHead.appendChild(close);
+			commentHead.appendChild(edit);
+		}
 
-		commentElement.appendChild(commentInList);
+		commentBox.appendChild(commentHead);
+
+		const commentText = document.createElement("div");
+		commentText.setAttribute("class", "comment-content");
+		commentText.innerHTML = commentsText;
+
+		commentBox.appendChild(commentText);
+
+		commentInList.appendChild(commentBox);
+
+		commentElement.insertBefore(commentInList, commentElement.childNodes[0]);
 	}
 });
 
-async function CreateNewComment(PostID) {
+async function CreateNewComment(usersAvatar, Name, PostID, url, isOP) {
 	const commentsText = document.getElementById("commentText-" + PostID).value;
-	console.log(commentsText, PostID);
-	connection.invoke("DistributeComment", PostID, commentsText).catch(err => console.error(err.toString()));
+
+	connection.invoke("DistributeComment", usersAvatar, Name, currentUserID, isOP, PostID, commentsText, url).catch(err => console.error(err.toString()));
 	await SendNewCommentData(PostID);
-	event.preventDefault();
+
 };
 
 connection.on("AddTheReaction", (PostID, likes, dislikes) => {

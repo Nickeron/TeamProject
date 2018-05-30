@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Http;
 namespace TeamProject.Models
 {
     public class MyWallViewModel
-    {
+    {        
+        public User ThisUser { get; set; }
         public List<Post> Posts { get; set; }
         public List<Interest> Interests { get; set; }
         public bool CanCreateNewPostHere { get; set; }
