@@ -10,6 +10,7 @@ namespace TeamProject.Data.Entities
         myself,
         addFriend,
         acceptRequest,
+        removeRequest,
         removeFriend
     }
 }

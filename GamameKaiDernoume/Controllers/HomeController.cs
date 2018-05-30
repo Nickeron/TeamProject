@@ -73,7 +73,6 @@ namespace TeamProject.Controllers
             {
                 ThisUser = thisUser,
                 ProfileUser = thisUser,
-                CanCreateNewPostHere = true,
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
@@ -86,9 +85,7 @@ namespace TeamProject.Controllers
         [HttpGet("{username}")]
         public async Task<IActionResult> Personal(string username)
         {
-            if (username is null) { Redirect(Url.Action("Personal", "Home")); }
-
-            User thisUser = await userManager.GetUserAsync(HttpContext.User);            
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);                        
             User profileUser = userManager.Users.FirstOrDefault(u => u.UserName == username);
 
             MyWallViewModel MyWallData = new MyWallViewModel

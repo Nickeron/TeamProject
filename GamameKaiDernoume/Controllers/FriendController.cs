@@ -35,7 +35,7 @@ namespace TeamProject.Controllers
             this.logger = logger;
         }
 
-        public async Task<IActionResult> FindFriends()
+        public async Task<IActionResult> Find()
         {
             var allAvailableFriends = dataRepository.GetAllStrangeUsers(await userManager.GetUserAsync(HttpContext.User));
 
@@ -63,9 +63,8 @@ namespace TeamProject.Controllers
             if (dataRepository.SaveAll())
             {
                 logger.LogError("Ok a new friend request was created");
-                return Ok("New friendship saved!");
             };
-            return BadRequest("Something bad happened");
+            return RedirectToAction("Personal", "Home", new { username = theNewFriend.UserName });
         }
 
         [Route("/addfriend/{userid}")]
@@ -73,6 +72,7 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Accept(string userid)
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            User theNewFriend = await userManager.FindByIdAsync(userid);
 
             if (userid is null || thisUser is null) throw new Exception();
 
@@ -81,9 +81,8 @@ namespace TeamProject.Controllers
             if (dataRepository.SaveAll())
             {
                 logger.LogError("Ok a new friend request was created");
-                return Ok("New friendship saved!");
             };
-            return BadRequest("Something bad happened");
+            return RedirectToAction("Personal", "Home", new { username = theNewFriend.UserName });
         }
 
         [Route("/unfriend/{userid}")]
@@ -91,6 +90,7 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Remove(string userid)
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            User theNewFriend = await userManager.FindByIdAsync(userid);
 
             if (userid is null || thisUser is null) throw new Exception();
 
@@ -100,9 +100,8 @@ namespace TeamProject.Controllers
             if (dataRepository.SaveAll())
             {
                 logger.LogError("Ok a new friend request was created");
-                return Ok("New friendship saved!");
             };
-            return BadRequest("Something bad happened");
+            return RedirectToAction("Personal", "Home", new { username = theNewFriend.UserName });
         }
     }
 }

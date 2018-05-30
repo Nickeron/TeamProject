@@ -59,7 +59,8 @@ namespace TeamProject.Data
             (f.Receiver.Id == anotherUser.Id && f.Sender.Id == thisUser.Id));
 
             if (friendship is null) { return Friendship.addFriend; }
-            else if (friendship.Receiver.Id == thisUser.Id) { return Friendship.acceptRequest; }
+            else if (friendship.Receiver.Id == thisUser.Id && friendship.Accept == false) { return Friendship.acceptRequest; }
+            else if (friendship.Sender.Id == thisUser.Id && friendship.Accept == false) { return Friendship.removeRequest; }
             else { return Friendship.removeFriend; }
         }
 

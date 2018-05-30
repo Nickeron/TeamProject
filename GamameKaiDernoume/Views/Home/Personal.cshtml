@@ -13,7 +13,7 @@
 		{
 			<a asp-controller="Friend"
 			   asp-action="Accept"
-			   asp-route-id="@Model.ProfileUser.Id"
+			   asp-route-userid="@Model.ProfileUser.Id"
 			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
 				Accept Request
 			</a>
@@ -22,16 +22,25 @@
 		{
 			<a asp-controller="Friend"
 			   asp-action="Make"
-			   asp-route-id="@Model.ProfileUser.Id"
+			   asp-route-userid="@Model.ProfileUser.Id"
 			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
 				Add friend
+			</a>
+		}
+		else if (Model.FriendshipStatus.Equals(Friendship.removeRequest))
+		{
+			<a asp-controller="Friend"
+			   asp-action="Remove"
+			   asp-route-userid="@Model.ProfileUser.Id"
+			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
+				Remove Request
 			</a>
 		}
 		else
 		{
 			<a asp-controller="Friend"
 			   asp-action="Remove"
-			   asp-route-id="@Model.ProfileUser.Id"
+			   asp-route-userid="@Model.ProfileUser.Id"
 			   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
 				Unfriend
 			</a>
@@ -40,7 +49,7 @@
 	Top 3 Interests of @Model.ProfileUser.FirstName
 </div>
 
-@if (Model.CanCreateNewPostHere)
+@if (Model.FriendshipStatus.Equals(Friendship.myself))
 {
 	<partial name="_CreatePostPartial" />
 }
