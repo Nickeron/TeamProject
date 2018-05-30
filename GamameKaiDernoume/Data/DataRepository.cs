@@ -280,7 +280,8 @@ namespace TeamProject.Data
             List<Friend> allKnown = _ctx.Friends
                 .Include(u => u.Receiver)
                 .Include(u => u.Sender)
-                .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
+                .Where(u => 
+                (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && u.Accept)
                 .ToList();
 
             List<string> allFriends = new List<string>();
