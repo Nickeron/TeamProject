@@ -2,9 +2,18 @@
 @{
 	ViewData["Title"] = "Profile";
 }
-<partial name="_CreatePostPartial" />
+<link href="~/css/profile.css" rel="stylesheet" />
+<br />
+<div class="jumbotron">
+	<img src="@Model.ThisUser.UserAvatar" class="profile-avatar rounded-circle img-thumbnail">
+	<h1>@Model.ThisUser.FirstName @Model.ThisUser.LastName</h1>
+	Top 3 Interests of @Model.ThisUser.FirstName
+</div>
+
+@if (Model.CanCreateNewPostHere)
+{
+	<partial name="_CreatePostPartial" />
+}
 <!-- Button TO CREATE A NEW POST modal -->
-<br />
-<button type="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#createPost" data-whatever="mdo">Create a new Post</button>
-<br />
-<partial name="_DisplayPostsPartial"/>
+
+<partial name="_DisplayPostsPartial" />

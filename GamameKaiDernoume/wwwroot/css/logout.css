@@ -81,7 +81,6 @@ button:active {
         -moz-transition: none !important;
         -o-transition: none !important;
         transition: none !important;
-        */
     }
 
 button:hover.clear-a {

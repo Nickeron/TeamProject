@@ -72,6 +72,7 @@ namespace TeamProject.Controllers
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,
+                CanCreateNewPostHere = true,
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
