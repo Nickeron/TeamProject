@@ -21,7 +21,9 @@
 							@interest.Interest.InterestCategory
 						</a>
 					}
+					<i class="fas fa-times-circle" onclick="deleteModal('post', '@post.PostID')"></i>
 				</p>
+				
 				<p class="text-muted">
 					<time class="post-date" datetime="@post.PostDate">@post.PostDate</time>
 
@@ -95,8 +97,8 @@
 							<time class="post-date" datetime="@postComment.CommentDate">@postComment.CommentDate</time>
 							@if (postComment.User.Id == Model.ThisUser.Id)
 							{
-								<i class="fas fa-times-circle" data-toggle="modal" data-target="#deleteThis" data-id=@postComment.CommentID></i>
-								<i class="fas fa-pen-square" data-toggle="modal" data-target="#deleteThis" data-id=@postComment.CommentID></i>
+								<i class="fas fa-times-circle" onclick="deleteModal('comment', '@postComment.CommentID')"></i>
+								<i class="fas fa-pen-square" data-toggle="modal" data-target="#editThis" data-id=@postComment.CommentID></i>
 							}
 						</div>
 						<div class="comment-content">
@@ -108,12 +110,29 @@
 		</ul>
 	</div>
 }
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/comment.js"></script>
 
 <script>
 	let currentUserID = "@Model.ThisUser.Id";
+
+	function deleteModal(type, id){
+		// Show the Modal 
+		$("#deleteThis").modal("show");
+
+		$("#confirm-delete").click(async function ()
+		{
+			
+			const action = (type === 'post') ? "@Url.Action("Delete", "Post")":"@Url.Action("Delete", "Comment")";
+			const url = "https://" + window.location.host + action;
+
+			await sendData(url, id);
+
+			location.reload(); 
+		});
+	}
+
 	async function SendReaction(PostID, isLike) {
 
 		let data = {
@@ -121,7 +140,7 @@
 			isLike: isLike
 		};
 
-		return await sendData("@Url.Action("AddReactionToPost", "Home")", data);
+		return await sendData("@Url.Action("AddReaction", "Post")", data);
 	}
 
 	async function SendNewCommentData(PostID)
@@ -135,7 +154,7 @@
 			commentText: commentsText
 		};
 
-		return await sendData("@Url.Action("AddNewCommentToPost", "Home")", data);
+		return await sendData("@Url.Action("AddToPost", "Comment")", data);
 	}
 
 </script>

@@ -29,6 +29,11 @@ namespace TeamProject.Data
             _ctx.Add(model);
         }
 
+        public void DeleteEntity(object model)
+        {
+            _ctx.Remove(model);
+        }
+
         public IEnumerable<Post> GetAllPosts()
         {
             try
@@ -173,6 +178,22 @@ namespace TeamProject.Data
             catch (Exception ex)
             {
                 _logger.LogError($"Failed to get the requested Post: {ex}");
+                return null;
+            }
+        }
+
+        public Comment GetCommentById(int commentID)
+        {
+            try
+            {
+                _logger.LogInformation("Get Comment by ID was called");
+
+                return _ctx.Comments
+                .Where(u => u.CommentID.Equals(commentID)).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Comment: {ex}");
                 return null;
             }
         }

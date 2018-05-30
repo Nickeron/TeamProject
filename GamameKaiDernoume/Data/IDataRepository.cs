@@ -8,6 +8,8 @@ namespace TeamProject.Data
     public interface IDataRepository
     {
         void AddEntity(object model);
+        void DeleteEntity(object model);
+
         IEnumerable<Interest> GetAllInterests();
 
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
@@ -24,6 +26,8 @@ namespace TeamProject.Data
 
         Post GetPostByTimeStamp(DateTime timestamp);
         Post GetPostById(int postID);
+
+        Comment GetCommentById(int commentID);
 
         Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser);
 

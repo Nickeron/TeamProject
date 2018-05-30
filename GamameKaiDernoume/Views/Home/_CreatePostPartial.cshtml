@@ -84,7 +84,7 @@
 		data.append('PostScope', scope)
 		data.append('Interests', interests)
 
-		const urlToSendRequest = "https://" + window.location.host + "@Url.Action("CreatePost", "Home")";
+		const urlToSendRequest = "https://" + window.location.host + "@Url.Action("Create", "Post")";
 
 		const rawData = await fetch(urlToSendRequest,
 		{
