@@ -37,9 +37,31 @@ namespace TeamProject.Controllers
 
         public async Task<IActionResult> Find()
         {
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
             var allAvailableFriends = dataRepository.GetAllStrangeUsers(await userManager.GetUserAsync(HttpContext.User));
+            List<UserModel> ToBeFriends = new List<UserModel>();
+            foreach(User availableFriend in allAvailableFriends)
+            {
+                UserModel toBeFriend = new UserModel
+                {
+                    ID = availableFriend.Id,
+                    Avatar = availableFriend.UserAvatar,
+                    UserName = availableFriend.UserName,
+                    Name = availableFriend.FirstName + " " + availableFriend.LastName,
+                    FriendshipStatus = dataRepository.GetFriendship(thisUser, availableFriend),
+                    TopInterests = dataRepository.GetTopUsersInterests(availableFriend)
+                };
+                ToBeFriends.Add(toBeFriend);
+            }
+            FriendViewModel data = new FriendViewModel
+            {
+                ThisUser = thisUser,
+                SentRequests = ToBeFriends.Where(u=>u.FriendshipStatus == Friendship.removeRequest).ToList(),
+                ReceivedRequests = ToBeFriends.Where(u => u.FriendshipStatus == Friendship.acceptRequest).ToList(),
+                OtherUsers = ToBeFriends.Where(u => u.FriendshipStatus == Friendship.addFriend).ToList()
+            };
 
-            return View(allAvailableFriends);
+            return View(data);
         }
 
 

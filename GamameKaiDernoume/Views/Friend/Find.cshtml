@@ -1,25 +1,118 @@
-﻿@model IEnumerable<User>
+﻿@model FriendViewModel
 @{
-	ViewData["Title"] = "FindFriends";
+	ViewData["Title"] = "Make New Friends";
 }
-
-<h2>FindFriends</h2>
-
-<div>
-	@foreach (User friend in Model)
-	{
-		<br />
-		<div id=@friend.Id>
-		<label>@friend.FirstName @friend.LastName </label>
-		<button id=@friend.Id onclick="sendRequest(this.id)">Send Friend Request</button>
-		</div>
-	}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-3">&nbsp;<i class="fas fa-address-book"></i> Make New Friends</h1>
+	</div>
 </div>
 
-<script>
-	async function sendRequest(userId)
-	{
-		await sendData("@Url.Action("SendFriendRequest", "Home")", userId);
-	}
-</script>
+
+<div>
+	<ul class="list-group list-group-flush">
+		@if (Model.ReceivedRequests.Count > 0)
+		{
+			<li class="list-group-item active">These users have asked you to be their friend</li>}
+		@foreach (UserModel friend in Model.ReceivedRequests)
+		{
+			<li class="list-group-item">
+				<div id=@friend.ID>
+					<a asp-controller="Home"
+					   asp-action="Personal"
+					   asp-route-username="@friend.UserName"
+					   id="@friend.FriendshipStatus">
+						<img src="@friend.Avatar" class="avatar rounded-circle">
+						<label>@friend.Name</label>
+					</a>
+					@foreach (Interest interest in friend.TopInterests)
+					{
+						<a asp-controller="Home"
+						   asp-action="Index"
+						   asp-route-id="@interest.InterestID"
+						   class="badge badge-primary">
+							@interest.InterestCategory
+						</a>
+					}
+					<a asp-controller="Friend"
+					   asp-action="Accept"
+					   asp-route-userid="@friend.ID"
+					   class="btn btn-outline-info float-right" id="@friend.FriendshipStatus">
+						Accept Request
+					</a>
+				</div>
+			</li>
+		}
+	</ul>
+	<br />
+	<ul class="list-group list-group-flush">
+		@if (Model.OtherUsers.Count > 0)
+		{
+			<li class="list-group-item active">Meet New People</li>}
+		@foreach (UserModel friend in Model.OtherUsers)
+		{
+			<li class="list-group-item">
+				<div id=@friend.ID>
+					<a asp-controller="Home"
+					   asp-action="Personal"
+					   asp-route-username="@friend.UserName"
+					   id="@friend.FriendshipStatus">
+						<img src="@friend.Avatar" class="avatar rounded-circle">
+						<label>@friend.Name</label>
+					</a>
+					@foreach (Interest interest in friend.TopInterests)
+					{
+						<a asp-controller="Home"
+						   asp-action="Index"
+						   asp-route-id="@interest.InterestID"
+						   class="badge badge-primary">
+							@interest.InterestCategory
+						</a>
+					}
+					<a asp-controller="Friend"
+					   asp-action="Make"
+					   asp-route-userid="@friend.ID"
+					   class="btn btn-outline-info float-right" id="@friend.FriendshipStatus">
+						Add friend
+					</a>
+				</div>
+			</li>
+		}
+	</ul>
+	<br />
+	<ul class="list-group list-group-flush">
+		@if (Model.SentRequests.Count > 0)
+		{
+			<li class="list-group-item active">Sent Friend Requests</li>}
+		@foreach (UserModel friend in Model.SentRequests)
+		{
+			<li class="list-group-item">
+				<div id=@friend.ID>
+					<a asp-controller="Home"
+					   asp-action="Personal"
+					   asp-route-username="@friend.UserName"
+					   id="@friend.FriendshipStatus">
+						<img src="@friend.Avatar" class="avatar rounded-circle">
+						<label>@friend.Name</label>
+					</a>
+					@foreach (Interest interest in friend.TopInterests)
+					{
+						<a asp-controller="Home"
+						   asp-action="Index"
+						   asp-route-id="@interest.InterestID"
+						   class="badge badge-primary">
+							@interest.InterestCategory
+						</a>
+					}
+					<a asp-controller="Friend"
+					   asp-action="Remove"
+					   asp-route-userid="@friend.ID"
+					   class="btn btn-outline-info float-right" id="@friend.FriendshipStatus">
+						Remove Request
+					</a>
+				</div>
+			</li>
+		}
+	</ul>
+</div>
 

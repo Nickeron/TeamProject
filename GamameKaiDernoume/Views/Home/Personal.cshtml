@@ -3,11 +3,11 @@
 	ViewData["Title"] = "Profile";
 }
 <link href="~/css/profile.css" rel="stylesheet" />
-<br />
-<div class="jumbotron .jumbotron-fluid">
+
+<div class="jumbotron jumbotron-fluid">
 	<div class="container">
 		<img src="@Model.ProfileUser.UserAvatar" class="profile-avatar rounded-circle img-thumbnail">
-		<h1>@Model.ProfileUser.FirstName @Model.ProfileUser.LastName</h1>
+		<h2 class="display-4">@Model.ProfileUser.FirstName @Model.ProfileUser.LastName</h2>
 		@if (!(Model.FriendshipStatus.Equals(Friendship.myself)))
 		{
 			if (Model.FriendshipStatus.Equals(Friendship.acceptRequest))
