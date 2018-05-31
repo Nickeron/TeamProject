@@ -1,5 +1,4 @@
 ﻿@model MyWallViewModel
-
 <div class="modal fade" id="editThis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -12,41 +11,23 @@
 			<div class="modal-body">
 				<form>
 					<div class="form-group">
-						<label for="editCommentText" class="col-form-label">Say something..</label>
+						<label for="editCommentText" class="col-form-label">Change this...</label>
 						<input id="editCommentText" type="text" class="form-control">
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button id="cofirmChanges" type="button" class="btn btn-primary" onclick="editComment()">Save Changes</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="editModal">Close</button>
+				<button id="confirmChanges" type="button" class="btn btn-primary">Save Changes</button>
 			</div>
 		</div>
 	</div>
 </div>
-
 <script>
-
-	async function editComment()
-	{
-		const newCommentText = document.getElementById("editCommentText").value;
-
-		if ($.trim(newCommentText) == '') {
-			alert("A post cannot be empty!");
-			return false;
-		}
-
-		const urlToSendRequest = "https://" + window.location.host + "@Url.Action("Edit", "Comment")";
-
-		await sendData(urlToSendRequest, newCommentText);
-
-		location.reload();
-	}
-
-	document.addEventListener('keydown', (e) => {
-		if (e.which == 13) {
-			sendNewPost();
-			return false;
-		}
-	});
+    document.addEventListener('keydown', (e) => {
+        if (e.which == 13) {
+            sendNewPost();
+            return false;
+        }
+    });
 </script>

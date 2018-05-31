@@ -39,6 +39,7 @@ namespace TeamProject.Models
     public class CommentModel {
         [Required]
         public int PostID { get; set; }
+        public int CommentID { get; set; }
 
         [Required]
         public string CommentText { get; set; }

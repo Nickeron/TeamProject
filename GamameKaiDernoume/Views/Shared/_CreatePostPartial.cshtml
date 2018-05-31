@@ -33,7 +33,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" onclick="sendNewPost()">Save Post</button>
+				<button type="button" id="createNewPostButton" class="btn btn-primary" onclick="sendNewPost()">Save Post</button>
 			</div>
 		</div>
 	</div>
@@ -99,7 +99,7 @@
 
 	document.getElementById("postText").addEventListener('keydown', (e) => {
 		if (e.which == 13) {
-			sendNewPost();
+			document.getElementById("createNewPostButton").click;
 			return false;
 		}
 	});

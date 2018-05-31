@@ -53,7 +53,7 @@ namespace TeamProject.Controllers
                     }
                 }
 
-                DateTime timeStamp = DateTime.Now;
+                DateTime timeStamp = DateTime.UtcNow;
                 Post theNewPost = new Post
                 {
                     User = thisUser,

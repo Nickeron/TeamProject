@@ -30,7 +30,7 @@
 				</p>
 
 				<p class="text-muted">
-					<time class="post-date" datetime="@post.PostDate">@post.PostDate</time>
+					<time class="post-date" id="@post.PostDate"></time>
 
 					@if (@post.PostScope == Scope.Global)
 					{
@@ -103,7 +103,7 @@
 							@if (postComment.User.Id == Model.ThisUser.Id)
 							{
 								<i class="fas fa-times-circle" onclick="deleteModal('comment', '@postComment.CommentID')"></i>
-								<i class="fas fa-pen-square" data-toggle="modal" data-target="#editThis" data-id=@postComment.CommentID></i>
+								<i class="fas fa-pen-square"  onclick="editModal('@postComment.CommentID')"></i>
 							}
 						</div>
 						<div class="comment-content">
@@ -121,6 +121,28 @@
 
 <script>
 	let currentUserID = "@Model.ThisUser.Id";
+
+	 function editModal(id) {
+        //Show the Modal
+        $("#editThis").modal("show");
+
+        $("#confirmChanges").click(async function ()
+        {
+            const newCommentText = document.getElementById("editCommentText").value;
+            const action = "@Url.Action("Edit", "Comment")";
+            const url = "https://" + window.location.host + action;
+
+            let data = {
+                commentID: id,
+                commentText: newCommentText
+            };
+            console.log(data);
+            await sendData(url, data);
+
+            location.reload();
+        });
+
+    }
 
 	function deleteModal(type, id){
 		// Show the Modal

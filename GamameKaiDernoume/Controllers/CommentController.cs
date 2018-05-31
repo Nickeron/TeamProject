@@ -43,7 +43,7 @@ namespace TeamProject.Controllers
                 Comment newComment = new Comment
                 {
                     User = thisUser,
-                    CommentDate = DateTime.Now,
+                    CommentDate = DateTime.UtcNow,
                     CommentText = CommentData.CommentText,
                     Post = commentedPost
                 };
@@ -57,6 +57,22 @@ namespace TeamProject.Controllers
                 return Ok("New Comment Added");
             }
             return BadRequest("Something bad happened");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromBody]CommentModel CommentData)
+        {
+            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+            Comment toEditComment = dataRepository.GetCommentById(CommentData.CommentID);
+            toEditComment.CommentText = CommentData.CommentText;
+            toEditComment.CommentDate = DateTime.UtcNow;
+
+            if (dataRepository.SaveAll())
+            {
+                logger.LogError("saved");
+            };
+            return Ok(" Comment Eddited");
+
         }
 
         [HttpPost]
