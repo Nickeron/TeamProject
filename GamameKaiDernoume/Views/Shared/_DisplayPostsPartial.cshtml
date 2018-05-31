@@ -1,5 +1,7 @@
 ﻿@model MyWallViewModel
 <partial name="_DeleteThisPartial" />
+<partial name="_EditCommentPartial" />
+
 @foreach (Post post in Model.Posts)
 {
 	<div class="jumbotron w-75 mx-auto">
@@ -23,10 +25,10 @@
 					}
 					@if (post.User.Id == Model.ThisUser.Id)
 					{
-					<i class="fas fa-times-circle fa-lg" onclick="deleteModal('post', '@post.PostID')"></i>
+						<i class="fas fa-times-circle fa-lg" onclick="deleteModal('post', '@post.PostID')"></i>
 					}
 				</p>
-				
+
 				<p class="text-muted">
 					<time class="post-date" datetime="@post.PostDate">@post.PostDate</time>
 
@@ -121,18 +123,18 @@
 	let currentUserID = "@Model.ThisUser.Id";
 
 	function deleteModal(type, id){
-		// Show the Modal 
+		// Show the Modal
 		$("#deleteThis").modal("show");
 
 		$("#confirm-delete").click(async function ()
 		{
-			
+
 			const action = (type === 'post') ? "@Url.Action("Delete", "Post")":"@Url.Action("Delete", "Comment")";
 			const url = "https://" + window.location.host + action;
 
 			await sendData(url, id);
 
-			location.reload(); 
+			location.reload();
 		});
 	}
 

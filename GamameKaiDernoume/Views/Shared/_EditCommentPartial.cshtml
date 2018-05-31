@@ -1,6 +1,6 @@
 ﻿@model MyWallViewModel
 
-<div class="modal fade" id="createPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editThis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -11,87 +11,34 @@
 			</div>
 			<div class="modal-body">
 				<form>
-					<select name="scope" id="scope" onchange="changeScope(this)">
-						<option value=0 selected>Global</option>
-						<option value=1>Personal</option>
-					</select>
-					<p id="interests-off-post">
-						@foreach (Interest interest in Model.Interests)
-						{
-							<span class="badge badge-secondary" onclick="toggleInterest(this)">@interest.InterestCategory</span>
-						}
-					</p>
-					<p id="interests-in-post"></p>
 					<div class="form-group">
-						<label for="postText" class="col-form-label">Say something..</label>
-						<input id="postText" type="text" class="form-control">
-						<label for="postImage" class="col-form-label">Add an image..</label>
-						<input id="postImage" type="file" class="form-control" name="image">
+						<label for="editCommentText" class="col-form-label">Say something..</label>
+						<input id="editCommentText" type="text" class="form-control">
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" onclick="sendNewPost()">Save Post</button>
+				<button id="cofirmChanges" type="button" class="btn btn-primary" onclick="editComment()">Save Changes</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	let interests = [];
-	let scope = 0;
 
-	function toggleInterest(element) {
-		console.log(element);
-		console.log(interests);
-		const offInterests = document.getElementById("interests-off-post");
-		const inInterests = document.getElementById("interests-in-post");
-		const index = interests.findIndex(x => x === element.innerHTML);
-		if (index >= 0) {
-			element.setAttribute("class", "badge badge-secondary");
-			inInterests.removeChild(element);
-			offInterests.appendChild(element);
-			interests.splice(index, 1);
-		}
-		else {
-			element.setAttribute("class", "badge badge-primary");
-			offInterests.removeChild(element);
-			inInterests.appendChild(element);
-			interests.push(element.innerHTML);
-		}
-	}
-
-	function changeScope(element)
+	async function editComment()
 	{
-		scope = element.value;
-	}
+		const newCommentText = document.getElementById("editCommentText").value;
 
-	async function sendNewPost()
-	{
-		const newPostText = document.getElementById("postText").value;
-
-		if ($.trim(newPostText) == '') {
+		if ($.trim(newCommentText) == '') {
 			alert("A post cannot be empty!");
 			return false;
 		}
 
-		let input = document.querySelector('input[type="file"]')
+		const urlToSendRequest = "https://" + window.location.host + "@Url.Action("Edit", "Comment")";
 
-		let data = new FormData()
-		data.append('PostImage', input.files[0])
-		data.append('PostText', newPostText)
-		data.append('PostScope', scope)
-		data.append('Interests', interests)
-
-		const urlToSendRequest = "https://" + window.location.host + "@Url.Action("CreatePost", "Home")";
-
-		const rawData = await fetch(urlToSendRequest,
-		{
-			method: 'POST',
-			credentials: "same-origin",
-			body: data
-		});
+		await sendData(urlToSendRequest, newCommentText);
 
 		location.reload();
 	}

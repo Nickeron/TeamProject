@@ -34,6 +34,98 @@ namespace TeamProject.Data
             _ctx.Remove(model);
         }
 
+        public IEnumerable<Interest> GetAllInterests()
+        {
+            try
+            {
+                _logger.LogInformation("Get All Interests was called");
+
+                return _ctx.Interests
+                           .OrderBy(p => p.InterestCategory)
+                           .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get all Interests: {ex}");
+                return null;
+            }
+        }
+
+        List<String> GetTopUsersInterests(User thisUser)
+        {
+            try
+            {
+                _logger.LogInformation("Get Top Users Interests was called");
+
+                IEnumerable<Post> UsersPosts = GetAllPostsByUser(thisUser);
+
+                _ctx.Interests
+                    .Include(i=>i.PostInterests)
+                    .GroupBy(p => p.InterestCategory)
+                    .ToList();
+
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get users Interests: {ex}");
+                return null;
+            }
+        }
+
+        public IEnumerable<User> GetAllStrangeUsers(User thisUser)
+        {
+            IEnumerable<Friend> allKnown = _ctx.Friends
+                .Include(u => u.Receiver)
+                .Include(u => u.Sender)
+                .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
+                .ToList();
+
+            List<string> allFriends = new List<string>() { thisUser.Id };
+            foreach (Friend knownPerson in allKnown)
+            {
+                if (knownPerson.Receiver.Id != thisUser.Id)
+                {
+                    allFriends.Add(knownPerson.Receiver.Id);
+                }
+                if (knownPerson.Sender.Id != thisUser.Id)
+                {
+                    allFriends.Add(knownPerson.Sender.Id);
+                }
+            }
+
+            return _ctx.Users.Where(u => !allFriends.Contains(u.Id)).ToList();
+        }
+
+        public IEnumerable<User> GetUsersFriends(User thisUser)
+        {
+            List<Friend> allKnown = _ctx.Friends
+                .Include(u => u.Receiver)
+                .Include(u => u.Sender)
+                .Where(u =>
+                (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && u.Accept)
+                .ToList();
+
+            List<string> allFriends = new List<string>();
+
+            foreach (Friend knownPerson in allKnown)
+            {
+                if (knownPerson.Receiver.Id != thisUser.Id)
+                {
+                    allFriends.Add(knownPerson.Receiver.Id);
+                }
+                if (knownPerson.Sender.Id != thisUser.Id)
+                {
+                    allFriends.Add(knownPerson.Sender.Id);
+                }
+            }
+
+            return _ctx.Users
+                .Include(u => u.SentMessages)
+                .Where(u => allFriends.Contains(u.Id)).ToList();
+        }
+
         public Friend GetFriend(User thisUser, string friendsID)
         {
             try
@@ -64,22 +156,42 @@ namespace TeamProject.Data
             else { return Friendship.removeFriend; }
         }
 
-        public IEnumerable<Post> GetAllPosts()
+        public IEnumerable<Message> GetAllMessagesOfUser(User thisUser)
         {
             try
             {
-                _logger.LogInformation("Get All Posts was called");
-                return _ctx.Posts
-                    .Include(u => u.Comments)
-                    .Include(u => u.Reactions)
-                    .Include(u => u.PostInterests)
-                    .ThenInclude(u => u.Interest)
-                    .OrderByDescending(p => p.PostDate)
+                _logger.LogInformation("Get All messages of user was called");
+
+                return _ctx.Messages
+                    .Include(p => p.Sender)
+                    .Include(m => m.Receiver)
+                    .Where(m => m.Sender.Id == thisUser.Id || m.Receiver.Id == thisUser.Id)
                     .ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to get all Posts: {ex}");
+                _logger.LogError($"Failed to get the requested Messages: {ex}");
+                return null;
+            }
+        }
+
+        public IEnumerable<Message> GetAllMessagesOfUsers(User thisUser, User talkUser)
+        {
+            try
+            {
+                _logger.LogInformation("Get All messages of users was called");
+
+                return _ctx.Messages
+                    .Include(p => p.Sender)
+                    .Include(m => m.Receiver)
+                    .Where(m =>
+                    (m.Sender.Id == thisUser.Id && m.Receiver.Id == talkUser.Id) ||
+                    (m.Sender.Id == talkUser.Id && m.Receiver.Id == thisUser.Id))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Messages: {ex}");
                 return null;
             }
         }
@@ -154,24 +266,7 @@ namespace TeamProject.Data
                 _logger.LogError($"Failed to get all Posts: {ex}");
                 return null;
             }
-        }
-
-        public IEnumerable<Interest> GetAllInterests()
-        {
-            try
-            {
-                _logger.LogInformation("Get All Interests was called");
-
-                return _ctx.Interests
-                           .OrderBy(p => p.InterestCategory)
-                           .ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get all Interests: {ex}");
-                return null;
-            }
-        }
+        }        
 
         public Post GetPostByTimeStamp(DateTime timeStamp)
         {
@@ -249,103 +344,16 @@ namespace TeamProject.Data
         public bool SaveAll()
         {
             return _ctx.SaveChanges() > 0;
-        }
-
-        public IEnumerable<User> GetAllStrangeUsers(User thisUser)
-        {
-            IEnumerable<Friend> allKnown = _ctx.Friends
-                .Include(u => u.Receiver)
-                .Include(u => u.Sender)
-                .Where(u => u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id)
-                .ToList();
-
-            List<string> allFriends = new List<string>() { thisUser.Id };
-            foreach (Friend knownPerson in allKnown)
-            {
-                if (knownPerson.Receiver.Id != thisUser.Id)
-                {
-                    allFriends.Add(knownPerson.Receiver.Id);
-                }
-                if (knownPerson.Sender.Id != thisUser.Id)
-                {
-                    allFriends.Add(knownPerson.Sender.Id);
-                }
-            }
-
-            return _ctx.Users.Where(u => !allFriends.Contains(u.Id)).ToList();
-        }
-
-        public IEnumerable<User> GetUsersFriends(User thisUser)
-        {
-            List<Friend> allKnown = _ctx.Friends
-                .Include(u => u.Receiver)
-                .Include(u => u.Sender)
-                .Where(u => 
-                (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && u.Accept)
-                .ToList();
-
-            List<string> allFriends = new List<string>();
-
-            foreach (Friend knownPerson in allKnown)
-            {
-                if (knownPerson.Receiver.Id != thisUser.Id)
-                {
-                    allFriends.Add(knownPerson.Receiver.Id);
-                }
-                if (knownPerson.Sender.Id != thisUser.Id)
-                {
-                    allFriends.Add(knownPerson.Sender.Id);
-                }
-            }
-
-            return _ctx.Users
-                .Include(u=>u.SentMessages)
-                .Where(u => allFriends.Contains(u.Id)).ToList();
-        }
+        }       
 
         public Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser)
         {
             return _ctx.Reactions.Where(r => r.Post.PostID == reactionPostId && r.User == thisUser).FirstOrDefault();
         }
 
-        public IEnumerable<Message> GetAllMessagesOfUser(User thisUser)
+        List<string> IDataRepository.GetTopUsersInterests(User thisUser)
         {
-            try
-            {
-                _logger.LogInformation("Get All messages of user was called");
-
-                return _ctx.Messages
-                    .Include(p => p.Sender)
-                    .Include(m=>m.Receiver)
-                    .Where(m => m.Sender.Id == thisUser.Id || m.Receiver.Id == thisUser.Id)
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get the requested Messages: {ex}");
-                return null;
-            }
-        }
-
-        public IEnumerable<Message> GetAllMessagesOfUsers(User thisUser, User talkUser)
-        {
-            try
-            {
-                _logger.LogInformation("Get All messages of users was called");
-
-                return _ctx.Messages
-                    .Include(p => p.Sender)
-                    .Include(m => m.Receiver)
-                    .Where(m => 
-                    (m.Sender.Id == thisUser.Id && m.Receiver.Id == talkUser.Id) || 
-                    (m.Sender.Id == talkUser.Id && m.Receiver.Id == thisUser.Id))
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get the requested Messages: {ex}");
-                return null;
-            }
+            throw new NotImplementedException();
         }
     }
 }
