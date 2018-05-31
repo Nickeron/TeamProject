@@ -44,8 +44,6 @@
 	let scope = 0;
 
 	function toggleInterest(element) {
-		console.log(element);
-		console.log(interests);
 		const offInterests = document.getElementById("interests-off-post");
 		const inInterests = document.getElementById("interests-in-post");
 		const index = interests.findIndex(x => x === element.innerHTML);
@@ -70,6 +68,7 @@
 
 	async function sendNewPost()
 	{
+
 		const newPostText = document.getElementById("postText").value;
 
 		if ($.trim(newPostText) == '') {

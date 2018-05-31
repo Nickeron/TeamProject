@@ -60,17 +60,22 @@ namespace TeamProject.Data
                 List<int> UsersPostInterests =
                     GetAllPostsByUser(thisUser).SelectMany(p => p.PostInterests).Select(pi=>pi.InterestId).ToList();
 
+                List<int> TopUsersInterests = UsersPostInterests
+                    .GroupBy(s => s)
+                    .OrderByDescending(s => s.Count())
+                    .Take(3).SelectMany(ui => ui).ToList();
+
                 List<Interest> UsersInterests = _ctx.Interests
                     .Include(i => i.PostInterests)
-                    .Where(i => UsersPostInterests.Contains(i.InterestID))
+                    .Where(i => TopUsersInterests.Contains(i.InterestID))
                     .ToList();
 
-                var TopUsersInterests = UsersInterests
-                    .GroupBy(s => s.InterestCategory)
-                    .OrderByDescending(s => s.Count())
-                    .Take(3).SelectMany(ui=>ui);
+                //var TopUsersInterests = UsersInterests
+                //    .GroupBy(s => s.InterestCategory)
+                //    .OrderBy(s => s.Count())
+                //    .Take(3).SelectMany(ui=>ui);
 
-                return TopUsersInterests.ToList();
+                return UsersInterests;
             }
             catch (Exception ex)
             {

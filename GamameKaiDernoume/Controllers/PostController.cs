@@ -47,7 +47,7 @@ namespace TeamProject.Controllers
                 List<Interest> addedInterests = new List<Interest>();
                 foreach (Interest interest in interests)
                 {
-                    if (newPostData.Interests.Contains(interest.InterestCategory))
+                    if (newPostData.Interests[0].Contains(interest.InterestCategory))
                     {
                         addedInterests.Add(interest);
                     }
