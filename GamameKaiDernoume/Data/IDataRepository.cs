@@ -11,7 +11,7 @@ namespace TeamProject.Data
         void DeleteEntity(object model);
 
         IEnumerable<Interest> GetAllInterests();
-        List<String> GetTopUsersInterests(User thisUser);
+        List<Interest> GetTopUsersInterests(User thisUser);
 
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
         IEnumerable<User> GetUsersFriends(User thisUser);

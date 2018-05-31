@@ -51,21 +51,26 @@ namespace TeamProject.Data
             }
         }
 
-        List<String> GetTopUsersInterests(User thisUser)
+        public List<Interest> GetTopUsersInterests(User thisUser)
         {
             try
             {
                 _logger.LogInformation("Get Top Users Interests was called");
 
-                IEnumerable<Post> UsersPosts = GetAllPostsByUser(thisUser);
+                List<int> UsersPostInterests =
+                    GetAllPostsByUser(thisUser).SelectMany(p => p.PostInterests).Select(pi=>pi.InterestId).ToList();
 
-                _ctx.Interests
-                    .Include(i=>i.PostInterests)
-                    .GroupBy(p => p.InterestCategory)
+                List<Interest> UsersInterests = _ctx.Interests
+                    .Include(i => i.PostInterests)
+                    .Where(i => UsersPostInterests.Contains(i.InterestID))
                     .ToList();
 
+                var TopUsersInterests = UsersInterests
+                    .GroupBy(s => s.InterestCategory)
+                    .OrderByDescending(s => s.Count())
+                    .Take(3).SelectMany(ui=>ui);
 
-                return null;
+                return TopUsersInterests.ToList();
             }
             catch (Exception ex)
             {
@@ -266,7 +271,7 @@ namespace TeamProject.Data
                 _logger.LogError($"Failed to get all Posts: {ex}");
                 return null;
             }
-        }        
+        }
 
         public Post GetPostByTimeStamp(DateTime timeStamp)
         {
@@ -344,16 +349,11 @@ namespace TeamProject.Data
         public bool SaveAll()
         {
             return _ctx.SaveChanges() > 0;
-        }       
+        }
 
         public Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser)
         {
             return _ctx.Reactions.Where(r => r.Post.PostID == reactionPostId && r.User == thisUser).FirstOrDefault();
-        }
-
-        List<string> IDataRepository.GetTopUsersInterests(User thisUser)
-        {
-            throw new NotImplementedException();
         }
     }
 }

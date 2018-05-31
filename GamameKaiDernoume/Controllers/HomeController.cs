@@ -73,6 +73,7 @@ namespace TeamProject.Controllers
             {
                 ThisUser = thisUser,
                 ProfileUser = thisUser,
+                TopUserInterests = dataRepository.GetTopUsersInterests(thisUser),
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
@@ -92,6 +93,7 @@ namespace TeamProject.Controllers
             {
                 ThisUser = thisUser,
                 ProfileUser = profileUser,
+                TopUserInterests = dataRepository.GetTopUsersInterests(profileUser),
                 FriendshipStatus = dataRepository.GetFriendship(thisUser, profileUser),
                 Posts = dataRepository.GetAllPostsByUser(profileUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()

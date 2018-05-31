@@ -48,6 +48,15 @@
 			}
 		}
 		Top 3 Interests of @Model.ProfileUser.FirstName
+		@foreach (Interest userInterest in Model.TopUserInterests)
+		{
+			<a asp-controller="Home"
+			   asp-action="Index"
+			   asp-route-id="@userInterest.InterestID"
+			   class="badge badge-primary">
+				@userInterest.InterestCategory
+			</a>
+		}
 	</div>
 </div>
 

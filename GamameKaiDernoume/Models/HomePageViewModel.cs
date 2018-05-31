@@ -13,7 +13,7 @@ namespace TeamProject.Models
         public User ProfileUser { get; set; }
         public User ThisUser { get; set; }
         public List<Post> Posts { get; set; }
-        public List<string> TopUserInterests { get; set; }
+        public List<Interest> TopUserInterests { get; set; }
         public List<Interest> Interests { get; set; }
         public Friendship FriendshipStatus { get; set; }
         
