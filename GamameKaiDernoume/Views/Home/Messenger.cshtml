@@ -98,11 +98,12 @@
 		</div>
 	</div>
 </div>
-
+<script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 
-<script>
+<script>	
+	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
 	let thisUserID = document.getElementById("userName").title;
 
 	async function setActiveUser(userID)
