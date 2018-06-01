@@ -1,0 +1,107 @@
+﻿@model InterestViewModel
+@{
+	ViewData["Title"] = "Manage Interests";
+}
+<div class="modal fade" id="createInterest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Interests</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="editText" class="col-form-label">They are never enough</label>
+						<input id="editText" type="text" class="form-control">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmChanges" type="button" class="btn btn-primary">Create</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<partial name="_DeleteThisPartial" />
+<partial name="_EditCommentPartial" />
+@*<div id="theForm">
+		<form asp-controller="Home" asp-action="CreateInterest" asp-method="post">
+			<label asp-for="InterestCategory">Interest Category</label>
+			<input asp-for="InterestCategory" /> <br />
+
+			<input type="submit" value="Save Interest" />
+		</form>
+	</div>*@
+
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4">&nbsp;<i class="fas fa-dice"></i> Manage Interests</h1>
+	</div>
+</div>
+
+<button type="button" class="btn btn-lg btn-outline-light btn-block w-75 mx-auto" style="background-color:#25a08d;" data-toggle="modal" data-target="#createInterest">Create a new Interest</button>
+<br />
+<div>
+	<ul class="list-group w-75 mx-auto">
+		@foreach (Interest interest in Model.Interests)
+		{
+			<li class="list-group-item">
+				<strong>@interest.InterestCategory</strong>
+
+				<button class="btn btn-outline-danger float-right" onclick="deleteModal('@interest.InterestID')">Delete</button>
+				<button class="btn btn-outline-info float-right" onclick="editModal('@interest.InterestID', '@interest.InterestCategory')">Edit</button>
+			</li>
+		}
+	</ul>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+	function editModal(id, previousText) {
+		//Show the Modal
+		$("#editThis").modal("show");
+		$("#editText").attr("placeholder", previousText);
+
+        $("#confirmChanges").click(async function ()
+        {
+			const newCategoryName = document.getElementById("editText").value;
+
+            const url = "https://" + window.location.host + "@Url.Action("Edit", "Interest")";
+
+            let data = {
+                interestId: id,
+                interestCategory: newCategoryName
+            };
+            console.log(data);
+            await sendData(url, data);
+
+            location.reload();
+        });
+    }
+
+	function deleteModal(id){
+		// Show the Modal
+		$("#deleteThis").modal("show");
+
+		$("#confirm-delete").click(async function ()
+		{
+
+			const url = "https://" + window.location.host + "@Url.Action("Delete", "Interest")";
+
+			await sendData(url, id);
+
+			location.reload();
+		});
+	}
+
+	document.addEventListener('keydown', (e) => {
+		if (e.which == 13) {
+			createInterest();
+			return false;
+		}
+	});
+</script>

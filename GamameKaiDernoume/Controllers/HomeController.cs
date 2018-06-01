@@ -172,29 +172,6 @@ namespace TeamProject.Controllers
             return BadRequest("Something bad happened");
         }
 
-        [Authorize]
-        public IActionResult CreateInterest()
-        {
-            return View();
-        }
-
-        [Authorize]
-        [HttpPost]
-        public IActionResult CreateInterest(Interest newInterest)
-        {
-            Interest theNewInterest = new Interest
-            {
-                InterestCategory = newInterest.InterestCategory
-            };
-
-            dataRepository.AddEntity(theNewInterest);
-            if (dataRepository.SaveAll())
-            {
-                logger.LogError("Ok new interest was created and saved to database");
-            };
-            return View();
-        }
-
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

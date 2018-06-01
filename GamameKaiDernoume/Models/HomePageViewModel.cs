@@ -15,14 +15,7 @@ namespace TeamProject.Models
         public List<Post> Posts { get; set; }
         public List<Interest> TopUserInterests { get; set; }
         public List<Interest> Interests { get; set; }
-        public Friendship FriendshipStatus { get; set; }
-        
-    }
-
-    public class InterestPostViewModel
-    {
-        [Required]
-        public int InterestId { get; set; }
+        public Friendship FriendshipStatus { get; set; }        
     }
 
     public class CreatePostViewModel

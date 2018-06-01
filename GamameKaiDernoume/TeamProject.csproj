@@ -19,7 +19,7 @@
     <Content Update="Areas\Identity\Pages\Account\Register_old.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Home\CreateInterest.cshtml">
+    <Content Update="Views\Interest\Manage.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Home\Personal.cshtml">
