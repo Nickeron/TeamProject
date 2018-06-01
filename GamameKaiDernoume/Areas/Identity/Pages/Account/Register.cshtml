@@ -1,37 +1,73 @@
 @page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+	ViewData["Title"] = "Register";
 }
 
-<h2>@ViewData["Title"]</h2>
+<link href="~/css/login.css" rel="stylesheet" />
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default">Register</button>
-        </form>
-    </div>
-</div>
+<body class="login">
+	<div class="container">
+		<div class="login-container-wrapper clearfix">
+			<ul class="switcher clearfix">
+				<li class="first logo" data-tab="login" style="font-size:16px; color:#ccd1d0; font-weight:normal;">
+					<a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login</a>
+				</li>
+				<li class="second logo active" data-tab="sign_up" style="font-size:16px; color:#ccd1d0; font-weight:normal;">
+					<a>Register</a>
+				</li>
+			</ul>
+			<div asp-validation-summary="All" class="text-danger"></div>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="sign_up">
+					<form class="form-horizontal login-form " asp-route-returnUrl="@Model.ReturnUrl" method="post">
+						<div class="form-group relative">
+							<input class="form-control input-lg" id="register_username" readonly onfocus="this.removeAttribute('readonly');" asp-for="Input.Email" placeholder="E-mail Address" required="" type="text"> <i class="fa fa-user"></i>
+							<span asp-validation-for="Input.Email" class="text-danger"></span>
+						</div>
+						<div class="form-group relative">
+							<input class="form-control input-lg" id="register_password" readonly onfocus="this.removeAttribute('readonly');" asp-for="Input.Password" placeholder="Password" required="" type="password"> <i class="fa fa-lock"></i>
+							<span asp-validation-for="Input.Password" class="text-danger"></span>
+						</div>
+						<div class="form-group relative">
+							<input class="form-control input-lg" id="register_conf_password" readonly onfocus="this.removeAttribute('readonly');" asp-for="Input.ConfirmPassword" placeholder="Repeat Password" required="" type="password"> <i class="fa fa-lock"></i>
+							<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-success btn-lg btn-block" type="submit">Sign Up</button>
+						</div>
+						<div class="checkbox checkbox-success">
+							<input id="agree-terms" type="checkbox">
+							<label for="agree-terms"> Agree our terms</label>
+						</div>
+						<hr>
+						<div class="text-center">
+							<label><a href="#">Already Member?</a></label>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+	<partial name="_ValidationScriptsPartial" />
+	<script>
+		$(document).ready(function () {
+
+			$('ul.switcher li').click(function () {
+				var tab_id = $(this).attr('data-tab');
+
+				$('li').removeClass('active');
+				$('div.tab-pane').removeClass('active');
+
+				$(this).addClass('active');
+				$("#" + tab_id).addClass('active');
+			})
+
+		});
+
+	</script>
 }

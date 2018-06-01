@@ -16,6 +16,9 @@
 
 
   <ItemGroup>
+    <Content Update="Areas\Identity\Pages\Account\Register_old.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Home\CreateInterest.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
