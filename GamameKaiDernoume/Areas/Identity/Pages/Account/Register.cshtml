@@ -18,7 +18,6 @@
 				</li>
 			</ul>
 			<div asp-validation-summary="All" class="text-danger"></div>
-
 			<div class="tab-content">
 				<div class="tab-pane active" id="sign_up">
 					<form class="form-horizontal login-form " asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -39,11 +38,11 @@
 						</div>
 						<div class="checkbox checkbox-success">
 							<input id="agree-terms" type="checkbox">
-							<label for="agree-terms"> Agree our terms</label>
+							<label for="agree-terms"> Agree to our terms</label>
 						</div>
 						<hr>
 						<div class="text-center">
-							<label><a href="#">Already Member?</a></label>
+							<label><a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Already Member?</a></label>
 						</div>
 					</form>
 				</div>
@@ -56,18 +55,9 @@
 	<partial name="_ValidationScriptsPartial" />
 	<script>
 		$(document).ready(function () {
-
 			$('ul.switcher li').click(function () {
-				var tab_id = $(this).attr('data-tab');
-
-				$('li').removeClass('active');
-				$('div.tab-pane').removeClass('active');
-
-				$(this).addClass('active');
-				$("#" + tab_id).addClass('active');
+				window.location = $(this).find("a").first().attr("href");
 			})
-
 		});
-
 	</script>
 }
