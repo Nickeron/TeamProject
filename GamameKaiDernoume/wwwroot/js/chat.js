@@ -4,7 +4,7 @@
 
 connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
 	if (senderID === document.getElementById("activeUser").title) {
-		$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+		$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p title="' + moment().fromNow() + '" > ' + message + '</p></li>').appendTo($('.messages ul'));
 		$('.message-input input').val(null);
 		$('.contact.active .preview').html('<span>You: </span>' + message);
 		$(".messages").animate({ scrollTop: $(document).height() }, "fast");
@@ -16,7 +16,7 @@ connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
 });
 
 connection.on("ShowSentMessage", (receiverID, senderAvatar, message) => {
-	$('<li class="sent"><img src="' + senderAvatar + '" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+	$('<li class="sent"><img src="' + senderAvatar + '" alt="" /><p title="'+ moment().fromNow() +'" > ' + message + '</p ></li > ').appendTo($('.messages ul'));
 	$('.message-input input').val(null);
 	$('.contact.active .preview').html('<span>You: </span>' + message);
 	$(".messages").animate({ scrollTop: $(document).height() }, "fast");

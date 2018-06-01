@@ -75,14 +75,14 @@
 						{
 							<li class="sent">
 								<img src="@Model.ThisUser.UserAvatar" alt="" />
-								<p>@message.MessageText</p>
+								<p class="message-text" title="@message.MessageDate">@message.MessageText</p>
 							</li>
 						}
 						else
 						{
 							<li class="replies">
 								<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
-								<p>@message.MessageText</p>
+								<p class="message-text" title="@message.MessageDate">@message.MessageText</p>
 							</li>
 						}
 					}

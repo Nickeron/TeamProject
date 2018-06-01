@@ -278,16 +278,60 @@ ul {
 /** =====================
  * Responsive
  ========================*/
-@media only screen and (max-width: 770px) {
+@media only screen and (max-width: 960px) {
 	.comments-container {
 		width: 480px;
 	}
 
 	.comments-list .comment-box {
-		width: 390px;
+		width: 300px;
 	}
 
 	.reply-list .comment-box {
 		width: 320px;
+	}
+}
+
+@media only screen and (max-width: 670px) {
+	.comments-container {
+		width: 400px;
+	}
+
+	.comments-list .comment-box {
+		width: 250px;
+	}
+
+	.reply-list .comment-box {
+		width: 320px;
+	}
+}
+
+@media only screen and (max-width: 400px) {
+	.comments-container {
+		width: 350px;
+	}
+
+	.comments-list .comment-box {
+		width: 180px;
+	}
+}
+
+@media only screen and (max-width: 320px) {
+	.comments-container {
+		padding:0;
+		width: 300px;
+	}
+
+	.comments-list .comment-box {
+		padding: 0;
+		width: 150px;
+	}
+}
+
+@media (max-width: 590px) {
+	.display-4 {
+		font-size: 1.75rem;
+		font-weight: 300;
+		line-height: 1.0;
 	}
 }

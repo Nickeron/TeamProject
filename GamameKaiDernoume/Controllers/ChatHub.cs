@@ -61,7 +61,7 @@ namespace TeamProject.Controllers
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             string thisUserID = userManager.GetUserId(Context.User);
-            //allConnected.Remove(thisUserID);
+            allConnected.Remove(thisUserID);
             await Groups.AddToGroupAsync(Context.ConnectionId, Context.User.Identity.Name);
             await Clients.All.SendAsync("UserDisConnected", userManager.GetUserId(Context.User));
             await base.OnDisconnectedAsync(exception);

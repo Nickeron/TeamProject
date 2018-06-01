@@ -99,7 +99,7 @@
 								</a>
 							</h6>
 
-							<span class="post-date" datetime="@postComment.CommentDate">@postComment.CommentDate</span>
+							<span class="post-date" id="@postComment.CommentDate"></span>
 							@if (postComment.User.Id == Model.ThisUser.Id)
 							{
 								<i class="fas fa-times-circle" onclick="deleteModal('comment', '@postComment.CommentID')"></i>

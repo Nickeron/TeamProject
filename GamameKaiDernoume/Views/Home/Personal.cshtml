@@ -6,57 +6,65 @@
 
 <div class="jumbotron jumbotron-fluid">
 	<div class="container">
-		<img src="@Model.ProfileUser.UserAvatar" class="profile-avatar rounded-circle img-thumbnail">
-		<h2 class="display-4">@Model.ProfileUser.FirstName @Model.ProfileUser.LastName</h2>
-		@if (!(Model.FriendshipStatus.Equals(Friendship.myself)))
-		{
-			if (Model.FriendshipStatus.Equals(Friendship.acceptRequest))
-			{
-				<a asp-controller="Friend"
-				   asp-action="Accept"
-				   asp-route-userid="@Model.ProfileUser.Id"
-				   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
-					Accept Request
-				</a>
-			}
-			else if (Model.FriendshipStatus.Equals(Friendship.addFriend))
-			{
-				<a asp-controller="Friend"
-				   asp-action="Make"
-				   asp-route-userid="@Model.ProfileUser.Id"
-				   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
-					Add friend
-				</a>
-			}
-			else if (Model.FriendshipStatus.Equals(Friendship.removeRequest))
-			{
-				<a asp-controller="Friend"
-				   asp-action="Remove"
-				   asp-route-userid="@Model.ProfileUser.Id"
-				   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
-					Remove Request
-				</a>
-			}
-			else
-			{
-				<a asp-controller="Friend"
-				   asp-action="Remove"
-				   asp-route-userid="@Model.ProfileUser.Id"
-				   class="btn btn-outline-secondary" id="@Model.FriendshipStatus">
-					Unfriend
-				</a>
-			}
-		}
-		Top 3 Interests of @Model.ProfileUser.FirstName
-		@foreach (Interest userInterest in Model.TopUserInterests)
-		{
-			<a asp-controller="Home"
-			   asp-action="Index"
-			   asp-route-id="@userInterest.InterestID"
-			   class="badge badge-primary">
-				@userInterest.InterestCategory
-			</a>
-		}
+		<div class="row justify-content-center">
+			<div class="col-sm-4 col-md-3 col-lg-2 align-self-start">
+				<img src="@Model.ProfileUser.UserAvatar" class="profile-avatar rounded-circle img-thumbnail">
+			</div>
+			<div class="col-lg-4 align-self-center">
+				<h2 class="display-4">@Model.ProfileUser.FirstName @Model.ProfileUser.LastName</h2>
+				@foreach (Interest userInterest in Model.TopUserInterests)
+				{
+					<a asp-controller="Home"
+					   asp-action="Index"
+					   asp-route-id="@userInterest.InterestID"
+					   class="badge badge-primary">
+						@userInterest.InterestCategory
+					</a>
+				}
+			</div>
+			<div class="col-2 align-self-end">
+				@if (!(Model.FriendshipStatus.Equals(Friendship.myself)))
+				{
+					if (Model.FriendshipStatus.Equals(Friendship.acceptRequest))
+					{
+						<a asp-controller="Friend"
+						   asp-action="Accept"
+						   asp-route-userid="@Model.ProfileUser.Id"
+						   class="btn btn-outline-secondary float-right" id="@Model.FriendshipStatus">
+							Accept Request
+						</a>
+					}
+					else if (Model.FriendshipStatus.Equals(Friendship.addFriend))
+					{
+						<a asp-controller="Friend"
+						   asp-action="Make"
+						   asp-route-userid="@Model.ProfileUser.Id"
+						   class="btn btn-outline-secondary float-right" id="@Model.FriendshipStatus">
+							Add friend
+						</a>
+					}
+					else if (Model.FriendshipStatus.Equals(Friendship.removeRequest))
+					{
+						<a asp-controller="Friend"
+						   asp-action="Remove"
+						   asp-route-userid="@Model.ProfileUser.Id"
+						   class="btn btn-outline-secondary float-right" id="@Model.FriendshipStatus">
+							Remove Request
+						</a>
+					}
+					else
+					{
+						<a asp-controller="Friend"
+						   asp-action="Remove"
+						   asp-route-userid="@Model.ProfileUser.Id"
+						   class="btn btn-outline-secondary float-right" id="@Model.FriendshipStatus">
+							Unfriend
+						</a>
+					}
+				}
+			</div>
+		</div>
+		
 	</div>
 </div>
 
