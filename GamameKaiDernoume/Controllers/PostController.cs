@@ -43,13 +43,16 @@ namespace TeamProject.Controllers
 
             if (ModelState.IsValid)
             {
-                List<Interest> interests = (List<Interest>)dataRepository.GetAllInterests();
                 List<Interest> addedInterests = new List<Interest>();
-                foreach (Interest interest in interests)
+                if (!(newPostData.Interests[0] is null))
                 {
-                    if (newPostData.Interests[0].Contains(interest.InterestCategory))
+                    List<Interest> interests = (List<Interest>)dataRepository.GetAllInterests();
+                    foreach (Interest interest in interests)
                     {
-                        addedInterests.Add(interest);
+                        if (newPostData.Interests[0].Contains(interest.InterestCategory))
+                        {
+                            addedInterests.Add(interest);
+                        }
                     }
                 }
 
