@@ -31,10 +31,11 @@ namespace TeamProject.Data
         Post GetPostByTimeStamp(DateTime timestamp);
         Post GetPostById(int postID);
 
-        Comment GetCommentById(int commentID);
+        Task<Comment> GetCommentById(int commentID);
+        Task<Comment> GetCommentByDate(DateTime timeStamp);
 
         Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser);
 
-        bool SaveAll();
+        bool SaveAll();        
     }
 }

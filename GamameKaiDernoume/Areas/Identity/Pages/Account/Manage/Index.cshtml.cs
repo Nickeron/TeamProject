@@ -29,6 +29,7 @@ namespace TeamProject.Areas.Identity.Pages.Account.Manage
         }
 
         public string Username { get; set; }
+        public string UserAvatar { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -78,6 +79,8 @@ namespace TeamProject.Areas.Identity.Pages.Account.Manage
                 LastName = user.LastName,
                 PhoneNumber = phoneNumber
             };
+
+            UserAvatar = user.UserAvatar;
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
 

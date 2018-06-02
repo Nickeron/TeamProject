@@ -2,7 +2,7 @@
 	.withUrl("/chatHub")
 	.build();
 
-connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, commentsText, url) => {
+connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, commentID, commentsText, url) => {
 	const commentElement = document.getElementById("listOfComments-" + PostID);
 
 	if (typeof commentElement != 'undefined') {
@@ -45,8 +45,15 @@ connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, co
 		if (AuthorID == currentUserID) {
 			const close = document.createElement("i");
 			close.setAttribute("class", "fas fa-times-circle");
+			close.addEventListener("click", function () {
+				deleteModal("comment", commentID);
+			});
 			const edit = document.createElement("i");
 			edit.setAttribute("class", "fas fa-pen-square");
+			edit.addEventListener("click", function () {
+				editModal(commentID, commentsText);
+			});
+
 			commentHead.appendChild(close);
 			commentHead.appendChild(edit);
 		}
@@ -67,9 +74,10 @@ connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, co
 
 async function CreateNewComment(usersAvatar, Name, PostID, url, isOP) {
 	const commentsText = document.getElementById("commentText-" + PostID).value;
+	const commentID = await SendNewCommentData(PostID);
+	console.log(commentID);
+	connection.invoke("DistributeComment", usersAvatar, Name, currentUserID, isOP, PostID, commentID, commentsText, url).catch(err => console.error(err.toString()));
 
-	connection.invoke("DistributeComment", usersAvatar, Name, currentUserID, isOP, PostID, commentsText, url).catch(err => console.error(err.toString()));
-	await SendNewCommentData(PostID);
 
 };
 

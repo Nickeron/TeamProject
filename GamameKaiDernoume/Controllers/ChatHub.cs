@@ -31,9 +31,9 @@ namespace TeamProject.Controllers
             await Clients.User(ReceiverId).SendAsync("ReceiveMessage", SenderId, SenderAvatar, message);
         }
 
-        public async Task DistributeComment(string usersAvatar, string Name,string AuthorID, bool isOP, string PostID, string commentsText, string url)
+        public async Task DistributeComment(string usersAvatar, string Name,string AuthorID, bool isOP, string PostID, string CommentID, string commentsText, string url)
         {
-            await Clients.All.SendAsync("AddTheNewComment", usersAvatar, Name, AuthorID, isOP, PostID, commentsText, url);
+            await Clients.All.SendAsync("AddTheNewComment", usersAvatar, Name, AuthorID, isOP, PostID,CommentID, commentsText, url);
         }
 
         public async Task DistributeReaction(string PostID, int likes, int dislikes)

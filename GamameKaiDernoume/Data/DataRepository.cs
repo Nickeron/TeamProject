@@ -333,14 +333,30 @@ namespace TeamProject.Data
             }
         }
 
-        public Comment GetCommentById(int commentID)
+        public async Task<Comment> GetCommentById(int commentID)
         {
             try
             {
                 _logger.LogInformation("Get Comment by ID was called");
 
-                return _ctx.Comments
-                .Where(u => u.CommentID.Equals(commentID)).FirstOrDefault();
+                return await _ctx.Comments
+                .SingleOrDefaultAsync(u => u.CommentID.Equals(commentID));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Comment: {ex}");
+                return null;
+            }
+        }
+
+        public async Task<Comment> GetCommentByDate(DateTime timeStamp)
+        {
+            try
+            {
+                _logger.LogInformation("Get Comment by date was called");
+
+                return await _ctx.Comments
+                .SingleOrDefaultAsync(u => u.CommentDate.Equals(timeStamp));
             }
             catch (Exception ex)
             {
@@ -376,5 +392,7 @@ namespace TeamProject.Data
         {
             return _ctx.Reactions.Where(r => r.Post.PostID == reactionPostId && r.User == thisUser).FirstOrDefault();
         }
+
+        
     }
 }

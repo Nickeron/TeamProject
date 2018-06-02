@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using TeamProject.Data;
 
 namespace TeamProject.Areas.Identity.Pages.Account.Manage
 {
@@ -16,12 +17,15 @@ namespace TeamProject.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger<DownloadPersonalDataModel> _logger;
+        private readonly IDataRepository dataRepository;
 
         public DownloadPersonalDataModel(
             UserManager<User> userManager,
+            IDataRepository dataRepository,
             ILogger<DownloadPersonalDataModel> logger)
         {
             _userManager = userManager;
+            this.dataRepository = dataRepository;
             _logger = logger;
         }
 
@@ -39,9 +43,23 @@ namespace TeamProject.Areas.Identity.Pages.Account.Manage
             var personalData = new Dictionary<string, string>();
             var personalDataProps = typeof(User).GetProperties().Where(
                             prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
+            
             foreach (var p in personalDataProps)
             {
                 personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
+            }
+            IEnumerable<Message> personalMessages = dataRepository.GetAllMessagesOfUser(user);
+
+            foreach (var p in personalMessages)
+            {
+                personalData.Add($"{p.Sender} sent to {p.Receiver} in {p.MessageDate}: ", p.MessageText);
+            }
+
+            IEnumerable<Post> personalPosts = dataRepository.GetAllPostsByUser(user);
+
+            foreach (var p in personalPosts)
+            {
+                personalData.Add($"Post with scope {p.PostScope} created on {p.PostDate} with text: ", p.PostText);
             }
 
             Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");

@@ -3,10 +3,10 @@
 @{
 	ViewData["Title"] = "Profile";
 }
-
+<img src="@Model.UserAvatar" class="avatar rounded-circle">
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
-<button type="button" class="btn-lg btn-success btn-block" data-toggle="modal" data-target="#uploadImage">Upload an Image</button>
+<button type="button" class="btn-lg btn-outline-dark" data-toggle="modal" data-target="#uploadImage">Upload an Image</button>
 
 <partial name="_ImageUploadPartial" />
 <div class="row">

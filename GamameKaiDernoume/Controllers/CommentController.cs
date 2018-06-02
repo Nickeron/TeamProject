@@ -40,10 +40,11 @@ namespace TeamProject.Controllers
             if (ModelState.IsValid)
             {
                 Post commentedPost = dataRepository.GetPostById(CommentData.PostID);
+                DateTime timeStamp = DateTime.UtcNow;
                 Comment newComment = new Comment
                 {
                     User = thisUser,
-                    CommentDate = DateTime.UtcNow,
+                    CommentDate = timeStamp,
                     CommentText = CommentData.CommentText,
                     Post = commentedPost
                 };
@@ -54,7 +55,8 @@ namespace TeamProject.Controllers
                 {
                     logger.LogError("saved");
                 };
-                return Ok("New Comment Added");
+                Comment savedComment = await dataRepository.GetCommentByDate(timeStamp);
+                return Json(savedComment.CommentID);
             }
             return BadRequest("Something bad happened");
         }
@@ -63,7 +65,7 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Edit([FromBody]CommentModel CommentData)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
-            Comment toEditComment = dataRepository.GetCommentById(CommentData.CommentID);
+            Comment toEditComment = await dataRepository.GetCommentById(CommentData.CommentID);
             toEditComment.CommentText = CommentData.CommentText;
             toEditComment.CommentDate = DateTime.UtcNow;
 
@@ -80,7 +82,7 @@ namespace TeamProject.Controllers
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
 
-            Comment toDelete = dataRepository.GetCommentById(id);
+            Comment toDelete = await dataRepository.GetCommentById(id);
 
             dataRepository.DeleteEntity(toDelete);
 
