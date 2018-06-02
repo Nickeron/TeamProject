@@ -10,7 +10,8 @@ namespace TeamProject.Data
         void AddEntity(object model);
         void DeleteEntity(object model);
 
-        IEnumerable<Interest> GetAllInterests();
+        Interest GetInterestById(int InterestId);
+        IEnumerable<Interest> GetAllInterests();        
         List<Interest> GetTopUsersInterests(User thisUser);
 
         IEnumerable<User> GetAllStrangeUsers(User thisUser);

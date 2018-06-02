@@ -45,7 +45,7 @@ namespace TeamProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Interest newInterest)
+        public IActionResult Create(InterestViewModel newInterest)
         {
             Interest theNewInterest = new Interest
             {
@@ -57,15 +57,30 @@ namespace TeamProject.Controllers
             {
                 logger.LogError("Ok new interest was created and saved to database");
             };
-            return View();
-        }        
+            return RedirectToAction("Manage", "Interest");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromBody]InterestPostViewModel interestData)
+        {
+            var thisUser = await userManager.GetUserAsync(HttpContext.User);
+
+            Interest toEdit = dataRepository.GetInterestById(interestData.InterestId);
+            toEdit.InterestCategory = interestData.InterestCategory;
+
+            if (dataRepository.SaveAll())
+            {
+                logger.LogInformation("saved");
+            };
+            return Ok("Comment Deleted");
+        }
 
         [HttpPost]
         public async Task<IActionResult> Delete([FromBody]int id)
         {
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
 
-            Post toDelete = dataRepository.GetPostById(id);
+            Interest toDelete = dataRepository.GetInterestById(id);
 
             dataRepository.DeleteEntity(toDelete);
 

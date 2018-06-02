@@ -12,15 +12,15 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form>
+				<form asp-controller="Interest" asp-action="Create" asp-method="post">
 					<div class="form-group">
-						<label for="editText" class="col-form-label">They are never enough</label>
-						<input id="editText" type="text" class="form-control">
+						<label asp-for="@Model.InterestCategory" class="col-form-label">They are never enough</label>
+						<input asp-for="@Model.InterestCategory" id="newInterestCategory" type="text" class="form-control">
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button id="confirmChanges" type="button" class="btn btn-primary">Create</button>
+				<button id="Create" type="button" class="btn btn-primary">Create</button>
 			</div>
 		</div>
 	</div>
@@ -28,14 +28,6 @@
 
 <partial name="_DeleteThisPartial" />
 <partial name="_EditCommentPartial" />
-@*<div id="theForm">
-		<form asp-controller="Home" asp-action="CreateInterest" asp-method="post">
-			<label asp-for="InterestCategory">Interest Category</label>
-			<input asp-for="InterestCategory" /> <br />
-
-			<input type="submit" value="Save Interest" />
-		</form>
-	</div>*@
 
 <div class="jumbotron jumbotron-fluid">
 	<div class="container">

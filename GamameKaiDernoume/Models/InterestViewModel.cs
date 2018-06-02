@@ -11,6 +11,8 @@ namespace TeamProject.Models
     public class InterestViewModel
     {  
         public List<Interest> Interests { get; set; }
+        public int InterestId { get; set; }
+        public string InterestCategory { get; set; }
     }
 
     public class InterestPostViewModel

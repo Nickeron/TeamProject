@@ -34,6 +34,22 @@ namespace TeamProject.Data
             _ctx.Remove(model);
         }
 
+        public Interest GetInterestById(int InterestId)
+        {
+            try
+            {
+                _logger.LogInformation("Get Interest by ID was called");
+
+                return _ctx.Interests
+                           .SingleOrDefault(i => i.InterestID == InterestId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Interest: {ex}");
+                return null;
+            }
+        }
+
         public IEnumerable<Interest> GetAllInterests()
         {
             try
