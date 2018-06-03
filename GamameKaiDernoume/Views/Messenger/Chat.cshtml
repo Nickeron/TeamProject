@@ -147,6 +147,15 @@
 			activeUserElement.firstElementChild.setAttribute("src", messageModel.correspondant.userAvatar);
 			activeUserElement.lastElementChild.innerHTML = messageModel.correspondant.firstName + " " + messageModel.correspondant.lastName;
 
+			if (messageModel.unreadReceived) {
+				const newUnreadMessagesElement = document.createElement("span");
+				newUnreadMessagesElement.setAttribute("id", "unreadLatestCount");
+				newUnreadMessagesElement.setAttribute("class", "badge badge-pill badge-danger");
+				newUnreadMessagesElement.innerHTML = messageModel.unreadReceived;
+
+				activeUserElement.lastElementChild.appendChild(newUnreadMessagesElement);
+			}
+
 			const comMessages = messageModel.correspondantsMessages;
 			for (const key in comMessages) {
 				if (comMessages.hasOwnProperty(key)) {
@@ -168,6 +177,7 @@
 					ulMessages.appendChild(li);
 				}
 			}
+			$(".messages").scrollTop(1000000);
 		}
 	}
 

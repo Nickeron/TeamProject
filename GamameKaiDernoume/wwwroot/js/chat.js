@@ -3,6 +3,8 @@
 	.build();
 
 connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
+	var audio = new Audio('/sounds/notification.mp3');
+	audio.play();
 	const activeUserId = document.getElementById("activeUser").title;
 	const friendOnPanel = document.getElementById("friend-panel-" + senderID).firstElementChild.lastElementChild;
 	const unreadSidePanelElement = document.getElementById("unreadCount-" + senderID);
