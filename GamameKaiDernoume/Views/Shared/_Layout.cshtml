@@ -34,17 +34,17 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-						<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Personal" asp-route-username="">
+						<a class="nav-link" id="nav-link-personal" asp-area="" asp-controller="Home" asp-action="Personal" asp-route-username="">
 							<i class="fas fa-user-astronaut">&nbsp;</i> Profile
 						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" asp-area="" asp-controller="Friend" asp-action="Find">
+						<a class="nav-link" id="nav-link-find" asp-area="" asp-controller="Friend" asp-action="Find">
 							<i class="fas fa-users">&nbsp;</i> Find Friends
 						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" asp-area="" asp-controller="Messenger" asp-action="Chat">
+						<a class="nav-link" id="nav-link-messenger" asp-area="" asp-controller="Messenger" asp-action="Chat">
 							<i class="far fa-envelope">&nbsp;</i> Messenger
 						</a>
 					</li>
@@ -53,7 +53,7 @@
 						@if (User.IsInRole("Admin"))
 						{
 							<li class="nav-item">
-								<a class="nav-link" asp-area="" asp-controller="Interest" asp-action="Manage">
+								<a class="nav-link" id="nav-link-interest" asp-area="" asp-controller="Interest" asp-action="Manage">
 									<i class="fas fa-dice">&nbsp;</i> Interests
 								</a>
 							</li>

@@ -45,11 +45,11 @@ namespace TeamProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(InterestViewModel newInterest)
+        public async Task<IActionResult> Create([FromBody]string newInterest)
         {
             Interest theNewInterest = new Interest
             {
-                InterestCategory = newInterest.InterestCategory
+                InterestCategory = newInterest
             };
 
             dataRepository.AddEntity(theNewInterest);
@@ -57,7 +57,7 @@ namespace TeamProject.Controllers
             {
                 logger.LogError("Ok new interest was created and saved to database");
             };
-            return RedirectToAction("Manage", "Interest");
+            return Ok("Interest Created");
         }
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace TeamProject.Controllers
             {
                 logger.LogInformation("saved");
             };
-            return Ok("Comment Deleted");
+            return Ok("Interest Edited");
         }
 
         [HttpPost]

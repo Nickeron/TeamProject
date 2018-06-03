@@ -68,7 +68,6 @@
 
 	async function sendNewPost()
 	{
-
 		const newPostText = document.getElementById("postText").value;
 
 		if ($.trim(newPostText) == '') {
@@ -95,10 +94,10 @@
 
 		location.reload();
 	}
-
-	document.getElementById("postText").addEventListener('keydown', (e) => {
-		if (e.which == 13) {
-			document.getElementById("createNewPostButton").click;
+	document.getElementById('postText').addEventListener('keydown', (e) => {
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			sendNewPost();
 			return false;
 		}
 	});

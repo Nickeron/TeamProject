@@ -65,12 +65,14 @@
 				</p>
 				<div class="collapse" id="collapseComment-@post.PostID">
 					<div class="input-group mb-3">
-						<input type="text" class="form-control" id="commentText-@post.PostID" placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
+						<input type="text" class="form-control" id="commentText-@post.PostID"
+							   onkeydown="if (event.keyCode == 13) document.getElementById('commentButton-'+@post.PostID).click()" 
+							   placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
 						<div class="input-group-append">
 							@{
 								int isOP = (post.User.Id == Model.ThisUser.Id) ? 1 : 0;
 							}
-							<button onclick="CreateNewComment('@Model.ThisUser.UserAvatar', '@Model.ThisUser.FirstName @Model.ThisUser.LastName',
+							<button id="commentButton-@post.PostID" onclick="CreateNewComment('@Model.ThisUser.UserAvatar', '@Model.ThisUser.FirstName @Model.ThisUser.LastName',
 									@post.PostID, '@Url.Action("Personal", "Home", new { username = @Model.ThisUser.UserName })', @isOP)"
 									type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#collapseComment-@post.PostID">
 								Send Comment

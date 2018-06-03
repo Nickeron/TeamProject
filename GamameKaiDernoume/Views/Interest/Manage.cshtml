@@ -20,7 +20,7 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button id="Create" type="button" class="btn btn-primary">Create</button>
+				<button id="Create" type="button" class="btn btn-primary" onclick="createInterest()">Create</button>
 			</div>
 		</div>
 	</div>
@@ -53,6 +53,17 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
+	async function createInterest() {
+		const url = "https://" + window.location.host + "@Url.Action("Create", "Interest")";
+		const newInterest = document.getElementById("newInterestCategory").value;
+		if ($.trim(newInterest) == '') {
+			alert("An Interest Category cannot be empty!");
+			return false;
+		}
+		await sendData(url, newInterest);
+		location.reload();
+	}
+
 	function editModal(id, previousText) {
 		//Show the Modal
 		$("#editThis").modal("show");
@@ -64,7 +75,7 @@
 
             const url = "https://" + window.location.host + "@Url.Action("Edit", "Interest")";
 
-            let data = {
+            const data = {
                 interestId: id,
                 interestCategory: newCategoryName
             };
@@ -90,8 +101,9 @@
 		});
 	}
 
-	document.addEventListener('keydown', (e) => {
-		if (e.which == 13) {
+	document.getElementById('newInterestCategory').addEventListener('keydown', (e) => {
+		if (e.keyCode == 13) {
+			e.preventDefault();
 			createInterest();
 			return false;
 		}
