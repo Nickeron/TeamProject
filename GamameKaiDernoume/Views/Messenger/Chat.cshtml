@@ -25,22 +25,27 @@
 		</div>
 		<div id="contacts">
 			<ul>
-				@foreach (User friend in Model.ThisUsersFriends)
+				@foreach (UserChatModel userChat in Model.FriendsAndMessages)
 				{
-					var lastText = @Model.UsersMessages.Where(m => m.Receiver.Id == friend.Id || m.Sender.Id == friend.Id).LastOrDefault();
-					<li class="contact" title="@friend.Id" id="friend-panel-@friend.Id" onclick="setActiveUser('@friend.Id')">
+					var lastText = userChat.CorrespondantsMessages.LastOrDefault();
+					var unreadCount = userChat.UnreadReceived;
+					<li class="contact" title="@userChat.Correspondant.Id" id="friend-panel-@userChat.Correspondant.Id" onclick="setActiveUser('@userChat.Correspondant.Id')">
 						<div class="wrap">
 							<span class="contact-status offline"></span>
-							<img src="@friend.UserAvatar" alt="" />
+							<img src="@userChat.Correspondant.UserAvatar" alt="" />
 							<div class="meta">
-								<p class="name">@friend.FirstName @friend.LastName</p>
+								<p class="name">@userChat.Correspondant.FirstName @userChat.Correspondant.LastName</p>
 								@if (lastText is null)
 								{
 									<p class="preview">No messages</p>
 								}
 								else
 								{
-									<p class="preview">@lastText.MessageText</p>
+									<p class="preview">
+										@lastText.MessageText
+										@if (unreadCount > 0)
+										{<strong class="badge badge-pill badge-danger float-right">@unreadCount</strong>}
+									</p>
 								}
 							</div>
 						</div>
@@ -62,14 +67,19 @@
 		}
 		else
 		{
-
 			<div id="activeUser" title="@Model.LatestCommunicator.Id" class="contact-profile">
 				<img src="@Model.LatestCommunicator.UserAvatar" alt="" />
-				<p>@Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName</p>
+				<p>
+					@Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName
+					@if (Model.UnreadLatest > 0)
+					{
+						<span class="badge badge-pill badge-danger">@Model.UnreadLatest</span>
+					}
+				</p>
 			</div>
-			<div class="messages">
+			<div class="messages" onclick="readMessages()">
 				<ul id="active-user-messages">
-					@foreach (Message message in Model.UsersMessages.Where(m => m.Receiver.Id == Model.LatestCommunicator.Id || m.Sender.Id == Model.LatestCommunicator.Id))
+					@foreach (Message message in Model.FriendsAndMessages.Where(m => m.Correspondant.Id == Model.LatestCommunicator.Id).SelectMany(u => u.CorrespondantsMessages))
 					{
 						if (message.Sender.Id == Model.ThisUser.Id)
 						{
@@ -98,26 +108,28 @@
 		</div>
 	</div>
 </div>
+
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 
-<script>	
+<script>
+
 	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
 	let thisUserID = document.getElementById("userName").title;
 
 	async function setActiveUser(userID)
 	{
-		const messageModel = await sendData("@Url.Action("Messenger", "Home")", userID);
+		const messageModel = await sendData("@Url.Action("Chat", "Messenger")", userID);
 		const ulMessages = document.getElementById("active-user-messages");
 		ulMessages.innerHTML = "";
 
 		const activeUserElement = document.getElementById("activeUser");
 		activeUserElement.title = userID;
-		activeUserElement.firstElementChild.setAttribute("src", messageModel.latestCommunicator.userAvatar);
-		activeUserElement.lastElementChild.innerHTML = messageModel.latestCommunicator.firstName +" "+ messageModel.latestCommunicator.lastName;
+		activeUserElement.firstElementChild.setAttribute("src", messageModel.correspondant.userAvatar);
+		activeUserElement.lastElementChild.innerHTML = messageModel.correspondant.firstName + " " + messageModel.correspondant.lastName;
 
-		const comMessages = messageModel.usersMessages;
+		const comMessages = messageModel.correspondantsMessages;
 		for (const key in comMessages) {
 			if (comMessages.hasOwnProperty(key)) {
 				const message = comMessages[key];
@@ -140,6 +152,11 @@
 		}
 	}
 
+	async function readMessages()
+	{
+
+	}
+
 	function sendRequest(userId, message)
 	{
 		let data =
@@ -148,7 +165,7 @@
 				messageText: message
 			};
 
-		sendData("@Url.Action("SendMessage", "Home")", data);
+		sendData("@Url.Action("SendMessage", "Messenger")", data);
 	}
 </script>
 

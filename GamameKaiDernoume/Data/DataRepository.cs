@@ -222,6 +222,21 @@ namespace TeamProject.Data
             }
         }
 
+        public bool ReadAllMessagesFrom(string senderId, User toThisUser)
+        {
+            List<Message> allUnreadMessagesReceived = _ctx.Messages
+                    .Include(p => p.Sender)
+                    .Include(m => m.Receiver)
+                    .Where(m => (m.Sender.Id == senderId && m.Receiver.Id == toThisUser.Id) && (m.isUnread))
+                    .ToList();
+
+            foreach(Message unreadMessage in allUnreadMessagesReceived)
+            {
+                unreadMessage.isUnread = false;
+            }
+            return SaveAll();
+        }
+
         public IEnumerable<Post> GetAllPostsForUser(User currentUser)
         {
             try
@@ -392,7 +407,5 @@ namespace TeamProject.Data
         {
             return _ctx.Reactions.Where(r => r.Post.PostID == reactionPostId && r.User == thisUser).FirstOrDefault();
         }
-
-        
     }
 }

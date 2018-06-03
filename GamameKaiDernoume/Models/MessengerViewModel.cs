@@ -10,9 +10,15 @@ namespace TeamProject.Models
     {
         public User ThisUser { get; set; }
         public User LatestCommunicator { get; set; }
+        public int UnreadLatest { get; set; }
+        public List<UserChatModel> FriendsAndMessages { get; set; }
+    }
 
-        public IEnumerable<Message> UsersMessages { get; set; }
-        public IEnumerable<User> ThisUsersFriends { get; set; }
+    public class UserChatModel
+    {
+        public User Correspondant { get; set; }
+        public int UnreadReceived { get; set; }
+        public List<Message> CorrespondantsMessages { get; set; }
     }
 
     public class SendMessageModel

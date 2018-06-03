@@ -8,6 +8,7 @@ namespace TeamProject.Data.Entities
     public class Message
     {
         public int MessageID { get; set; }
+        public bool isUnread { get; set; }
         public DateTime MessageDate { get; set; }
         public string MessageText { get; set; }
 
