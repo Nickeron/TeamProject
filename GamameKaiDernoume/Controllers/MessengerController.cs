@@ -41,7 +41,14 @@ namespace TeamProject.Controllers
             int unreadLatest = 0;
             if (!(allUsersMessages is null) && allUsersMessages.Count > 0)
             {
-                lastCommUser = allUsersMessages.Where(m => m.Receiver.Id == thisUser.Id).LastOrDefault().Sender;
+                if (allUsersMessages.LastOrDefault().Receiver.Id == thisUser.Id)
+                {
+                    lastCommUser = allUsersMessages.LastOrDefault().Sender;
+                }
+                else
+                {
+                    lastCommUser = allUsersMessages.LastOrDefault().Receiver;
+                }
                 unreadLatest = allUsersMessages.Where(m => m.Sender.Id == lastCommUser.Id && m.isUnread).ToList().Count;
             }
             List<UserChatModel> Correspondance = new List<UserChatModel>();

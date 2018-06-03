@@ -3,23 +3,59 @@
 	.build();
 
 connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
-	if (senderID === document.getElementById("activeUser").title) {
+	const activeUserId = document.getElementById("activeUser").title;
+	const friendOnPanel = document.getElementById("friend-panel-" + senderID).firstElementChild.lastElementChild;
+	const unreadSidePanelElement = document.getElementById("unreadCount-" + senderID);
+	// Adds the new message in the side panel to preview
+	friendOnPanel.lastElementChild.innerHTML = message;
+
+	if (unreadSidePanelElement) {
+		const oldCount = unreadSidePanelElement.innerHTML;
+		const newCount = parseInt(oldCount) + 1;
+		unreadSidePanelElement.innerHTML = newCount;
+
+		const sidePanelPreview = document.getElementById("preview-" + senderID);
+		sidePanelPreview.appendChild(unreadSidePanelElement);
+	}
+	else {
+		const newUnreadSidePanelElement = document.createElement("strong");
+		newUnreadSidePanelElement.setAttribute("id", "unreadCount-" + senderID);
+		newUnreadSidePanelElement.setAttribute("class", "badge badge-pill badge-danger float-right");
+		newUnreadSidePanelElement.innerHTML = 1;
+
+		const sidePanelPreview = document.getElementById("preview-" + senderID);
+		sidePanelPreview.appendChild(newUnreadSidePanelElement);
+	}
+
+	if (senderID === activeUserId) {
+		const unreadMessagesElement = document.getElementById("unreadLatestCount");
+		if (unreadMessagesElement) {
+			// Increases the red count of unread messages on the head of conversation
+			const oldCount = unreadMessagesElement.innerHTML;
+			const newCount = parseInt(oldCount) + 1;
+			unreadMessagesElement.innerHTML = newCount;
+		}
+		else {
+			const newUnreadMessagesElement = document.createElement("span");
+			newUnreadMessagesElement.setAttribute("id", "unreadLatestCount");
+			newUnreadMessagesElement.setAttribute("class", "badge badge-pill badge-danger");
+			newUnreadMessagesElement.innerHTML = 1;
+
+			const headerMeta = document.getElementById("activeUserMeta")
+			headerMeta.appendChild(newUnreadMessagesElement);
+		}
 		$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p title="' + moment().fromNow() + '" > ' + message + '</p></li>').appendTo($('.messages ul'));
 		$('.message-input input').val(null);
 		$('.contact.active .preview').html('<span>You: </span>' + message);
-		$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+		$(".messages").scrollTop(1000000);
 	}
-
-	const friendOnPanel = document.getElementById("friend-panel-" + senderID).firstElementChild.lastElementChild;
-	friendOnPanel.lastElementChild.innerHTML = message;
-
 });
 
 connection.on("ShowSentMessage", (receiverID, senderAvatar, message) => {
-	$('<li class="sent"><img src="' + senderAvatar + '" alt="" /><p title="'+ moment().fromNow() +'" > ' + message + '</p ></li > ').appendTo($('.messages ul'));
+	$('<li class="sent"><img src="' + senderAvatar + '" alt="" /><p title="' + moment().fromNow() + '" > ' + message + '</p ></li > ').appendTo($('.messages ul'));
 	$('.message-input input').val(null);
 	$('.contact.active .preview').html('<span>You: </span>' + message);
-	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+	$(".messages").scrollTop(1000000);
 
 	const friendOnPanel = document.getElementById("friend-panel-" + receiverID).firstElementChild.lastElementChild;
 	friendOnPanel.lastElementChild.innerHTML = message;
