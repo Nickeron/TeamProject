@@ -117,11 +117,10 @@
 		</ul>
 	</div>
 }
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/comment.js"></script>
 
-<script>
+<script defer>
 	let currentUserID = "@Model.ThisUser.Id";
 
 	 function editModal(id, previousText) {

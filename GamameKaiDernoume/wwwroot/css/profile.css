@@ -1,3 +1,8 @@
+.jumbotron {
+	background-color: #446789;
+	/*background-color: #6082b6;*/
+}
+
 .profile-avatar {
 	object-fit: cover;
 	vertical-align: middle;

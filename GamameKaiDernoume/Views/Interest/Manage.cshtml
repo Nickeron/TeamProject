@@ -51,7 +51,6 @@
 	</ul>
 </div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
 	async function createInterest() {
 		const url = "https://" + window.location.host + "@Url.Action("Create", "Interest")";
@@ -63,12 +62,12 @@
 		await sendData(url, newInterest);
 		location.reload();
 	}
-
+	let interestIDToChange;
 	function editModal(id, previousText) {
 		//Show the Modal
 		$("#editThis").modal("show");
 		$("#editText").attr("placeholder", previousText);
-
+		interestIDToChange = id;
         $("#confirmChanges").click(async function ()
         {
 			const newCategoryName = document.getElementById("editText").value;
@@ -76,7 +75,7 @@
             const url = "https://" + window.location.host + "@Url.Action("Edit", "Interest")";
 
             const data = {
-                interestId: id,
+				interestId: interestIDToChange,
                 interestCategory: newCategoryName
             };
             console.log(data);

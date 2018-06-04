@@ -86,11 +86,6 @@ namespace TeamProject.Data
                     .Where(i => TopUsersInterests.Contains(i.InterestID))
                     .ToList();
 
-                //var TopUsersInterests = UsersInterests
-                //    .GroupBy(s => s.InterestCategory)
-                //    .OrderBy(s => s.Count())
-                //    .Take(3).SelectMany(ui=>ui);
-
                 return UsersInterests;
             }
             catch (Exception ex)

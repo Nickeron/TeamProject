@@ -21,7 +21,7 @@
 	</style>
 </head>
 <body>
-	<nav class="navbar sticky-top navbar-expand-lg navbar-dark" style="background-color: #6082b6;">
+	<nav class="navbar sticky-top navbar-expand-lg navbar-dark" style="background-color: #446789;">
 		<div class="container">
 			<div class="navbar-brand">
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,27 +70,26 @@
 	<div class="container body-content">
 		@RenderBody()
 		<hr />
-		<footer>
-			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-				<div class="container">
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav mr-auto">
-							<li class="nav-item">
-								<a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
-							</li>
-							<li class="nav-item">
-								<p class="navbar-text">&copy; 2018 - BitsPlease</p>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</nav>
-		</footer>
 	</div>
-
+	<footer>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container">
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+							<a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+						</li>
+						<li class="nav-item">
+							<p class="navbar-text">&copy; 2018 - BitsPlease</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</footer>
 	<script src="~/lib/moment/moment.min.js"></script>
 	<script src="~/lib/moment/moment-with-locales.js"></script>
 
