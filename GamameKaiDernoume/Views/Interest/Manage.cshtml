@@ -31,7 +31,7 @@
 
 <div class="jumbotron jumbotron-fluid">
 	<div class="container">
-		<h1 class="display-4">&nbsp;<i class="fas fa-dice"></i> Manage Interests</h1>
+		<h1 class="display-3">&nbsp;<i class="fas fa-dice"></i> Manage Interests</h1>
 	</div>
 </div>
 
@@ -91,7 +91,6 @@
 
 		$("#confirm-delete").click(async function ()
 		{
-
 			const url = "https://" + window.location.host + "@Url.Action("Delete", "Interest")";
 
 			await sendData(url, id);

@@ -14,6 +14,7 @@ namespace TeamProject.Data
         IEnumerable<Interest> GetAllInterests();        
         List<Interest> GetTopUsersInterests(User thisUser);
 
+        IEnumerable<User> GetAllUsersExcept(User thisUser);
         IEnumerable<User> GetAllStrangeUsers(User thisUser);
         IEnumerable<User> GetUsersFriends(User thisUser);
 

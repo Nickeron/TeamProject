@@ -39,7 +39,7 @@ namespace TeamProject
 
             services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("OurConnection")));
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -123,7 +123,18 @@ namespace TeamProject
             //Assign Admin role to the main User here we have given our newly registered 
             //login id for Admin management
             User user = await UserManager.FindByEmailAsync("nkaramousadakis@outlook.com");
-            var User = new User();
+            if(user is null)
+            {
+                user = new User
+                {
+                    UserName = "nickeron",
+                    FirstName = "Nick",
+                    LastName = "Karamousadakis",
+                    Email = "nkaramousadakis@outlook.com",
+                    UserAvatar = "/images/user.png"
+                };
+                var result = await UserManager.CreateAsync(user, "asdQWE123!@#");
+            }
             await UserManager.AddToRoleAsync(user, "Admin");
         }
     }

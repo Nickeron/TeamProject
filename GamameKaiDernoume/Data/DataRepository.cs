@@ -94,6 +94,10 @@ namespace TeamProject.Data
                 return null;
             }
         }
+        public IEnumerable<User> GetAllUsersExcept(User thisUser)
+        {
+           return _ctx.Users.Where(u => u.Id != thisUser.Id);
+        }
 
         public IEnumerable<User> GetAllStrangeUsers(User thisUser)
         {

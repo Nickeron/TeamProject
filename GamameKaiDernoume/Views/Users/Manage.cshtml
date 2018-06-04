@@ -1,0 +1,79 @@
+﻿@model List<UserManagementModel>
+@{
+	ViewData["Title"] = "Manage Users";
+}
+<partial name="_DeleteThisPartial" />
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-3">&nbsp;<i class="fas fa-building"></i> Manage Users</h1>
+	</div>
+</div>
+
+
+<div>
+	<ul class="list-group list-group-flush w-75 mx-auto">
+		<li class="list-group-item active"><strong>Administrators</strong></li>
+		@foreach (UserManagementModel user in Model.Where(u => u.IsAdmin))
+		{
+			<li class="list-group-item">
+				<div id=@user.ID>
+					<a asp-controller="Home"
+					   asp-action="Personal"
+					   asp-route-username="@user.UserName">
+						<img src="@user.Avatar" class="avatar rounded-circle">
+						<label>@user.Name</label>
+					</a>
+					<button class="btn btn-outline-danger float-right" onclick="deleteModal('@user.ID')">Delete</button>
+					<button class="btn btn-outline-info float-right" onclick="backToUser('@user.ID')">Make User</button>
+				</div>
+			</li>
+		}
+	</ul>
+	<br />
+	<ul class="list-group list-group-flush w-75 mx-auto">
+		<li class="list-group-item active"><strong>Users</strong></li>
+		@foreach (UserManagementModel user in Model.Where(u => !u.IsAdmin))
+		{
+			<li class="list-group-item">
+				<div id=@user.ID>
+					<a asp-controller="Home"
+					   asp-action="Personal"
+					   asp-route-username="@user.UserName">
+						<img src="@user.Avatar" class="avatar rounded-circle">
+						<label>@user.Name</label>
+					</a>
+					<button class="btn btn-outline-danger float-right" onclick="deleteModal('@user.ID')">Delete</button>
+					<button class="btn btn-outline-info float-right" onclick="makeAdmin('@user.ID')">Make Administrator</button>
+				</div>
+			</li>
+		}
+	</ul>
+</div>
+<script>
+
+	async function backToUser(userid) {
+		const url = "https://" + window.location.host + "@Url.Action("MakeUser", "Users")";
+		await sendData(url, userid);
+		location.reload();
+	}
+
+	async function makeAdmin(userid) {
+		const url = "https://" + window.location.host + "@Url.Action("MakeAdministrator", "Users")";
+		await sendData(url, userid);
+		location.reload();
+	}
+
+	function deleteModal(userid){
+		// Show the Modal
+		$("#deleteThis").modal("show");
+
+		$("#confirm-delete").click(async function ()
+		{
+			const url = "https://" + window.location.host + "@Url.Action("Delete", "Users")";
+			console.log(userid);
+			await sendData(url, userid);
+
+			location.reload();
+		});
+	}
+</script>

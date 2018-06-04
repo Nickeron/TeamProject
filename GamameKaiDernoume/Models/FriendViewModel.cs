@@ -1,10 +1,6 @@
 ﻿using TeamProject.Data.Entities;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace TeamProject.Models
 {
@@ -25,5 +21,15 @@ namespace TeamProject.Models
         public string UserName { get; set; }
         public List<Interest> TopInterests { get; set; }
         public Friendship FriendshipStatus { get; set; }
+    }
+
+    public class UserManagementModel
+    {
+        [Required]
+        public string ID { get; set; }
+        public string Avatar { get; set; }
+        public string Name { get; set; }
+        public string UserName { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }
