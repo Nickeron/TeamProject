@@ -3,7 +3,7 @@
 .body-content {
 	padding-left: 15px;
 	padding-right: 15px;
-	min-height: calc(100vh - 146px);
+	min-height: calc(100vh - 130px);
 }
 
 .jumbotron-fluid {
