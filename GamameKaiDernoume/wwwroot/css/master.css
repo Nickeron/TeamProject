@@ -1,0 +1,100 @@
+﻿.invisible {
+	visibility: hidden;
+}
+
+.wrapper {
+	visibility: visible;
+	z-index: 1000;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 1100px;
+	height: 200px;
+	cursor: pointer;
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+	.wrapper.active .left_side,
+	.wrapper.active .right_side {
+		width: 50%;
+	}
+
+		.wrapper.active .left_side,
+		.wrapper.active .left_side .text {
+			-moz-transition: ease-out 3000ms;
+			-o-transition: ease-out 3000ms;
+			-webkit-transition: ease-out 3000ms;
+			transition: ease-out 3000ms;
+		}
+
+		.wrapper.active .right_side,
+		.wrapper.active .right_side .text {
+			-moz-transition: ease-out 3000ms 3000ms;
+			-o-transition: ease-out 3000ms 3000ms;
+			-webkit-transition: ease-out 3000ms;
+			-webkit-transition-delay: 3000ms;
+			transition: ease-out 3000ms 3000ms;
+		}
+
+	.wrapper .left_side,
+	.wrapper .left_side .text {
+		-moz-transition: ease-in-out 1500ms 1500ms;
+		-o-transition: ease-in-out 1500ms 1500ms;
+		-webkit-transition: ease-in-out 1500ms;
+		-webkit-transition-delay: 1500ms;
+		transition: ease-in-out 1500ms 1500ms;
+	}
+
+	.wrapper .right_side,
+	.wrapper .right_side .text {
+		-moz-transition: ease-in-out 1500ms;
+		-o-transition: ease-in-out 1500ms;
+		-webkit-transition: ease-in-out 1500ms;
+		transition: ease-in-out 1500ms;
+	}
+
+	.wrapper .left_side,
+	.wrapper .right_side {
+		position: relative;
+		width: 0;
+		height: 100%;
+		float: left;
+		white-space: nowrap;
+		overflow: hidden;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+		.wrapper .left_side .text,
+		.wrapper .right_side .text {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			display: block;
+			width: 550px;
+			padding: 5px;
+			font: 50px/55px Arial;
+			color: white;
+			letter-spacing: 2px;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+			-moz-transform: translate(0, -50%);
+			-ms-transform: translate(0, -50%);
+			-webkit-transform: translate(0, -50%);
+			transform: translate(0, -50%);
+		}
+
+	.wrapper .left_side {
+		border-right: 1px solid white;
+		text-align: right;
+	}
+
+		.wrapper .left_side .text {
+			left: 0;
+			right: auto;
+		}
