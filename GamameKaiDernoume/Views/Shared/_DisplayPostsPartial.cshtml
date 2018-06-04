@@ -126,11 +126,14 @@
 	 function editModal(id, previousText) {
         //Show the Modal
 		 $("#editThis").modal("show");
-		 $("#editText").attr("placeholder", previousText);
+		 $("#editText").attr("value", previousText);
 
         $("#confirmChanges").click(async function ()
         {
-            const newCommentText = document.getElementById("editText").value;
+			const newCommentText = document.getElementById("editText").value;
+			if ($.trim(newCommentText) == '') {
+				return false;
+			}
             const action = "@Url.Action("Edit", "Comment")";
             const url = "https://" + window.location.host + action;
 

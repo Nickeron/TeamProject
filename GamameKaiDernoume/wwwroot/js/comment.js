@@ -74,6 +74,9 @@ connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, co
 
 async function CreateNewComment(usersAvatar, Name, PostID, url, isOP) {
 	const commentsText = document.getElementById("commentText-" + PostID).value;
+	if ($.trim(commentsText) == '') {
+		return false;
+	}
 	const commentID = await SendNewCommentData(PostID);
 	console.log(commentID);
 	connection.invoke("DistributeComment", usersAvatar, Name, currentUserID, isOP, PostID, commentID, commentsText, url).catch(err => console.error(err.toString()));
