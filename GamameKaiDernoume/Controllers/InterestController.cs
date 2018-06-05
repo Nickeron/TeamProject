@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -19,33 +16,30 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
-        private readonly IHostingEnvironment env;
         private readonly ILogger<InterestController> logger;
 
         public InterestController(IDataRepository dataRepository,
             UserManager<User> userManager,
-            IHostingEnvironment env,
             ILogger<InterestController> logger)
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
-            this.env = env;
             this.logger = logger;
         }
 
-        
+
         public IActionResult Manage()
         {
             InterestViewModel interestData = new InterestViewModel
             {
                 Interests = dataRepository.GetAllInterests().ToList()
             };
-
+            logger.LogInformation("Admin navigated to Interest Management Page");
             return View(interestData);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]string newInterest)
+        public IActionResult Create([FromBody]string newInterest)
         {
             Interest theNewInterest = new Interest
             {
@@ -55,7 +49,7 @@ namespace TeamProject.Controllers
             dataRepository.AddEntity(theNewInterest);
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok new interest was created and saved to database");
+                logger.LogInformation("Ok new interest was created and saved to database");
             };
             return Ok("Interest Created");
         }
@@ -70,7 +64,7 @@ namespace TeamProject.Controllers
 
             if (dataRepository.SaveAll())
             {
-                logger.LogInformation("saved");
+                logger.LogInformation("Interest with id: " + toEdit.InterestID + " successfully changed to " + toEdit.InterestCategory);
             };
             return Ok("Interest Edited");
         }
@@ -86,7 +80,7 @@ namespace TeamProject.Controllers
 
             if (dataRepository.SaveAll())
             {
-                logger.LogInformation("Deletion Successfull");
+                logger.LogInformation("Deletion of interest was Successfull");
             };
             return Ok("Interest Deleted");
         }

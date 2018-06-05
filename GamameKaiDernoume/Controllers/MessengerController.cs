@@ -18,17 +18,14 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
-        private readonly IHostingEnvironment env;
         private readonly ILogger<MessengerController> logger;
 
         public MessengerController(IDataRepository dataRepository,
             UserManager<User> userManager,
-            IHostingEnvironment env,
             ILogger<MessengerController> logger)
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
-            this.env = env;
             this.logger = logger;
         }
 
@@ -75,6 +72,8 @@ namespace TeamProject.Controllers
                 UnreadLatest = unreadLatest,
                 FriendsAndMessages = Correspondance
             };
+
+            logger.LogInformation("User " + thisUser.UserName + " navigated to Chat Page");
             return View(messengerView);
         }
 
@@ -91,6 +90,9 @@ namespace TeamProject.Controllers
                 CorrespondantsMessages = allUsersMessages,
                 UnreadReceived = allUsersMessages.Where(m => m.Sender.Id == UserID && m.isUnread).ToList().Count,
             };
+            logger.LogInformation("User " + thisUser.UserName
+                + " navigated to Chat Page with default correspondant "
+                + correspondant.UserName);
             return Json(messengerView);
         }
 
@@ -127,42 +129,10 @@ namespace TeamProject.Controllers
             User toThisUser = await userManager.GetUserAsync(HttpContext.User);
             if (dataRepository.ReadAllMessagesFrom(SenderId, toThisUser))
             {
-                return Ok("OK");
+                return Ok("OK messages were read!");
             };
 
             return BadRequest("Could not read messages");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit([FromBody]CommentModel CommentData)
-        {
-            var thisUser = await userManager.GetUserAsync(HttpContext.User);
-            Comment toEditComment = await dataRepository.GetCommentById(CommentData.CommentID);
-            toEditComment.CommentText = CommentData.CommentText;
-            toEditComment.CommentDate = DateTime.UtcNow;
-
-            if (dataRepository.SaveAll())
-            {
-                logger.LogError("saved");
-            };
-            return Ok(" Comment Eddited");
-
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete([FromBody]int id)
-        {
-            var thisUser = await userManager.GetUserAsync(HttpContext.User);
-
-            Comment toDelete = await dataRepository.GetCommentById(id);
-
-            dataRepository.DeleteEntity(toDelete);
-
-            if (dataRepository.SaveAll())
-            {
-                logger.LogInformation("saved");
-            };
-            return Ok("Comment Deleted");
         }
     }
 }

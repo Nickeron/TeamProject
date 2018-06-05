@@ -18,17 +18,14 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
-        private readonly IHostingEnvironment env;
         private readonly ILogger<CommentController> logger;
 
         public CommentController(IDataRepository dataRepository,
             UserManager<User> userManager,
-            IHostingEnvironment env,
             ILogger<CommentController> logger)
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
-            this.env = env;
             this.logger = logger;
         }
 
@@ -53,7 +50,7 @@ namespace TeamProject.Controllers
 
                 if (dataRepository.SaveAll())
                 {
-                    logger.LogError("saved");
+                    logger.LogInformation("New comment saved to database");
                 };
                 Comment savedComment = await dataRepository.GetCommentByDate(timeStamp);
                 return Json(savedComment.CommentID);
@@ -71,9 +68,9 @@ namespace TeamProject.Controllers
 
             if (dataRepository.SaveAll())
             {
-                logger.LogError("saved");
+                logger.LogInformation("Edits in comment saved");
             };
-            return Ok(" Comment Eddited");
+            return Ok("Comment Eddited");
 
         }
 
@@ -88,7 +85,7 @@ namespace TeamProject.Controllers
 
             if (dataRepository.SaveAll())
             {
-                logger.LogInformation("saved");
+                logger.LogInformation("Deletion of comment successfull");
             };
             return Ok("Comment Deleted");
         }

@@ -19,17 +19,14 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
-        private readonly IHostingEnvironment env;
         private readonly ILogger<UsersController> logger;
 
         public UsersController(IDataRepository dataRepository,
             UserManager<User> userManager,
-            IHostingEnvironment env,
             ILogger<UsersController> logger)
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
-            this.env = env;
             this.logger = logger;
         }
 
@@ -55,6 +52,7 @@ namespace TeamProject.Controllers
                 };
                 accessUsers.Add(managedUser);
             }
+            logger.LogInformation("Admin " + thisUser.UserName + " navigated to manage users Page");
             return View(accessUsers);
         }
 
@@ -67,7 +65,7 @@ namespace TeamProject.Controllers
             await userManager.AddToRoleAsync(upToAdmin, "Admin");
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok the user was promoted");
+                logger.LogInformation("Ok the user was promoted");
             };
             return Ok("User Promoted");
         }
@@ -81,7 +79,7 @@ namespace TeamProject.Controllers
             await userManager.RemoveFromRoleAsync(backToUser, "Admin");
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok the admin was downgraded");
+                logger.LogInformation("Ok the admin was downgraded");
             };
             return Ok("Admin no more");
         }
@@ -96,7 +94,7 @@ namespace TeamProject.Controllers
             dataRepository.DeleteEntity(toBeDeleted);
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok the user was deleted");
+                logger.LogInformation("Ok the user was deleted");
             };
             return Ok("User Deleted");
         }

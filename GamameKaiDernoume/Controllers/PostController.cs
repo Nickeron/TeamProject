@@ -12,8 +12,6 @@ using TeamProject.Data;
 using TeamProject.Data.Entities;
 using TeamProject.Models;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace TeamProject.Controllers
 {
     [Authorize]
@@ -101,7 +99,7 @@ namespace TeamProject.Controllers
                 {
                     logger.LogError("Ok relationship of post and interests was saved");
                 };
-                return Ok("Ok relationship of post and interests was saved");
+                return Ok("Ok new post was saved");
             }
             return BadRequest("Something was missing");
 
@@ -132,26 +130,24 @@ namespace TeamProject.Controllers
 
                     if (dataRepository.SaveAll())
                     {
-                        logger.LogInformation("Reaction Saved to Database");
+                        logger.LogInformation("NEW Reaction Saved to Database");
                     };
-                    //return Ok("New Reaction Added");
                 }
                 else
                 {
-                    //return Ok("No change");
                     if (postReaction.IsLike != ReactionData.IsLike)
                     {
                         postReaction.IsLike = ReactionData.IsLike;
                         if (dataRepository.SaveAll())
                         {
-                            logger.LogInformation("Reaction Saved to Database");
+                            logger.LogInformation("Reaction was changed and Saved to Database");
                         };
-                        //return Ok("Reaction Changed");
                     }
                 }
             }
             reactedPost = dataRepository.GetPostById(ReactionData.PostID);
 
+            // Return the new amount of likes and dislikes
             return Json(new
             {
                 likes = reactedPost.Reactions.Where(r => r.IsLike).ToList().Count,
@@ -170,9 +166,9 @@ namespace TeamProject.Controllers
 
             if (dataRepository.SaveAll())
             {
-                logger.LogInformation("saved");
+                logger.LogInformation("The post was deleted successfully");
             };
-            return Ok("Comment Deleted");
+            return Ok("Post Deleted");
         }
     }
 }

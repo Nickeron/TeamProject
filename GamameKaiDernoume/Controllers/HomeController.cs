@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +18,14 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
-        private readonly IHostingEnvironment env;
         private readonly ILogger<HomeController> logger;
 
         public HomeController(IDataRepository dataRepository,
             UserManager<User> userManager,
-            IHostingEnvironment env,
             ILogger<HomeController> logger)
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
-            this.env = env;
             this.logger = logger;
         }
 
@@ -44,7 +40,7 @@ namespace TeamProject.Controllers
                 Posts = dataRepository.GetAllPostsForUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
-
+            logger.LogInformation("User " + thisUser.UserName + " navigated to Home Page");
             return View(MyWallData);
         }
 
@@ -60,7 +56,7 @@ namespace TeamProject.Controllers
                 Posts = dataRepository.GetAllPostsForUserByInterest(thisUser, id).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
-
+            logger.LogInformation("User " + thisUser.UserName + " navigated to Home Page");
             return View(MyWallData);
         }
 
@@ -77,7 +73,7 @@ namespace TeamProject.Controllers
                 Posts = dataRepository.GetAllPostsByUser(thisUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
-
+            logger.LogInformation("User " + thisUser.UserName + " navigated to his personal Page");
             return View(MyWallData);
         }
 
@@ -86,7 +82,7 @@ namespace TeamProject.Controllers
         [HttpGet("{username}")]
         public async Task<IActionResult> Personal(string username)
         {
-            User thisUser = await userManager.GetUserAsync(HttpContext.User);                        
+            User thisUser = await userManager.GetUserAsync(HttpContext.User);
             User profileUser = userManager.Users.FirstOrDefault(u => u.UserName == username);
 
             MyWallViewModel MyWallData = new MyWallViewModel
@@ -98,21 +94,17 @@ namespace TeamProject.Controllers
                 Posts = dataRepository.GetAllPostsByUser(profileUser).ToList(),
                 Interests = dataRepository.GetAllInterests().ToList()
             };
-
+            logger.LogInformation("User " + thisUser.UserName + " navigated to " + profileUser.UserName + "'s Page");
             return View(MyWallData);
         }
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 

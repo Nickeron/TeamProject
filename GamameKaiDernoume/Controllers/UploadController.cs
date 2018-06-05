@@ -12,6 +12,7 @@ using TeamProject.Data.Entities;
 
 namespace TeamProject.Controllers
 {
+    [Authorize]
     public class UploadController : Controller
     {
         private readonly IHostingEnvironment env;
@@ -23,7 +24,7 @@ namespace TeamProject.Controllers
             this.env = env;
             this.userManager = userManager;
         }
-        [Authorize]
+        
         [HttpPost]
         public async Task UserAvatar(IFormFile image)
         {

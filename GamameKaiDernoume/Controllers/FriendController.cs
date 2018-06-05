@@ -19,10 +19,7 @@ namespace TeamProject.Controllers
     {
         private readonly IDataRepository dataRepository;
         private readonly UserManager<User> userManager;
-        private readonly IHostingEnvironment env;
         private readonly ILogger<FriendController> logger;
-
-        
 
         public FriendController(IDataRepository dataRepository,
             UserManager<User> userManager,
@@ -31,7 +28,6 @@ namespace TeamProject.Controllers
         {
             this.dataRepository = dataRepository;
             this.userManager = userManager;
-            this.env = env;
             this.logger = logger;
         }
 
@@ -40,7 +36,7 @@ namespace TeamProject.Controllers
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
             var allAvailableFriends = dataRepository.GetAllStrangeUsers(await userManager.GetUserAsync(HttpContext.User));
             List<UserModel> ToBeFriends = new List<UserModel>();
-            foreach(User availableFriend in allAvailableFriends)
+            foreach (User availableFriend in allAvailableFriends)
             {
                 UserModel toBeFriend = new UserModel
                 {
@@ -56,10 +52,11 @@ namespace TeamProject.Controllers
             FriendViewModel data = new FriendViewModel
             {
                 ThisUser = thisUser,
-                SentRequests = ToBeFriends.Where(u=>u.FriendshipStatus == Friendship.removeRequest).ToList(),
+                SentRequests = ToBeFriends.Where(u => u.FriendshipStatus == Friendship.removeRequest).ToList(),
                 ReceivedRequests = ToBeFriends.Where(u => u.FriendshipStatus == Friendship.acceptRequest).ToList(),
                 OtherUsers = ToBeFriends.Where(u => u.FriendshipStatus == Friendship.addFriend).ToList()
             };
+            logger.LogInformation("User " + thisUser.UserName + " navigated to Find Friends Page");
 
             return View(data);
         }
@@ -84,7 +81,7 @@ namespace TeamProject.Controllers
             dataRepository.AddEntity(newFriendship);
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok a new friend request was created");
+                logger.LogInformation("Ok a new friend request was created");
             };
             return RedirectToAction("Personal", "Home", new { username = theNewFriend.UserName });
         }
@@ -102,7 +99,7 @@ namespace TeamProject.Controllers
             friendship.Accept = true;
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok a new friend request was created");
+                logger.LogInformation("Ok a new friendship was created");
             };
             return RedirectToAction("Personal", "Home", new { username = theNewFriend.UserName });
         }
@@ -121,7 +118,7 @@ namespace TeamProject.Controllers
             dataRepository.DeleteEntity(friendship);
             if (dataRepository.SaveAll())
             {
-                logger.LogError("Ok a new friend request was created");
+                logger.LogInformation("Ok a friendship was broken successfully");
             };
             return RedirectToAction("Personal", "Home", new { username = theNewFriend.UserName });
         }
