@@ -86,9 +86,9 @@ namespace TeamProject.Controllers
 
             if (dataRepository.SaveAll())
             {
-                logger.LogInformation("saved");
+                logger.LogInformation("Deletion Successfull");
             };
-            return Ok("Comment Deleted");
+            return Ok("Interest Deleted");
         }
     }
 }

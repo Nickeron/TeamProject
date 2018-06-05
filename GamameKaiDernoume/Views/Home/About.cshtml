@@ -1,7 +1,45 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+<link href="~/css/About.css" rel="stylesheet" />
+
+<body style="background-image:url(https://i.ytimg.com/vi/JquobII5VjA/maxresdefault.jpg)">
+<div id="starwars" class="animate">
+    <p class="intro">
+        Not a long time ago, in our galaxy, four guys decided to create ...
+    </p>
+    <img src="https://s33.postimg.cc/z0ght6lrj/Logo.png" class="logo" />
+    <div id="reel">
+        <div class="content">
+            <h1>TEAM bits_please</h1>
+            <h2>A NEW SOCIAL APP</h2>
+            <p>Nikos, Konstadinos, Jimmy and Yannis took the chance to recreate a well known social app. It took them about three weeks to complete.</p>
+
+            <p>Using MVC Core, C#, HTML, Css, JavaScript and great help from their teachers/influencers they created a whole new environment for users to share their stories, share their interests and connect with each other.</p>
+
+            <p>We all enterd the CB4 Bootcamp following our dreams. This project is an example of what we learn and a view of what we can do in the future....</p>
+
+            <p>MAY THE FORCE BE WITH US</p>
+        </div>
+    </div>
+
+    <audio src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/244725/MainTitle.ogg" onloadeddata="var audioPlayer = this; setTimeout(function() { audioPlayer.play(); }, 1500)"></audio>
+
+    <button>Restart</button>
+</div>
+    </body>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+
+<script>
+    $(function () {
+        $('button').on('click', function () {
+            var elm = document.getElementById('starwars');
+            var newone = elm.cloneNode(true);
+            elm.parentNode.replaceChild(newone, elm);
+        });
+    }());
+
+
+</script>

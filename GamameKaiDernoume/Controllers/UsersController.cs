@@ -14,7 +14,7 @@ using TeamProject.Models;
 
 namespace TeamProject.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly IDataRepository dataRepository;
@@ -33,8 +33,10 @@ namespace TeamProject.Controllers
             this.logger = logger;
         }
 
+        [Route("/manageusers")]
         public async Task<IActionResult> Manage()
         {
+
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
             var allUsers = dataRepository.GetAllUsersExcept(thisUser);
 
