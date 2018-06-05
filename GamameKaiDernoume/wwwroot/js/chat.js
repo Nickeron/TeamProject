@@ -56,8 +56,6 @@ connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
 		}
 		// Adds the new message text in the conversation and scrolls to the bottom
 		$('<li class="replies"><img src="' + senderAvatar + '" alt="" /><p title="' + moment().fromNow() + '" > ' + message + '</p></li>').appendTo($('.messages ul'));
-		$('.message-input input').val(null);
-		$('.contact.active .preview').html('<span>You: </span>' + message);
 		$(".messages").scrollTop(1000000);
 	}
 });
@@ -66,7 +64,6 @@ connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
 connection.on("ShowSentMessage", (receiverID, senderAvatar, message) => {
 	$('<li class="sent"><img src="' + senderAvatar + '" alt="" /><p title="' + moment().fromNow() + '" > ' + message + '</p ></li > ').appendTo($('.messages ul'));
 	$('.message-input input').val(null);
-	$('.contact.active .preview').html('<span>You: </span>' + message);
 	$(".messages").scrollTop(1000000);
 
 	const friendOnPanel = document.getElementById("friend-panel-" + receiverID).firstElementChild.lastElementChild;

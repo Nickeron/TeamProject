@@ -45,7 +45,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
-        [Route("/{id}")]
+        [Route("/interest/{id}")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Index(int id)
         {

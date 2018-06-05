@@ -70,6 +70,7 @@
 							   placeholder="Write a new comment.." aria-label="A new comment" aria-describedby="basic-addon2" />
 						<div class="input-group-append">
 							@{
+								// Need to know if the OP badge will be displayed through SignalR
 								int isOP = (post.User.Id == Model.ThisUser.Id) ? 1 : 0;
 							}
 							<button id="commentButton-@post.PostID" onclick="CreateNewComment('@Model.ThisUser.UserAvatar', '@Model.ThisUser.FirstName @Model.ThisUser.LastName',

@@ -43,7 +43,9 @@
 
 
   <ItemGroup>
+    <Folder Include="wwwroot\postImages\" />
     <Folder Include="wwwroot\sounds\" />
+    <Folder Include="wwwroot\userAvatars\" />
   </ItemGroup>
 
 </Project>
