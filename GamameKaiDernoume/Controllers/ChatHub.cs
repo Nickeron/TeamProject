@@ -38,7 +38,7 @@ namespace TeamProject.Controllers
 
         public async Task DistributeReaction(string PostID, int likes, int dislikes)
         {
-            await Clients.All.SendAsync("AddTheReaction", PostID, likes, dislikes);
+            await Clients.All.SendAsync("UpdateReactionsOnPost", PostID, likes, dislikes);
         }
 
         public Task SendMessageToGroups(string message)

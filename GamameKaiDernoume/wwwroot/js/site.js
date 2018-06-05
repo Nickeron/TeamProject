@@ -14,6 +14,7 @@
 	return rawData.json();
 }
 
+// Formats the dates of posts and comments to show as relative
 window.onload = function () {
 	var dateTimeElements = document.getElementsByClassName("post-date");
 

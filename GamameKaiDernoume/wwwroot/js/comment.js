@@ -2,6 +2,7 @@
 	.withUrl("/chatHub")
 	.build();
 
+// Runs on all USERS that see the POST this comment is attached
 connection.on("AddTheNewComment", (usersAvatar, Name, AuthorID, isOP, PostID, commentID, commentsText, url) => {
 	const commentElement = document.getElementById("listOfComments-" + PostID);
 
@@ -80,11 +81,9 @@ async function CreateNewComment(usersAvatar, Name, PostID, url, isOP) {
 	const commentID = await SendNewCommentData(PostID);
 	console.log(commentID);
 	connection.invoke("DistributeComment", usersAvatar, Name, currentUserID, isOP, PostID, commentID, commentsText, url).catch(err => console.error(err.toString()));
-
-
 };
 
-connection.on("AddTheReaction", (PostID, likes, dislikes) => {
+connection.on("UpdateReactionsOnPost", (PostID, likes, dislikes) => {
 	document.getElementById("like-count-" + PostID).innerHTML = likes;
 	document.getElementById("dislike-count-" + PostID).innerHTML = dislikes;
 });
