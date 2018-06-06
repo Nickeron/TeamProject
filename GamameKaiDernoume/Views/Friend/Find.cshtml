@@ -10,7 +10,7 @@
 
 
 <div>
-	<ul class="list-group list-group-flush w-75 mx-auto">
+	<ul class="list-group list-group-flush responsive-width mx-auto">
 		@if (Model.ReceivedRequests.Count > 0)
 		{
 			<li class="list-group-item active"><strong>These users have asked you to be their friend</strong></li>}
@@ -45,7 +45,7 @@
 		}
 	</ul>
 	<br />
-	<ul class="list-group list-group-flush w-75 mx-auto">
+	<ul class="list-group list-group-flush responsive-width mx-auto">
 		@if (Model.OtherUsers.Count > 0)
 		{
 			<li class="list-group-item active">
@@ -82,7 +82,7 @@
 		}
 	</ul>
 	<br />
-	<ul class="list-group list-group-flush w-75 mx-auto">
+	<ul class="list-group list-group-flush responsive-width mx-auto">
 		@if (Model.SentRequests.Count > 0)
 		{
 			<li class="list-group-item active">

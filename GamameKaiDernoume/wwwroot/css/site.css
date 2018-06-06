@@ -1,5 +1,16 @@
 ﻿/* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
+.responsive-width {
+    width: 75%;
+}
+
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .responsive-width {
+        width:100%;
+    }
+}
+
 .body-content {
 	padding-left: 15px;
 	padding-right: 15px;
@@ -183,19 +194,6 @@ ul {
 	box-shadow: 0 1px 1px rgba(0,0,0,0.15);
 }
 
-	.comments-list .comment-box:before, .comments-list .comment-box:after {
-		content: '';
-		height: 0;
-		width: 0;
-		position: absolute;
-		display: block;
-		border-width: 10px 12px 10px 0;
-		border-style: solid;
-		border-color: transparent #FCFCFC;
-		top: 8px;
-		left: -11px;
-	}
-
 	.comments-list .comment-box:before {
 		border-width: 11px 13px 11px 0;
 		border-color: transparent rgba(0,0,0,0.05);
@@ -278,28 +276,28 @@ ul {
 /** =====================
  * Responsive
  ========================*/
-@media only screen and (max-width: 960px) {
+/*@media only screen and (max-width: 960px) {
 	.comments-container {
 		width: 480px;
 	}
 
-	.comments-list .comment-box {
-		width: 300px;
-	}
+    .comments-list .comment-box {
+        width: 75vw;
+    }
 
 	.reply-list .comment-box {
 		width: 320px;
 	}
-}
+}*/
 
 @media only screen and (max-width: 670px) {
 	.comments-container {
 		width: 400px;
 	}
 
-	.comments-list .comment-box {
-		width: 250px;
-	}
+    /*.comments-list .comment-box {
+        width: 75vw;
+    }*/
 
 	.reply-list .comment-box {
 		width: 320px;
@@ -312,7 +310,8 @@ ul {
 	}
 
 	.comments-list .comment-box {
-		width: 180px;
+        padding-left:0;
+		width: 75vw;
 	}
 }
 
@@ -322,10 +321,10 @@ ul {
 		width: 300px;
 	}
 
-	.comments-list .comment-box {
-		padding: 0;
-		width: 150px;
-	}
+    .comments-list .comment-box {
+        padding: 0;
+        width: 75vw;
+    }
 }
 
 @media (max-width: 590px) {

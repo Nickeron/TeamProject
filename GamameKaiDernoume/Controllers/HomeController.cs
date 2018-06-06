@@ -8,9 +8,6 @@ using TeamProject.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
 
 namespace TeamProject.Controllers
 {
@@ -45,7 +42,7 @@ namespace TeamProject.Controllers
         }
 
         [Authorize]
-        [Route("/interest/{id}")]
+        [Route("/search-by-interest/{id}")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Index(int id)
         {
