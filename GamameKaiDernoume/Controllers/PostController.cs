@@ -54,7 +54,7 @@ namespace TeamProject.Controllers
                     }
                 }
 
-                DateTime timeStamp = DateTime.UtcNow;
+                DateTime timeStamp = DateTime.Now;
                 Post theNewPost = new Post
                 {
                     User = thisUser,
@@ -162,9 +162,7 @@ namespace TeamProject.Controllers
 
             Post toDelete = dataRepository.GetPostById(id);
 
-            dataRepository.DeleteEntity(toDelete);
-
-            if (dataRepository.SaveAll())
+            if (dataRepository.DeletePost(toDelete))
             {
                 logger.LogInformation("The post was deleted successfully");
             };

@@ -34,10 +34,47 @@ namespace TeamProject.Data
             _ctx.Remove(model);
         }
 
+        public bool DeletePost(Post toDelete)
+        {
+            try
+            {
+                _logger.LogInformation("Deleting post " + toDelete.PostID);
+                List<Comment> allPostsComments = _ctx.Comments
+                    .Include(u => u.Post)
+                    .Where(u => (u.Post.PostID == toDelete.PostID))
+                    .ToList();
+
+                if (!(allPostsComments is null) && allPostsComments.Count > 0)
+                {
+                    _ctx.RemoveRange(allPostsComments);
+                    SaveAll();
+                }
+
+                List<Reaction> allPostsReactions = _ctx.Reactions
+                    .Include(u => u.Post)
+                    .Where(u => (u.Post.PostID == toDelete.PostID))
+                    .ToList();
+
+                if (!(allPostsReactions is null) && allPostsReactions.Count > 0)
+                {
+                    _ctx.RemoveRange(allPostsReactions);
+                    SaveAll();
+                }
+                _ctx.Remove(toDelete);
+                return SaveAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to delete the requested Post: {ex}");
+                return false;
+            }
+        }
+
         public bool DeleteUser(User toBeDeleted)
         {
             try
             {
+                _logger.LogInformation("Deleting user " +toBeDeleted.UserName);
                 List<Friend> allKnown = _ctx.Friends
                     .Include(u => u.Receiver)
                     .Include(u => u.Sender)

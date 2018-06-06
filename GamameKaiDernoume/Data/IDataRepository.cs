@@ -9,6 +9,7 @@ namespace TeamProject.Data
     {
         void AddEntity(object model);
         void DeleteEntity(object model);
+        bool DeletePost(Post toDelete);
         bool DeleteUser(User toBeDeleted);
 
         Interest GetInterestById(int InterestId);
@@ -40,6 +41,5 @@ namespace TeamProject.Data
         Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser);
 
         bool SaveAll();
-        
     }
 }
