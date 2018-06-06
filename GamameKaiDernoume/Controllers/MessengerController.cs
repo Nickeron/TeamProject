@@ -86,9 +86,7 @@ namespace TeamProject.Controllers
 
             UserChatModel messengerView = new UserChatModel
             {
-                Correspondant = correspondant,
-                CorrespondantsMessages = allUsersMessages,
-                UnreadReceived = allUsersMessages.Where(m => m.Sender.Id == UserID && m.isUnread).ToList().Count,
+                CorrespondantsMessages = allUsersMessages
             };
             logger.LogInformation("User " + thisUser.UserName
                 + " navigated to Chat Page with default correspondant "
