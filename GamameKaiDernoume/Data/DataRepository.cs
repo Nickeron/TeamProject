@@ -71,10 +71,10 @@ namespace TeamProject.Data
         {
             try
             {
-                _logger.LogInformation("Get Top Users Interests was called");
+                _logger.LogInformation("Get Top Users: " + thisUser.UserName + "Interests was called");
 
                 List<int> UsersPostInterests =
-                    GetAllPostsByUser(thisUser).SelectMany(p => p.PostInterests).Select(pi=>pi.InterestId).ToList();
+                    GetAllPostsByUser(thisUser).SelectMany(p => p.PostInterests).Select(pi => pi.InterestId).ToList();
 
                 List<int> TopUsersInterests = UsersPostInterests
                     .GroupBy(s => s)
@@ -96,59 +96,79 @@ namespace TeamProject.Data
         }
         public IEnumerable<User> GetAllUsersExcept(User thisUser)
         {
-           return _ctx.Users.Where(u => u.Id != thisUser.Id);
+            return _ctx.Users.Where(u => u.Id != thisUser.Id);
         }
 
         public IEnumerable<User> GetAllStrangeUsers(User thisUser)
         {
-            IEnumerable<Friend> allKnown = _ctx.Friends
+            try
+            {
+                _logger.LogInformation("Get all strange Users for: " + thisUser.UserName + " was called");
+
+                IEnumerable<Friend> allKnown = _ctx.Friends
                 .Include(u => u.Receiver)
                 .Include(u => u.Sender)
                 .Where(u => (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && (u.Accept))
                 .ToList();
 
-            List<string> allFriends = new List<string>() { thisUser.Id };
-            foreach (Friend knownPerson in allKnown)
-            {
-                if (knownPerson.Receiver.Id != thisUser.Id)
+                List<string> allFriends = new List<string>() { thisUser.Id };
+                foreach (Friend knownPerson in allKnown)
                 {
-                    allFriends.Add(knownPerson.Receiver.Id);
+                    if (knownPerson.Receiver.Id != thisUser.Id)
+                    {
+                        allFriends.Add(knownPerson.Receiver.Id);
+                    }
+                    if (knownPerson.Sender.Id != thisUser.Id)
+                    {
+                        allFriends.Add(knownPerson.Sender.Id);
+                    }
                 }
-                if (knownPerson.Sender.Id != thisUser.Id)
-                {
-                    allFriends.Add(knownPerson.Sender.Id);
-                }
-            }
 
-            return _ctx.Users.Where(u => !allFriends.Contains(u.Id)).ToList();
+                return _ctx.Users.Where(u => !allFriends.Contains(u.Id)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get all strange users: {ex}");
+                return null;
+            }
         }
 
         public IEnumerable<User> GetUsersFriends(User thisUser)
         {
-            List<Friend> allKnown = _ctx.Friends
+            try
+            {
+                _logger.LogInformation("Get all friend Users for: " + thisUser.UserName + " was called");
+
+                List<Friend> allKnown = _ctx.Friends
                 .Include(u => u.Receiver)
                 .Include(u => u.Sender)
                 .Where(u =>
                 (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && u.Accept)
                 .ToList();
 
-            List<string> allFriends = new List<string>();
+                List<string> allFriends = new List<string>();
 
-            foreach (Friend knownPerson in allKnown)
-            {
-                if (knownPerson.Receiver.Id != thisUser.Id)
+                foreach (Friend knownPerson in allKnown)
                 {
-                    allFriends.Add(knownPerson.Receiver.Id);
+                    if (knownPerson.Receiver.Id != thisUser.Id)
+                    {
+                        allFriends.Add(knownPerson.Receiver.Id);
+                    }
+                    if (knownPerson.Sender.Id != thisUser.Id)
+                    {
+                        allFriends.Add(knownPerson.Sender.Id);
+                    }
                 }
-                if (knownPerson.Sender.Id != thisUser.Id)
-                {
-                    allFriends.Add(knownPerson.Sender.Id);
-                }
+
+                return _ctx.Users
+                    .Include(u => u.SentMessages)
+                    .Where(u => allFriends.Contains(u.Id)).ToList();
             }
-
-            return _ctx.Users
-                .Include(u => u.SentMessages)
-                .Where(u => allFriends.Contains(u.Id)).ToList();
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get all friend users: {ex}");
+                return null;
+            }
         }
 
         public Friend GetFriend(User thisUser, string friendsID)
@@ -229,7 +249,7 @@ namespace TeamProject.Data
                     .Where(m => (m.Sender.Id == senderId && m.Receiver.Id == toThisUser.Id) && (m.isUnread))
                     .ToList();
 
-            foreach(Message unreadMessage in allUnreadMessagesReceived)
+            foreach (Message unreadMessage in allUnreadMessagesReceived)
             {
                 unreadMessage.isUnread = false;
             }
@@ -240,7 +260,7 @@ namespace TeamProject.Data
         {
             try
             {
-                _logger.LogInformation("Get All Posts for User was called");
+                _logger.LogInformation("Get All Posts for User " + currentUser.UserName + " was called");
                 List<User> friends = (List<User>)GetUsersFriends(currentUser);
 
                 return _ctx.Posts
@@ -264,7 +284,7 @@ namespace TeamProject.Data
         {
             try
             {
-                _logger.LogInformation("Get All Posts for User by interest was called");
+                _logger.LogInformation("Get All Posts for User " + currentUser.UserName + " by interest was called");
                 _logger.LogInformation("Before the call" + interestId);
                 List<Post> allAvailablePosts = (List<Post>)GetAllPostsForUser(currentUser);
 
@@ -286,18 +306,18 @@ namespace TeamProject.Data
             }
         }
 
-        public IEnumerable<Post> GetAllPostsByUser(User user)
+        public IEnumerable<Post> GetAllPostsByUser(User currentUser)
         {
             try
             {
-                _logger.LogInformation("Get All Posts by User was called");
+                _logger.LogInformation("Get All Posts by User " + currentUser.UserName + " was called");
                 return _ctx.Posts
                            .Include(o => o.Reactions)
                            .Include(i => i.Comments)
                            .ThenInclude(c => c.User)
                            .Include(i => i.PostInterests)
                            .ThenInclude(i => i.Interest)
-                           .Where(o => o.User.Id == user.Id)
+                           .Where(o => o.User.Id == currentUser.Id)
                            .OrderByDescending(p => p.PostDate)
                            .ToList();
             }
@@ -332,7 +352,7 @@ namespace TeamProject.Data
         {
             try
             {
-                _logger.LogInformation("Get Post by ID was called");
+                _logger.LogInformation("Get Post by ID: " + postID + " was called");
 
                 return _ctx.Posts
                 .Include(p => p.PostInterests)
@@ -351,7 +371,7 @@ namespace TeamProject.Data
         {
             try
             {
-                _logger.LogInformation("Get Comment by ID was called");
+                _logger.LogInformation("Get Comment by ID: " + commentID + " was called");
 
                 return await _ctx.Comments
                 .SingleOrDefaultAsync(u => u.CommentID.Equals(commentID));
