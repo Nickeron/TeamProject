@@ -37,7 +37,7 @@ namespace TeamProject.Controllers
             if (ModelState.IsValid)
             {
                 Post commentedPost = dataRepository.GetPostById(CommentData.PostID);
-                DateTime timeStamp = DateTime.UtcNow;
+                DateTime timeStamp = DateTime.Now;
                 Comment newComment = new Comment
                 {
                     User = thisUser,
@@ -64,7 +64,7 @@ namespace TeamProject.Controllers
             var thisUser = await userManager.GetUserAsync(HttpContext.User);
             Comment toEditComment = await dataRepository.GetCommentById(CommentData.CommentID);
             toEditComment.CommentText = CommentData.CommentText;
-            toEditComment.CommentDate = DateTime.UtcNow;
+            toEditComment.CommentDate = DateTime.Now;
 
             if (dataRepository.SaveAll())
             {
