@@ -142,7 +142,10 @@
         if (userID != currentlyActiveUserID) {
             console.log("Sending request to database for user with ID: ", userID);
             const ulMessages = document.getElementById("active-user-messages");
-            ulMessages.innerHTML = "";
+            // Add loader until messages are retrieved from database
+            const loader = document.createElement("img");
+            loader.setAttribute("src", "/images/loader.svg");
+            ulMessages.innerHTML = loader;
             const activeUserElement = document.getElementById("activeUser");
             activeUserElement.title = userID;
 
@@ -158,7 +161,7 @@
             activeUserElement.lastElementChild.innerHTML = usersName;
 
 			const messageModel = await sendData("@Url.Action("Chat", "Messenger")", userID);
-
+            ulMessages.innerHTML = '';
 			const comMessages = messageModel.correspondantsMessages;
 			for (const key in comMessages) {
 				if (comMessages.hasOwnProperty(key)) {
