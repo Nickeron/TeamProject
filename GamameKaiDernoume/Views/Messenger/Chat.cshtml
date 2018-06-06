@@ -142,10 +142,15 @@
         if (userID != currentlyActiveUserID) {
             console.log("Sending request to database for user with ID: ", userID);
             const ulMessages = document.getElementById("active-user-messages");
+            ulMessages.innerHTML = '';
             // Add loader until messages are retrieved from database
+            const liloader = document.createElement("li");
             const loader = document.createElement("img");
             loader.setAttribute("src", "/images/loader.svg");
-            ulMessages.innerHTML = loader;
+            
+            liloader.appendChild(loader);
+            ulMessages.appendChild(liloader);
+
             const activeUserElement = document.getElementById("activeUser");
             activeUserElement.title = userID;
 
