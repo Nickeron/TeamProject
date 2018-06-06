@@ -680,6 +680,11 @@
 		float: left;
 	}
 
+    #frame .content .messages ul li .loader {
+        width: initial;
+        height: initial;
+    }
+
 	#frame .content .messages ul li p {
 		display: inline-block;
 		padding: 10px 15px;
