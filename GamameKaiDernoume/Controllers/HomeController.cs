@@ -31,6 +31,10 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Index()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            if (thisUser is null)
+            {
+                throw new System.Exception("In index httpContext had no user");
+            }
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,
@@ -47,6 +51,10 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Index(int id)
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            if (thisUser is null)
+            {
+                throw new System.Exception("In index httpContext had no user");
+            }
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,
@@ -62,6 +70,10 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Personal()
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            if (thisUser is null)
+            {
+                throw new System.Exception("In Personal httpContext had no user");
+            }
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,
@@ -80,8 +92,16 @@ namespace TeamProject.Controllers
         public async Task<IActionResult> Personal(string username)
         {
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
+            if (thisUser is null)
+            {
+                throw new System.Exception("In Personal httpContext had no user");
+            }
             User profileUser = userManager.Users.FirstOrDefault(u => u.UserName == username);
 
+            if (profileUser is null)
+            {
+                throw new System.Exception("In Personal, username " + username + " matched no user");
+            }
             MyWallViewModel MyWallData = new MyWallViewModel
             {
                 ThisUser = thisUser,

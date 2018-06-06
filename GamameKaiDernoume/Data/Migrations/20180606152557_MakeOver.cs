@@ -4,10 +4,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TeamProject.Data.Migrations
 {
-    public partial class initial : Migration
+    public partial class MakeOver : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "AspNetUserTokens",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldMaxLength: 128);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "LoginProvider",
+                table: "AspNetUserTokens",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldMaxLength: 128);
+
             migrationBuilder.AddColumn<DateTime>(
                 name: "DateOdBirth",
                 table: "AspNetUsers",
@@ -21,12 +35,17 @@ namespace TeamProject.Data.Migrations
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
             migrationBuilder.AddColumn<string>(
-                name: "UserAvatar",
+                name: "FirstName",
                 table: "AspNetUsers",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "UserId",
+                name: "LastName",
+                table: "AspNetUsers",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "UserAvatar",
                 table: "AspNetUsers",
                 nullable: true);
 
@@ -35,6 +54,20 @@ namespace TeamProject.Data.Migrations
                 table: "AspNetUsers",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "ProviderKey",
+                table: "AspNetUserLogins",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldMaxLength: 128);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "LoginProvider",
+                table: "AspNetUserLogins",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldMaxLength: 128);
 
             migrationBuilder.CreateTable(
                 name: "Friends",
@@ -64,16 +97,30 @@ namespace TeamProject.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Interests",
+                columns: table => new
+                {
+                    InterestID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    InterestCategory = table.Column<string>(nullable: true),
+                    InterestIcon = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Interests", x => x.InterestID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
                     MessageID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    isUnread = table.Column<bool>(nullable: false),
                     MessageDate = table.Column<DateTime>(nullable: false),
                     MessageText = table.Column<string>(nullable: true),
                     SenderId = table.Column<string>(nullable: true),
-                    ReceiverId = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    ReceiverId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -87,12 +134,6 @@ namespace TeamProject.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Messages_AspNetUsers_SenderId",
                         column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_UserId",
-                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -150,24 +191,27 @@ namespace TeamProject.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Interests",
+                name: "PostInterest",
                 columns: table => new
                 {
-                    InterestID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    InterestCategory = table.Column<string>(nullable: true),
-                    InterestIcon = table.Column<string>(nullable: true),
-                    PostID = table.Column<int>(nullable: true)
+                    PostId = table.Column<int>(nullable: false),
+                    InterestId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Interests", x => x.InterestID);
+                    table.PrimaryKey("PK_PostInterest", x => new { x.PostId, x.InterestId });
                     table.ForeignKey(
-                        name: "FK_Interests_Posts_PostID",
-                        column: x => x.PostID,
+                        name: "FK_PostInterest_Interests_InterestId",
+                        column: x => x.InterestId,
+                        principalTable: "Interests",
+                        principalColumn: "InterestID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostInterest_Posts_PostId",
+                        column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "PostID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,11 +242,6 @@ namespace TeamProject.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_UserId",
-                table: "AspNetUsers",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostID",
                 table: "Comments",
                 column: "PostID");
@@ -223,11 +262,6 @@ namespace TeamProject.Data.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Interests_PostID",
-                table: "Interests",
-                column: "PostID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Messages_ReceiverId",
                 table: "Messages",
                 column: "ReceiverId");
@@ -238,9 +272,9 @@ namespace TeamProject.Data.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_UserId",
-                table: "Messages",
-                column: "UserId");
+                name: "IX_PostInterest_InterestId",
+                table: "PostInterest",
+                column: "InterestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
@@ -256,22 +290,10 @@ namespace TeamProject.Data.Migrations
                 name: "IX_Reactions_UserId",
                 table: "Reactions",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_AspNetUsers_UserId",
-                table: "AspNetUsers",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_AspNetUsers_UserId",
-                table: "AspNetUsers");
-
             migrationBuilder.DropTable(
                 name: "Comments");
 
@@ -279,20 +301,19 @@ namespace TeamProject.Data.Migrations
                 name: "Friends");
 
             migrationBuilder.DropTable(
-                name: "Interests");
+                name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "PostInterest");
 
             migrationBuilder.DropTable(
                 name: "Reactions");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "Interests");
 
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_UserId",
-                table: "AspNetUsers");
+            migrationBuilder.DropTable(
+                name: "Posts");
 
             migrationBuilder.DropColumn(
                 name: "DateOdBirth",
@@ -303,16 +324,48 @@ namespace TeamProject.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "UserAvatar",
+                name: "FirstName",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "UserId",
+                name: "LastName",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "UserAvatar",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
                 name: "UserRole",
                 table: "AspNetUsers");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "AspNetUserTokens",
+                maxLength: 128,
+                nullable: false,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "LoginProvider",
+                table: "AspNetUserTokens",
+                maxLength: 128,
+                nullable: false,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "ProviderKey",
+                table: "AspNetUserLogins",
+                maxLength: 128,
+                nullable: false,
+                oldClrType: typeof(string));
+
+            migrationBuilder.AlterColumn<string>(
+                name: "LoginProvider",
+                table: "AspNetUserLogins",
+                maxLength: 128,
+                nullable: false,
+                oldClrType: typeof(string));
         }
     }
 }

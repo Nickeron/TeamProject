@@ -6,6 +6,47 @@
     <ApplicationIcon>gamer.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20180519122312_initial.cs" />
+    <Compile Remove="Data\Migrations\20180519122312_initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519124510_second.cs" />
+    <Compile Remove="Data\Migrations\20180519124510_second.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519125931_third.cs" />
+    <Compile Remove="Data\Migrations\20180519125931_third.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519130243_fourth.cs" />
+    <Compile Remove="Data\Migrations\20180519130243_fourth.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519130539_fifth.cs" />
+    <Compile Remove="Data\Migrations\20180519130539_fifth.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519142331_sixth.cs" />
+    <Compile Remove="Data\Migrations\20180519142331_sixth.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519144856_seventh.cs" />
+    <Compile Remove="Data\Migrations\20180519144856_seventh.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180521101316_ninth.cs" />
+    <Compile Remove="Data\Migrations\20180521101316_ninth.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180522131846_skata.cs" />
+    <Compile Remove="Data\Migrations\20180522131846_skata.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180522135142_fixed-skata.cs" />
+    <Compile Remove="Data\Migrations\20180522135142_fixed-skata.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180602183626_hopeToBeTheLast.cs" />
+    <Compile Remove="Data\Migrations\20180602183626_hopeToBeTheLast.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606121852_cascadeOndelete.cs" />
+    <Compile Remove="Data\Migrations\20180606121852_cascadeOndelete.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606134813_makeover.cs" />
+    <Compile Remove="Data\Migrations\20180606134813_makeover.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606140730_MakeOver.cs" />
+    <Compile Remove="Data\Migrations\20180606140730_MakeOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606141418_MakeOver.cs" />
+    <Compile Remove="Data\Migrations\20180606141418_MakeOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606141648_MakeOver.cs" />
+    <Compile Remove="Data\Migrations\20180606141648_MakeOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606141938_MakeOver.cs" />
+    <Compile Remove="Data\Migrations\20180606141938_MakeOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606142406_MakeOver.cs" />
+    <Compile Remove="Data\Migrations\20180606142406_MakeOver.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180606142609_MakeOver.cs" />
+    <Compile Remove="Data\Migrations\20180606142609_MakeOver.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />

@@ -34,6 +34,76 @@ namespace TeamProject.Data
             _ctx.Remove(model);
         }
 
+        public bool DeleteUser(User toBeDeleted)
+        {
+            try
+            {
+                List<Friend> allKnown = _ctx.Friends
+                    .Include(u => u.Receiver)
+                    .Include(u => u.Sender)
+                    .Where(u => (u.Receiver.Id == toBeDeleted.Id || u.Sender.Id == toBeDeleted.Id))
+                    .ToList();
+
+                if (!(allKnown is null) && allKnown.Count > 0)
+                {
+                    _ctx.RemoveRange(allKnown);
+                    SaveAll();
+                }
+
+                List<Comment> allHisComments = _ctx.Comments
+                    .Include(u => u.User)
+                    .Where(u => (u.User.Id == toBeDeleted.Id))
+                    .ToList();
+
+                if (!(allHisComments is null) && allHisComments.Count > 0)
+                {
+                    _ctx.RemoveRange(allHisComments);
+                    SaveAll();
+                }
+
+                List<Reaction> allHisReactions = _ctx.Reactions
+                    .Include(u => u.User)
+                    .Where(u => (u.User.Id == toBeDeleted.Id))
+                    .ToList();
+
+                if (!(allHisReactions is null) && allHisReactions.Count > 0)
+                {
+                    _ctx.RemoveRange(allHisReactions);
+                    SaveAll();
+                }
+
+                List<Post> allHisPosts = _ctx.Posts
+                    .Include(u => u.User)
+                    .Where(u => (u.User.Id == toBeDeleted.Id))
+                    .ToList();
+
+                if (!(allHisPosts is null) && allHisPosts.Count > 0)
+                {
+                    _ctx.RemoveRange(allHisPosts);
+                    SaveAll();
+                }
+
+                List<Message> allHisMessages = _ctx.Messages
+                    .Include(u => u.Sender)
+                    .Include(u => u.Receiver)
+                    .Where(u => (u.Sender.Id == toBeDeleted.Id) || (u.Receiver.Id == toBeDeleted.Id))
+                    .ToList();
+
+                if (!(allHisMessages is null) && allHisMessages.Count > 0)
+                {
+                    _ctx.RemoveRange(allHisMessages);
+                    SaveAll();
+                }
+                _ctx.Remove(toBeDeleted);
+                return SaveAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to delete the requested User: {ex}");
+                return false;
+            }
+        }
+
         public Interest GetInterestById(int InterestId)
         {
             try
@@ -111,6 +181,8 @@ namespace TeamProject.Data
                 .Where(u => (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && (u.Accept))
                 .ToList();
 
+                _logger.LogInformation("All strange Users successfully retrieved for: " + thisUser.UserName);
+                
                 List<string> allFriends = new List<string>() { thisUser.Id };
                 foreach (Friend knownPerson in allKnown)
                 {
@@ -146,6 +218,8 @@ namespace TeamProject.Data
                 (u.Receiver.Id == thisUser.Id || u.Sender.Id == thisUser.Id) && u.Accept)
                 .ToList();
 
+                _logger.LogInformation("All friend Users successfully retrieved for: " + thisUser.UserName);
+
                 List<string> allFriends = new List<string>();
 
                 foreach (Friend knownPerson in allKnown)
@@ -175,7 +249,7 @@ namespace TeamProject.Data
         {
             try
             {
-                _logger.LogInformation("Get friend was called");
+                _logger.LogInformation("Get friend was called for " + thisUser.UserName);
                 return _ctx.Friends.SingleOrDefault(f =>
             (f.Receiver.Id == thisUser.Id && f.Sender.Id == friendsID) ||
             (f.Receiver.Id == friendsID && f.Sender.Id == thisUser.Id));
@@ -189,16 +263,29 @@ namespace TeamProject.Data
 
         public Friendship GetFriendship(User thisUser, User anotherUser)
         {
-            if (thisUser.Id == anotherUser.Id) { return Friendship.myself; }
+            try
+            {
+                _logger.LogInformation("Get friendship of "
+                    + thisUser.UserName
+                    + " and "
+                    + anotherUser.UserName
+                    + " was called");
+                if (thisUser.Id == anotherUser.Id) { return Friendship.myself; }
 
-            Friend friendship = _ctx.Friends.SingleOrDefault(f =>
-            (f.Receiver.Id == thisUser.Id && f.Sender.Id == anotherUser.Id) ||
-            (f.Receiver.Id == anotherUser.Id && f.Sender.Id == thisUser.Id));
+                Friend friendship = _ctx.Friends.SingleOrDefault(f =>
+                (f.Receiver.Id == thisUser.Id && f.Sender.Id == anotherUser.Id) ||
+                (f.Receiver.Id == anotherUser.Id && f.Sender.Id == thisUser.Id));
 
-            if (friendship is null) { return Friendship.addFriend; }
-            else if (friendship.Receiver.Id == thisUser.Id && friendship.Accept == false) { return Friendship.acceptRequest; }
-            else if (friendship.Sender.Id == thisUser.Id && friendship.Accept == false) { return Friendship.removeRequest; }
-            else { return Friendship.removeFriend; }
+                if (friendship is null) { return Friendship.addFriend; }
+                else if (friendship.Receiver.Id == thisUser.Id && friendship.Accept == false) { return Friendship.acceptRequest; }
+                else if (friendship.Sender.Id == thisUser.Id && friendship.Accept == false) { return Friendship.removeRequest; }
+                else { return Friendship.removeFriend; }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Friendship: {ex}");
+                return Friendship.myself;
+            }
         }
 
         public IEnumerable<Message> GetAllMessagesOfUser(User thisUser)

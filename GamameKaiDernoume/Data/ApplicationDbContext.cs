@@ -38,7 +38,7 @@ namespace TeamProject.Data
             modelBuilder.Entity<Message>()
                 .HasOne(r => r.Receiver)
                 .WithMany(m => m.ReceivedMessages);
-                
+
             modelBuilder.Entity<Message>()
                 .HasOne(r => r.Sender)
                 .WithMany(m => m.SentMessages);
@@ -48,8 +48,7 @@ namespace TeamProject.Data
 
             modelBuilder.Entity<Friend>()
                 .HasOne(r => r.Receiver)
-                .WithMany(m => m.Friends)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(m => m.Friends);
 
             modelBuilder.Entity<PostInterest>()
                 .HasKey(pk => new { pk.PostId, pk.InterestId });

@@ -393,8 +393,7 @@ namespace TeamProject.Data.Migrations
                 {
                     b.HasOne("TeamProject.Data.Entities.User", "Receiver")
                         .WithMany("Friends")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ReceiverId");
 
                     b.HasOne("TeamProject.Data.Entities.User", "Sender")
                         .WithMany()
@@ -405,13 +404,11 @@ namespace TeamProject.Data.Migrations
                 {
                     b.HasOne("TeamProject.Data.Entities.User", "Receiver")
                         .WithMany("ReceivedMessages")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ReceiverId");
 
                     b.HasOne("TeamProject.Data.Entities.User", "Sender")
                         .WithMany("SentMessages")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("TeamProject.Data.Entities.Post", b =>

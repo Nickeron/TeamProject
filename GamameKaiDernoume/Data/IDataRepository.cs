@@ -9,6 +9,7 @@ namespace TeamProject.Data
     {
         void AddEntity(object model);
         void DeleteEntity(object model);
+        bool DeleteUser(User toBeDeleted);
 
         Interest GetInterestById(int InterestId);
         IEnumerable<Interest> GetAllInterests();        

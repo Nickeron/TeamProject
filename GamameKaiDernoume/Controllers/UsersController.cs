@@ -91,7 +91,7 @@ namespace TeamProject.Controllers
 
             if (userid is null) throw new Exception();
 
-            dataRepository.DeleteEntity(toBeDeleted);
+            dataRepository.DeleteUser(toBeDeleted);
             if (dataRepository.SaveAll())
             {
                 logger.LogInformation("Ok the user was deleted");
