@@ -14,15 +14,14 @@
 	return rawData.json();
 }
 
-// Formats the dates of posts and comments to show as relative
-window.onload = function () {
-	var dateTimeElements = document.getElementsByClassName("post-date");
+moment.locale('el');
 
-	for (var i = 0; i < dateTimeElements.length; i++) {
-		formatDate(dateTimeElements[i]);
-	}
-};
+// Formats the dates of posts and comments to show as relative
+window.setInterval(function () {
+    var dateTimeElements = document.getElementsByClassName("post-date");
+    for (var i = 0; i < dateTimeElements.length; i++) { formatDate(dateTimeElements[i]); }
+}, 5000);
 
 function formatDate(element) {
-	element.innerHTML = moment(element.id).fromNow();
+    element.innerHTML = moment(element.id).add(3, 'hours').fromNow();
 }
