@@ -157,9 +157,8 @@
 
             // If there is notification on the sidepanel - make one on the header
             const unreadFromUser = document.getElementById("unreadCount-" + userID);
-            console.log("Requested user has sent " + unreadFromUser.innerHTML + " new messages");
+
             if (unreadFromUser) {
-                console.log("Creating the new badge for the header");
                 const newUnreadMessagesElement = document.createElement("span");
                 newUnreadMessagesElement.setAttribute("id", "unreadLatestCount");
                 newUnreadMessagesElement.setAttribute("class", "badge badge-pill badge-danger");
