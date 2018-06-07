@@ -155,11 +155,12 @@
             const activeUserElement = document.getElementById("activeUser");
             activeUserElement.title = userID;
 
-            if (document.getElementById("unreadCount-"+userID)) {
+            const unreadFromUser = document.getElementById("unreadCount-" + userID);
+            if (unreadFromUser) {
                 const newUnreadMessagesElement = document.createElement("span");
                 newUnreadMessagesElement.setAttribute("id", "unreadLatestCount");
                 newUnreadMessagesElement.setAttribute("class", "badge badge-pill badge-danger");
-                newUnreadMessagesElement.innerHTML = unreadFromUser;
+                newUnreadMessagesElement.innerHTML = unreadFromUser.innerHTML;
 
                 activeUserElement.lastElementChild.appendChild(newUnreadMessagesElement);
             }
