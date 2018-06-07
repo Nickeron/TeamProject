@@ -64,7 +64,7 @@
         {
             <div id="activeUser" title="" class="contact-profile">
                 <img src="~/images/user.png" alt="" />
-                <p>No Communication History</p>
+                <p id="activeUserMeta">No Communication History</p>
             </div>
             <div class="messages">
                 <ul id="active-user-messages"></ul>
@@ -140,23 +140,26 @@
     {
         const currentlyActiveUserID = document.getElementById("activeUser").title;
         if (userID != currentlyActiveUserID) {
-            console.log("Sending request to database for user with ID: ", userID);
+            console.log("Sending request to database for user with ID: ", userID);    
+
+            // Removing previous conversation
             const ulMessages = document.getElementById("active-user-messages");
             ulMessages.innerHTML = '';
-            // Add loader until messages are retrieved from database
-            const liloader = document.createElement("li");
-            const loader = document.createElement("img");
-            loader.setAttribute("src", "/images/loader.svg");
-            loader.setAttribute("class", "loader");
-            
-            liloader.appendChild(loader);
-            ulMessages.appendChild(liloader);
-
+                      
             const activeUserElement = document.getElementById("activeUser");
+
+            // Setting the new title on the active user element
             activeUserElement.title = userID;
 
+            // Changing the headers name and avatar to the new active user
+            activeUserElement.firstElementChild.setAttribute("src", userAvatar);
+            activeUserElement.lastElementChild.innerHTML = usersName;
+
+            // If there is notification on the sidepanel - make one on the header
             const unreadFromUser = document.getElementById("unreadCount-" + userID);
+            console.log("Requested user has sent " + unreadFromUser.innerHTML + " new messages");
             if (unreadFromUser) {
+                console.log("Creating the new badge for the header");
                 const newUnreadMessagesElement = document.createElement("span");
                 newUnreadMessagesElement.setAttribute("id", "unreadLatestCount");
                 newUnreadMessagesElement.setAttribute("class", "badge badge-pill badge-danger");
@@ -164,11 +167,22 @@
 
                 activeUserElement.lastElementChild.appendChild(newUnreadMessagesElement);
             }
-            activeUserElement.firstElementChild.setAttribute("src", userAvatar);
-            activeUserElement.lastElementChild.innerHTML = usersName;
 
-			const messageModel = await sendData("@Url.Action("Chat", "Messenger")", userID);
+            // Add loader until messages are retrieved from database
+            const liloader = document.createElement("li");
+            const loader = document.createElement("img");
+            loader.setAttribute("src", "/images/loader.svg");
+            loader.setAttribute("class", "loader");
+            liloader.appendChild(loader);
+            ulMessages.appendChild(liloader);
+
+            // Making the request to get the new active user's messages
+            const messageModel = await sendData("@Url.Action("Chat", "Messenger")", userID);
+
+            // Removing loader
             ulMessages.innerHTML = '';
+
+            // Creating the new conversation with the incoming messages
 			const comMessages = messageModel.correspondantsMessages;
 			for (const key in comMessages) {
 				if (comMessages.hasOwnProperty(key)) {
