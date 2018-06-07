@@ -391,6 +391,7 @@ namespace TeamProject.Data
                            .Include(p => p.User)
                            .Include(o => o.Reactions)
                            .Include(i => i.Comments)
+                           .ThenInclude(c=>c.User)
                            .Include(i => i.PostInterests)
                            .ThenInclude(i => i.Interest)
                            .Where(o => friends.Select(x => x.Id).Contains(o.User.Id) || o.PostScope == Scope.Global)
