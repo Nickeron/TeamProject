@@ -52,7 +52,7 @@ namespace TeamProject.Areas.Identity.Pages.Account.Manage
 
             foreach (var p in personalMessages)
             {
-                personalData.Add($"{p.Sender} sent to {p.Receiver} in {p.MessageDate}: ", p.MessageText);
+                personalData.Add($"{p.MessageID}. {p.Sender} sent to {p.Receiver} in {p.MessageDate}: ", p.MessageText);
             }
 
             IEnumerable<Post> personalPosts = dataRepository.GetAllPostsByUser(user);
