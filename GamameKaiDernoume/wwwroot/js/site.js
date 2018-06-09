@@ -22,6 +22,11 @@ window.setInterval(function () {
     for (var i = 0; i < dateTimeElements.length; i++) { formatDate(dateTimeElements[i]); }
 }, 5000);
 
+window.setInterval(function () {
+    var dateTimeElements = document.getElementsByClassName("message-date");
+    for (var i = 0; i < dateTimeElements.length; i++) { formatDate(dateTimeElements[i]); }
+}, 5000);
+
 function formatDate(element) {
     element.innerHTML = moment(element.id).add(3, 'hours').fromNow();
 }

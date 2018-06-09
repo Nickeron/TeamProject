@@ -90,14 +90,16 @@
                         {
                             <li class="sent">
                                 <img src="@Model.ThisUser.UserAvatar" alt="" />
-                                <p class="message-text" title="@message.MessageDate">@message.MessageText</p>
+                                <p class="message-text">@message.MessageText</p>
+                                <span class="message-date" id="@message.MessageDate"></span>
                             </li>
                         }
                         else
                         {
                             <li class="replies">
                                 <img src="@Model.LatestCommunicator.UserAvatar" alt="" />
-                                <p class="message-text" title="@message.MessageDate">@message.MessageText</p>
+                                <p class="message-text">@message.MessageText</p>
+                                <span class="message-date" id="@message.MessageDate"></span>
                             </li>
                         }
                     }
@@ -140,12 +142,12 @@
     {
         const currentlyActiveUserID = document.getElementById("activeUser").title;
         if (userID != currentlyActiveUserID) {
-            console.log("Sending request to database for user with ID: ", userID);    
+            console.log("Sending request to database for user with ID: ", userID);
 
             // Removing previous conversation
             const ulMessages = document.getElementById("active-user-messages");
             ulMessages.innerHTML = '';
-                      
+
             const activeUserElement = document.getElementById("activeUser");
 
             // Setting the new title on the active user element
@@ -189,6 +191,9 @@
 					const li = document.createElement("li");
 					const img = document.createElement("img");
 					const p = document.createElement("p");
+                    const spanDate = document.createElement("span");
+                    spanDate.setAttribute("class", "message-date");
+                    spanDate.setAttribute("id", message.messageDate);
 
 					img.setAttribute("src", message.sender.userAvatar);
 					p.innerHTML = message.messageText;
@@ -199,7 +204,8 @@
 						li.setAttribute("class", "replies");
 					}
 					li.appendChild(img);
-					li.appendChild(p);
+                    li.appendChild(p);
+                    li.appendChild(spanDate);
 					ulMessages.appendChild(li);
 				}
 			}
