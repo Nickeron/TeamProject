@@ -23,6 +23,7 @@ namespace TeamProject.Data
         Friend GetFriend(User thisUser, string friendsID);
         Friendship GetFriendship(User thisUser, User anotherUser);
 
+        int GetMessageIDByTimestampAndUser(DateTime timestamp, User thisUser);
         IEnumerable<Message> GetAllMessagesOfUser(User thisUser);
         IEnumerable<Message> GetAllMessagesOfUsers(User thisUser, User correspondant);
         bool ReadAllMessagesFrom(string senderId, User toThisUser);
@@ -40,6 +41,6 @@ namespace TeamProject.Data
 
         Reaction GetReactionByPostAndUser(int reactionPostId, User thisUser);
 
-        bool SaveAll();
+        bool SaveAll();        
     }
 }

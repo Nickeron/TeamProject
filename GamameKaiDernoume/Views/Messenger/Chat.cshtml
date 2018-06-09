@@ -89,17 +89,17 @@
                         if (message.Sender.Id == Model.ThisUser.Id)
                         {
                             <li class="sent">
-                                <img src="@Model.ThisUser.UserAvatar" alt="" />
-                                <p class="message-text">@message.MessageText</p>
-                                <span class="message-date" id="@message.MessageDate"></span>
+                                <img src="@Model.ThisUser.UserAvatar" />
+                                <p data-toggle="collapse" data-target="#@message.MessageID" aria-expanded="false">@message.MessageText</p>
+                                <span class="message-date collapse" id="@message.MessageID" title="@message.MessageDate"></span>
                             </li>
                         }
                         else
                         {
                             <li class="replies">
-                                <img src="@Model.LatestCommunicator.UserAvatar" alt="" />
-                                <p class="message-text">@message.MessageText</p>
-                                <span class="message-date" id="@message.MessageDate"></span>
+                                <img src="@Model.LatestCommunicator.UserAvatar" />
+                                <p data-toggle="collapse" data-target="#@message.MessageID" aria-expanded="false">@message.MessageText</p>
+                                <span class="message-date collapse" id="@message.MessageID" title="@message.MessageDate"></span>
                             </li>
                         }
                     }
@@ -187,22 +187,30 @@
 			const comMessages = messageModel.correspondantsMessages;
 			for (const key in comMessages) {
 				if (comMessages.hasOwnProperty(key)) {
-					const message = comMessages[key];
-					const li = document.createElement("li");
-					const img = document.createElement("img");
-					const p = document.createElement("p");
-                    const spanDate = document.createElement("span");
-                    spanDate.setAttribute("class", "message-date");
-                    spanDate.setAttribute("id", message.messageDate);
+                    const message = comMessages[key];
 
-					img.setAttribute("src", message.sender.userAvatar);
-					p.innerHTML = message.messageText;
-					if (message.sender.id === thisUserID) {
-						li.setAttribute("class", "sent");
-					}
-					else {
-						li.setAttribute("class", "replies");
-					}
+                    const li = document.createElement("li");
+                    if (message.sender.id === thisUserID) {
+                        li.setAttribute("class", "sent");
+                    }
+                    else {
+                        li.setAttribute("class", "replies");
+                    }
+
+                    const img = document.createElement("img");
+                    img.setAttribute("src", message.sender.userAvatar);
+
+                    const p = document.createElement("p");
+                    p.setAttribute("data-toggle", "collapse");
+                    p.setAttribute("data-target", "#"+message.messageID);
+                    p.setAttribute("aria-expanded", "false");
+                    p.innerHTML = message.messageText;
+
+                    const spanDate = document.createElement("span");
+                    spanDate.setAttribute("class", "message-date collapse");
+                    spanDate.setAttribute("id", message.messageID);
+                    spanDate.setAttribute("title", message.messageDate);
+					
 					li.appendChild(img);
                     li.appendChild(p);
                     li.appendChild(spanDate);
@@ -213,7 +221,7 @@
 		}
 	}
 
-	function sendRequest(userId, message)
+	async function sendRequest(userId, message)
 	{
 		let data =
 			{
@@ -221,7 +229,7 @@
 				messageText: message
 			};
 
-		sendData("@Url.Action("SendMessage", "Messenger")", data);
+		return await sendData("@Url.Action("SendMessage", "Messenger")", data);
 	}
 </script>
 

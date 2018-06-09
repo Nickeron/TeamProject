@@ -25,10 +25,10 @@ namespace TeamProject.Controllers
             this.allConnected = allConnected;
         }
 
-        public async Task SendMessage(string SenderAvatar, string SenderId, string ReceiverId, string message)
+        public async Task SendMessage(string SenderAvatar, string SenderId, string ReceiverId, string message, string messageID, string messageDate)
         {
-            await Clients.Caller.SendAsync("ShowSentMessage", ReceiverId, SenderAvatar, message);
-            await Clients.User(ReceiverId).SendAsync("ReceiveMessage", SenderId, SenderAvatar, message);
+            await Clients.Caller.SendAsync("ShowSentMessage", ReceiverId, SenderAvatar, message, messageID, messageDate);
+            await Clients.User(ReceiverId).SendAsync("ReceiveMessage", SenderId, SenderAvatar, message, messageID, messageDate);
         }
 
         public async Task DistributeComment(string usersAvatar, string Name,string AuthorID, bool isOP, string PostID, string CommentID, string commentsText, string url)

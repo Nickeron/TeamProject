@@ -101,11 +101,11 @@ namespace TeamProject.Controllers
             User thisUser = await userManager.GetUserAsync(HttpContext.User);
 
             if (receiver is null || thisUser is null) throw new Exception("Cannot have null receiver or sender");
-
+            DateTime timestamp = DateTime.Now;
             Message newMessage = new Message
             {
                 isUnread = true,
-                MessageDate = DateTime.Now,
+                MessageDate = timestamp,
                 MessageText = messageModel.MessageText,
                 Receiver = receiver,
                 Sender = thisUser
@@ -116,9 +116,15 @@ namespace TeamProject.Controllers
             if (dataRepository.SaveAll())
             {
                 logger.LogError("Ok new message was saved");
-                return Ok("New message saved!");
             };
-            return BadRequest("Something bad happened");
+
+            NewMessageModel returnData = new NewMessageModel
+            {
+                MessageID = dataRepository.GetMessageIDByTimestampAndUser(timestamp, thisUser),
+                MessageDate = timestamp.ToString()
+            };
+
+            return Json(returnData);
         }
 
         [HttpPost]

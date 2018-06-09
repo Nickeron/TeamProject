@@ -3,7 +3,7 @@
     .build();
 
 // Runs on RECEIVER in chat and handles the intro of a new message
-connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
+connection.on("ReceiveMessage", (senderID, senderAvatar, message, messageID, messageDate) => {
     var audio = new Audio('/sounds/notification.mp3');
     audio.play();
 
@@ -55,14 +55,14 @@ connection.on("ReceiveMessage", (senderID, senderAvatar, message) => {
             headerMeta.appendChild(newUnreadMessagesElement);
         }
         // Adds the new message text in the conversation and scrolls to the bottom
-        $('<li class="replies"><img src="' + senderAvatar + '"/><p> ' + message + '</p><span class="message-date" id="' + moment().format() + '"></span></li>').appendTo($('.messages ul'));
+        $('<li class="replies"><img src="' + senderAvatar + '"/><p data-toggle="collapse" data-target="#' + messageID + '" aria-expanded="false"> ' + message + '</p><span class="message-date" id="' + messageID + '" title="' + messageDate + '"></span></li>').appendTo($('.messages ul'));
         $(".messages").scrollTop(1000000);
     }
 });
 
 // Runs on SENDER in chat and handles the intro of a new message in conversation and side panel
-connection.on("ShowSentMessage", (receiverID, senderAvatar, message) => {
-    $('<li class="sent"><img src="' + senderAvatar + '"/><p> ' + message + '</p><span class="message-date" id="' + moment().format() + '"></span></li > ').appendTo($('.messages ul'));
+connection.on("ShowSentMessage", (receiverID, senderAvatar, message, messageID, messageDate) => {
+    $('<li class="sent"><img src="' + senderAvatar + '"/><p data-toggle="collapse" data-target="#@message.MessageID" aria-expanded="false"> ' + message + '</p><span class="message-date" id="' + messageID + '" title="' + messageDate + '"></span></li > ').appendTo($('.messages ul'));
     $('.message-input input').val(null);
     $(".messages").scrollTop(1000000);
 
@@ -107,9 +107,11 @@ async function SendNewMessage() {
     const message = document.getElementById("messageInput").value;
 
     if ($.trim(message) == '') { return false; }
-
-    connection.invoke("SendMessage", senderAvatar, senderID, receiverID, message).catch(err => console.error(err.toString()));
-    sendRequest(receiverID, message);
+    const messageData = await sendRequest(receiverID, message);
+    console.log(messageData);
+    connection.invoke("SendMessage", senderAvatar, senderID, receiverID, message, messageData.messageID, messageData.messageDate)
+        .catch(err => console.error(err.toString()));
+    
     event.preventDefault();
 }
 

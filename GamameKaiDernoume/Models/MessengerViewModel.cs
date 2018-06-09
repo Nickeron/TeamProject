@@ -24,7 +24,13 @@ namespace TeamProject.Models
     public class SendMessageModel
     {
         public string ReceiverID { get; set; }
-        public string MessageText { get; set; }
+        public string MessageText { get; set; }        
+    }
+
+    public class NewMessageModel
+    {
+        public int MessageID { get; set; }
+        public string MessageDate { get; set; }        
     }
 
 

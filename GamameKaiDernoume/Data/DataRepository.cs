@@ -325,6 +325,25 @@ namespace TeamProject.Data
             }
         }
 
+        public int GetMessageIDByTimestampAndUser(DateTime timestamp, User thisUser)
+        {
+            try
+            {
+                _logger.LogInformation("Get message id through user and timestamp was called");
+
+                return _ctx.Messages
+                    .Include(p => p.Sender)
+                    .Include(m => m.Receiver)
+                    .SingleOrDefault(m => m.Sender.Id == thisUser.Id && m.MessageDate == timestamp)
+                    .MessageID;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the requested Message: {ex}");
+                return 0;
+            }
+        }
+
         public IEnumerable<Message> GetAllMessagesOfUser(User thisUser)
         {
             try
