@@ -97,12 +97,14 @@
 	<script src="~/lib/moment/moment.min.js"></script>
 	<script src="~/lib/moment/moment-with-locales.js"></script>
 
-	<environment include="Development">
-		<script src="~/lib/jquery/dist/jquery.js"></script>
-		<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-		<script src="~/js/site.js" asp-append-version="true"></script>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/linkify/linkify.js"></script>
+        <script src="~/lib/linkify/linkify-html.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
 
-	</environment>
+    </environment>
 	<environment exclude="Development">
 		<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
 				asp-fallback-src="~/lib/jquery/dist/jquery.min.js"

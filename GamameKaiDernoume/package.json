@@ -4,9 +4,10 @@
   "private": true,
   "devDependencies": {},
   "dependencies": {
-			"@aspnet/signalr": "^1.0.0-rc1-update1",
-			"jquery": "3.3.1",
-			"bootstrap": "4.1.1",
-			"moment": "2.22.1"
+    "@aspnet/signalr": "^1.1.0",
+    "bootstrap": "4.1.2",
+    "jquery": "3.3.1",
+    "linkifyjs": "2.1.6",
+    "moment": "2.22.1"
   }
 }

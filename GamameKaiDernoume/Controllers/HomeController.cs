@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using TeamProject.Models;
-using TeamProject.Data.Entities;
 using TeamProject.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authorization;
+using TeamProject.Data.Entities;
+using TeamProject.Models;
 
 namespace TeamProject.Controllers
 {

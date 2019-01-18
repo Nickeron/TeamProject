@@ -14,6 +14,19 @@
 	return rawData.json();
 }
 
+window.onload = function () {
+    var postStringElements = document.getElementsByTagName('h2');
+    var comentStringElements = document.getElementsByClassName("comment-content");
+
+    for (var i = 0; i < postStringElements.length; i++) {
+        linkifyHtml(postStringElements[i], options);
+    }
+
+    for (var i = 0; i < comentStringElements.length; i++) {
+        linkifyHtml(comentStringElements[i], options);
+    }
+};
+
 moment.locale('el');
 
 // Formats the dates of posts and comments to show as relative

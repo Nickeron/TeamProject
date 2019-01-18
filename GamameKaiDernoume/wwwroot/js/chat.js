@@ -55,14 +55,14 @@ connection.on("ReceiveMessage", (senderID, senderAvatar, message, messageID, mes
             headerMeta.appendChild(newUnreadMessagesElement);
         }
         // Adds the new message text in the conversation and scrolls to the bottom
-        $('<li class="replies"><img src="' + senderAvatar + '"/><p data-toggle="collapse" data-target="#' + messageID + '" aria-expanded="false"> ' + message + '</p><span class="message-date" id="' + messageID + '" title="' + messageDate + '"></span></li>').appendTo($('.messages ul'));
+        $('<li class="replies"><img src="' + senderAvatar + '"/><p data-toggle="collapse" data-target="#' + messageID + '" aria-expanded="false">' + message + '</p><span class="message-date" id="' + messageID + '" title="' + messageDate + '"></span></li>').appendTo($('.messages ul'));
         $(".messages").scrollTop(1000000);
     }
 });
 
 // Runs on SENDER in chat and handles the intro of a new message in conversation and side panel
 connection.on("ShowSentMessage", (receiverID, senderAvatar, message, messageID, messageDate) => {
-    $('<li class="sent"><img src="' + senderAvatar + '"/><p data-toggle="collapse" data-target="#@message.MessageID" aria-expanded="false"> ' + message + '</p><span class="message-date" id="' + messageID + '" title="' + messageDate + '"></span></li > ').appendTo($('.messages ul'));
+    $('<li class="sent"><img src="' + senderAvatar + '"/><p data-toggle="collapse" data-target="#' + messageID + '" aria-expanded="false">' + message + '</p><span class="message-date" id="' + messageID + '" title="' + messageDate + '"></span></li>').appendTo($('.messages ul'));
     $('.message-input input').val(null);
     $(".messages").scrollTop(1000000);
 
@@ -104,15 +104,18 @@ async function SendNewMessage() {
     const senderAvatar = document.getElementById("profile-img").getAttribute("src");
     const receiverID = document.getElementById("activeUser").title;
     const senderID = document.getElementById("userName").title;
-    const message = document.getElementById("messageInput").value;
+    const messageInputElement = document.getElementById("messageInput");
+    const message = messageInputElement.value;
 
-    if ($.trim(message) == '') { return false; }
+    if ($.trim(message) === '') { return false; }
+    const loader = document.createElement("img");
+    loader.setAttribute("src", "/images/loader.svg");
+    messageInputElement.appendChild(loader);
     const messageData = await sendRequest(receiverID, message);
     console.log(messageData);
     connection.invoke("SendMessage", senderAvatar, senderID, receiverID, message, messageData.messageID, messageData.messageDate)
         .catch(err => console.error(err.toString()));
-    
-    event.preventDefault();
+    messageInputElement.removeChild(loader);
 }
 
 // When user presses enter and there is text in input

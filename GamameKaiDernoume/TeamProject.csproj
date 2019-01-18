@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>aspnet-GamameKaiDernoume-8EB449F2-0BE8-4FBE-A335-294F31402517</UserSecretsId>
     <ApplicationIcon>gamer.ico</ApplicationIcon>
   </PropertyGroup>
@@ -49,9 +49,12 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" PrivateAssets="All" />
   </ItemGroup>
 
 
@@ -84,6 +87,7 @@
 
 
   <ItemGroup>
+    <Folder Include="wwwroot\lib\linkify\" />
     <Folder Include="wwwroot\postImages\" />
     <Folder Include="wwwroot\sounds\" />
     <Folder Include="wwwroot\userAvatars\" />
