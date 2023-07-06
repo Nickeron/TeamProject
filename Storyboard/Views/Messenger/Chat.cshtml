@@ -1,0 +1,235 @@
+﻿@model MessengerViewModel
+@{
+    ViewData["Title"] = "Messenger";
+}
+<link href="~/css/reset.css" rel="stylesheet prefetch" />
+<link href="~/css/messenger.css" rel="stylesheet" />
+
+<div id="frame">
+    <div id="sidepanel">
+        <div id="profile">
+            <div class="wrap">
+                <img id="profile-img" src="@Model.ThisUser.UserAvatar" class="online" alt="" />
+
+                <p title="@Model.ThisUser.Id" id="userName">@Model.ThisUser.FirstName @Model.ThisUser.LastName</p>
+                @*<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>*@
+                <div id="status-options">
+                    <ul>
+                        <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
+                        <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
+                        <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
+                        <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="contacts">
+            <ul>
+                @foreach (UserChatModel userChat in Model.FriendsAndMessages)
+                {
+                    var lastText = userChat.CorrespondentsMessages.LastOrDefault();
+                    <li class="contact" title="@userChat.Correspondent.Id" id="friend-panel-@userChat.Correspondent.Id"
+                        onclick="setActiveUser('@userChat.Correspondent.Id', '@userChat.Correspondent.UserAvatar',
+                        '@userChat.Correspondent.FirstName'+' '+'@userChat.Correspondent.LastName')">
+                        <div class="wrap">
+                            <span class="contact-status offline"></span>
+                            <img src="@userChat.Correspondent.UserAvatar" alt="" />
+                            <div class="meta">
+                                <p class="name">@userChat.Correspondent.FirstName @userChat.Correspondent.LastName</p>
+                                @if (lastText is null)
+                                {
+                                    <p class="preview">No messages</p>
+                                }
+                                else
+                                {
+                                    <p class="preview" id="preview-@userChat.Correspondent.Id">
+                                        @lastText.MessageText
+                                        @if (userChat.UnreadReceived > 0)
+                                        {
+                                            <strong id="unreadCount-@userChat.Correspondent.Id" class="badge badge-pill badge-danger float-right">
+                                                @userChat.UnreadReceived
+                                            </strong>
+                                        }
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        @if (Model.LatestCommunicator is null)
+        {
+            <div id="activeUser" title="" class="contact-profile">
+                <img src="~/images/user.png" alt="" />
+                <p id="activeUserMeta">No Communication History</p>
+            </div>
+            <div class="messages">
+                <ul id="active-user-messages"></ul>
+            </div>
+        }
+        else
+        {
+            <div id="activeUser" title="@Model.LatestCommunicator.Id" class="contact-profile">
+                <img src="@Model.LatestCommunicator.UserAvatar" alt="" />
+                <p id="activeUserMeta">
+                    @Model.LatestCommunicator.FirstName @Model.LatestCommunicator.LastName
+                    @if (Model.UnreadLatest > 0)
+                    {
+                        <span id="unreadLatestCount" class="badge badge-pill badge-danger">@Model.UnreadLatest</span>
+                    }
+                </p>
+            </div>
+            <div class="messages">
+                <ul id="active-user-messages">
+                    @foreach (Message message in Model.FriendsAndMessages.Where(m => m.Correspondent.Id == Model.LatestCommunicator.Id).SelectMany(u => u.CorrespondentsMessages))
+                    {
+                        if (message.Sender.Id == Model.ThisUser.Id)
+                        {
+                            <li class="sent">
+                                <img src="@Model.ThisUser.UserAvatar" />
+                                <p data-toggle="collapse" data-target="#@message.MessageID" aria-expanded="false">@message.MessageText</p>
+                                <span class="message-date collapse" id="@message.MessageID" title="@message.MessageDate"></span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="replies">
+                                <img src="@Model.LatestCommunicator.UserAvatar" />
+                                <p data-toggle="collapse" data-target="#@message.MessageID" aria-expanded="false">@message.MessageText</p>
+                                <span class="message-date collapse" id="@message.MessageID" title="@message.MessageDate"></span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+        <div class="message-input" onclick="markAsRead()">
+            <div class="wrap">
+                <input id="messageInput" type="text" placeholder="Write your message..." />
+                @*<i class="fa fa-paperclip attachment" aria-hidden="true"></i>*@
+                <button id="sendButton" class="submit" onclick="SendNewMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/signalr/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+
+<script>
+	$(".messages").scrollTop(1000000);
+	let thisUserID = document.getElementById("userName").title;
+
+	async function markAsRead()
+	{
+		const unreadMessagesElement = document.getElementById("unreadLatestCount");
+
+		if (unreadMessagesElement)
+		{
+			// Removes the red count of unread messages from both places
+			unreadMessagesElement.remove();
+			const activeUserId = document.getElementById("activeUser").title;
+			const sidePanelUnread = document.getElementById("unreadCount-" + activeUserId).remove();
+			sendData("@Url.Action("ReadMessages", "Messenger")", activeUserId);
+		}
+	}
+
+	async function setActiveUser(userID , userAvatar, usersName)
+    {
+        const currentlyActiveUserID = document.getElementById("activeUser").title;
+        if (userID != currentlyActiveUserID) {
+            console.log("Sending request to database for user with ID: ", userID);
+
+            // Removing previous conversation
+            const ulMessages = document.getElementById("active-user-messages");
+            ulMessages.innerHTML = '';
+
+            const activeUserElement = document.getElementById("activeUser");
+
+            // Setting the new title on the active user element
+            activeUserElement.title = userID;
+
+            // Changing the headers name and avatar to the new active user
+            activeUserElement.firstElementChild.setAttribute("src", userAvatar);
+            activeUserElement.lastElementChild.innerHTML = usersName;
+
+            // If there is notification on the sidepanel - make one on the header
+            const unreadFromUser = document.getElementById("unreadCount-" + userID);
+
+            if (unreadFromUser) {
+                const newUnreadMessagesElement = document.createElement("span");
+                newUnreadMessagesElement.setAttribute("id", "unreadLatestCount");
+                newUnreadMessagesElement.setAttribute("class", "badge badge-pill badge-danger");
+                newUnreadMessagesElement.innerHTML = unreadFromUser.innerHTML;
+
+                activeUserElement.lastElementChild.appendChild(newUnreadMessagesElement);
+            }
+
+            // Add loader until messages are retrieved from database
+            const liloader = document.createElement("li");
+            const loader = document.createElement("img");
+            loader.setAttribute("src", "/images/loader.svg");
+            loader.setAttribute("class", "loader");
+            liloader.appendChild(loader);
+            ulMessages.appendChild(liloader);
+
+            // Making the request to get the new active user's messages
+            const messageModel = await sendData("@Url.Action("Chat", "Messenger")", userID);
+
+            // Removing loader
+            ulMessages.innerHTML = '';
+
+            // Creating the new conversation with the incoming messages
+			const comMessages = messageModel.correspondantsMessages;
+			for (const key in comMessages) {
+				if (comMessages.hasOwnProperty(key)) {
+                    const message = comMessages[key];
+
+                    const li = document.createElement("li");
+                    if (message.sender.id === thisUserID) {
+                        li.setAttribute("class", "sent");
+                    }
+                    else {
+                        li.setAttribute("class", "replies");
+                    }
+
+                    const img = document.createElement("img");
+                    img.setAttribute("src", message.sender.userAvatar);
+
+                    const p = document.createElement("p");
+                    p.setAttribute("data-toggle", "collapse");
+                    p.setAttribute("data-target", "#"+message.messageID);
+                    p.setAttribute("aria-expanded", "false");
+                    p.innerHTML = message.messageText;
+
+                    const spanDate = document.createElement("span");
+                    spanDate.setAttribute("class", "message-date collapse");
+                    spanDate.setAttribute("id", message.messageID);
+                    spanDate.setAttribute("title", message.messageDate);
+					
+					li.appendChild(img);
+                    li.appendChild(p);
+                    li.appendChild(spanDate);
+					ulMessages.appendChild(li);
+				}
+			}
+			$(".messages").scrollTop(1000000);
+		}
+	}
+
+	async function sendRequest(userId, message)
+	{
+		let data =
+			{
+				receiverID: userId,
+				messageText: message
+			};
+
+		return await sendData("@Url.Action("SendMessage", "Messenger")", data);
+	}
+</script>
+
